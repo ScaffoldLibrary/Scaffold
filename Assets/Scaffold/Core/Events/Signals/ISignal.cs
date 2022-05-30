@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Scaffold.Core.Events
 {
-    public interface IEvent
+    public interface ISignal
     {
 
     }
