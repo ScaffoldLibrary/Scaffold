@@ -1,11 +1,5 @@
 {
   "dependencies": {
-    "com.mgc.scaffold.screens": {
-      "version": "file:ScaffoldScreens",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
     "com.unity.2d.animation": {
       "version": "5.0.10",
       "depth": 0,
