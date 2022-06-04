@@ -216,6 +216,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1419937058}
   - component: {fileID: 1419937057}
+  - component: {fileID: 1419937059}
+  - component: {fileID: 1419937060}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -253,3 +255,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1419937059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419937056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14e4b23c213d82f48998bb91444e7f04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1419937060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419937056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b61193cc1c38c240b8040e79abcb155, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  paths:
+  - name: com.mgc.scaffold.screens
+    path: https://github.com/MgCohen/ScaffoldScreens.git
+  - name: com.mgc.scaffold.screens1
+    path: https://github.com/MgCohen/ScaffoldScreens.git
+  - name: com.mgc.scaffold.screens2
+    path: https://github.com/MgCohen/ScaffoldScreens.git
+  - name: com.mgc.scaffold.screens3
+    path: https://github.com/MgCohen/ScaffoldScreens.git

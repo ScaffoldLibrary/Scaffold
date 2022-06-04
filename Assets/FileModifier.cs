@@ -12,7 +12,7 @@ public class FileModifier : MonoBehaviour
 {
     public TextAsset editableFile;
 
-    [SerializeField] private List<Path> paths = new List<Path>();
+    [SerializeField] private List<PackagePath> paths = new List<PackagePath>();
 
     [ContextMenu("Read")]
     public string ReadFile()
@@ -38,8 +38,6 @@ public class FileModifier : MonoBehaviour
         Debug.Log(parsedFile["dependencies"]);
         var dependencies = parsedFile["dependencies"].ToArray().Select(j => j.ToString()).ToList();
         Debug.Log(dependencies[0]);
-        //string[] values = JsonConvert.DeserializeObject<string[]>(parsedFile["dependencies"].ToString());
-        //Debug.Log(values[0]);
     }
 
     [ContextMenu("Add")]
@@ -101,17 +99,4 @@ public class FileModifier : MonoBehaviour
     {
         File.WriteAllText("./Packages/manifest.json", text);
     }
-
-    private class Manifest
-    {
-        public string[] dependencies;
-    }
-
-    [System.Serializable]
-    private class Path
-    {
-        public string name;
-        public string path;
-    }
-
 }
