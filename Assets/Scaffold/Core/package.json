@@ -4,7 +4,6 @@
   "displayName": "Scaffold Core",
   "description": "Core package for the Scaffold Framework, providing basic package controls and building blocks",
   "unity": "2018.4",
-  "dependencies": null,
   "author": {
     "name": "Matheus",
     "email": "matheus@hotmail.com",
