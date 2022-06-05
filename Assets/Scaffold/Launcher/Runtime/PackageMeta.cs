@@ -2,27 +2,30 @@
 
 public class PackageManifest
 {
-    public List<string> dependencies;
+    public Dictionary<string, string> dependencies;
 }
 
 [System.Serializable]
 public class PackagePath
 {
-    public PackagePath(string packageName, string packageReference, string packagePath)
+    public PackagePath(string packageName, string packageKey, string packagePath)
     {
         name = packageName;
-        reference = packageReference;
+        key = packageKey;
         path = packagePath;
     }
 
-    public PackagePath(string packageReference, string packagePath)
+    public PackagePath(string packageKey, string packagePath)
     {
-        reference = packageReference;
+        key = packageKey;
         path = packagePath;
     }
 
 
     public string name;
-    public string reference;
+    public string key;
     public string path;
+
+    public string manifestPath;
+    public List<string> dependencies = new List<string>();
 }

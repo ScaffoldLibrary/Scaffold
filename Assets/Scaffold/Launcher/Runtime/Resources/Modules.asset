@@ -13,15 +13,8 @@ MonoBehaviour:
   m_Name: Modules
   m_EditorClassIdentifier: 
   packages:
-  - name: com.mgc.scaffold.screens
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git
-  - name: com.mgc.scaffold.screens1
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git
-  - name: com.mgc.scaffold.screens2
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git
-  - name: com.mgc.scaffold.screens3
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git
+  - name: Events
+    key: com.scaffold.core
+    path: https://github.com/MgCohen/Scaffold-Core.git?path=/Assets/Scaffold/Core
+    manifestPath: https://github.com/MgCohen/Scaffold-Core/raw/main/Packages/manifest.json
+    dependencies: []
