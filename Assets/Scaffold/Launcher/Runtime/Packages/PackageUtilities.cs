@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Scaffold.Core.Launcher.Utilities;
 
-namespace Scaffold.Core.Launcher
+namespace Scaffold.Launcher.Utilities
 {
     public static class PackageUtilities
     {
+        public const string LauncherGit = "https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher";
+        public const string RawModuleGit = "https://github.com/MgCohen/Scaffold-Launcher/raw/main/Assets/Scaffold/Launcher/Runtime/Resources/RawModules.json";
+        public const string RawModuleLocal = "./Assets/Scaffold/Launcher/Runtime/Resources/RawModules.json";
 
         private static PackageModules Modules;
         public static PackageModules GetPackageModules()
@@ -27,11 +29,6 @@ namespace Scaffold.Core.Launcher
                                 .Select(depency => modules.GetPackage(depency.Key))
                                 .ToList();
             return currentModules;
-        }
-
-        public static List<PackagePath> CreateDependencyGraph()
-        {
-            return null;
         }
 
         public static void GetModuleManifest(this PackagePath package, Action<PackageManifest> callback)

@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
-using UnityEngine;
 
-namespace Scaffold.Builder
+namespace Scaffold.Builder.Installer
 {
     internal class LauncherInstaller
     {
@@ -18,7 +15,7 @@ namespace Scaffold.Builder
             await Task.Delay(1000);
             if (!EditorPrefs.GetBool("LauncherInstalled"))
             {
-                ClientRequest = Client.Add("https://github.com/MgCohen/Scaffold-Core.git?path=/Assets/Scaffold/Launcher");
+                ClientRequest = Client.Add("https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher");
             }
         }
 

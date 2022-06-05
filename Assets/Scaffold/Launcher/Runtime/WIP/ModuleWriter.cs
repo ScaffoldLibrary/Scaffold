@@ -5,8 +5,10 @@ using System.Linq;
 using System.IO;
 using UnityEditor;
 using Newtonsoft.Json;
+using Scaffold.Launcher;
+using Scaffold.Launcher.Utilities;
 
-namespace Scaffold.Core.Launcher.ModuleHandler
+namespace Scaffold.Launcher.ModuleHandler
 {
     public class ModuleWriter
     {

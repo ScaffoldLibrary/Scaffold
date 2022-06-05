@@ -3,7 +3,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Scaffold.Core.Launcher.ModuleHandler
+namespace Scaffold.Launcher.ModuleHandler
 {
     public class ModuleReader
     {

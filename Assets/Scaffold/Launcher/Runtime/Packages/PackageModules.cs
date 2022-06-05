@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace Scaffold.Core.Launcher
+namespace Scaffold.Launcher
 {
+    [CreateAssetMenu(menuName = "Package Module")]
     public class PackageModules : ScriptableObject
     {
-        public List<PackagePath> packages = new List<PackagePath>();
+        public List<PackagePath> Packages = new List<PackagePath>();
 
         public bool ContainModule(string packageName)
         {
-            return packages.Any(package => package.Key == packageName);
+            return Packages.Any(package => package.Key == packageName);
         }
 
         public PackagePath GetPackage(string packageName)
         {
             if (ContainModule(packageName))
             {
-                return packages.First(package => package.Key == packageName);
+                return Packages.First(package => package.Key == packageName);
             }
             else
             {
@@ -29,7 +30,7 @@ namespace Scaffold.Core.Launcher
 
         public List<PackagePath> GetPackageDependencies(PackagePath package)
         {
-            if (!packages.Contains(package))
+            if (!Packages.Contains(package))
             {
                 return null;
             }

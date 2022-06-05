@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace Scaffold.Core.Launcher
+namespace Scaffold.Launcher.Utilities
 {
     internal class ScaffoldLauncherUtility
     {

@@ -1,10 +1,7 @@
-using Scaffold.Core.Launcher;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
+using Scaffold.Launcher.Utilities;
 
-namespace Scaffold.Launcher
+namespace Scaffold.Launcher.Installer
 {
     internal class LauncherInstaller
     {

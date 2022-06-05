@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using UnityEngine;
-using Scaffold.Core.Launcher;
-using UnityEditor;
+﻿using UnityEditor;
 
-namespace Scaffold.Core.Launcher.Builder
+namespace Scaffold.Launcher.Builder
 {
     public class ScaffoldBuilder
     {

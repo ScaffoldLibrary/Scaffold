@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
+using Scaffold.Launcher.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
-namespace Scaffold.Core.Launcher
+namespace Scaffold.Launcher
 {
     public class PackageModuleBuilder
     {
@@ -25,7 +25,7 @@ namespace Scaffold.Core.Launcher
             _buildingGraph = true;
             _dependencyGraph = new Dictionary<string, List<string>>();
             PackageModules modules = PackageUtilities.GetPackageModules();
-            List<PackagePath> packages = modules.packages;
+            List<PackagePath> packages = modules.Packages;
 
             requestCount = packages.Count;
             foreach (PackagePath package in packages)
@@ -80,7 +80,7 @@ namespace Scaffold.Core.Launcher
         {
             Debug.Log("Building File");
             PackageModules modules = PackageUtilities.GetPackageModules();
-            List<PackagePath> packages = modules.packages;
+            List<PackagePath> packages = modules.Packages;
             foreach(PackagePath package in packages)
             {
                 package.dependencies = _dependencyGraph[package.Key];
