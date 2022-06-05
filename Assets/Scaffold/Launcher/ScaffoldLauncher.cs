@@ -9,6 +9,12 @@ namespace Scaffold.Core.Launcher
     {
         public List<PackagePath> paths = new List<PackagePath>();
 
+        private void Start()
+        {
+            var m = Resources.Load<PackageModules>("Modules");
+            Debug.Log(m.packages[0].path);
+        }
+
         [ContextMenu("Read")]
         public void Read()
         {
