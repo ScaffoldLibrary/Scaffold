@@ -43,13 +43,13 @@ namespace Scaffold.Core.Launcher
             }
 
             requestCount--;
-            string packageKey = rootPackage.key;
-            if(_dependencyGraph[packageKey] == null)
+            string packageKey = rootPackage.Key;
+            if (!_dependencyGraph.ContainsKey(packageKey))
             {
-                _dependencyGraph[packageKey] = new List<string>();
+                _dependencyGraph.Add(packageKey, new List<string>());
             }
 
-            List<string> dependencyKeys = packages.Select(dependency => dependency.key).ToList();
+            List<string> dependencyKeys = packages.Select(dependency => dependency.Key).ToList();
             _dependencyGraph[packageKey].AddRange(dependencyKeys);
             TryResolveCircularDependencies();
         }
@@ -66,9 +66,11 @@ namespace Scaffold.Core.Launcher
 
         private void ResolveCircularDependencies()
         {
-            foreach(var entry in _dependencyGraph)
+            for (int i = _dependencyGraph.Count - 1; i >= 0; i--)
             {
-                _dependencyGraph[entry.Key] = BuildPackageTree(entry.Value);
+                var entry = _dependencyGraph.ElementAt(i);
+                List<string> newDependencies = BuildPackageTree(entry.Value);
+                _dependencyGraph[entry.Key] = newDependencies;
             }
 
             BuildModuleFile();
@@ -76,11 +78,12 @@ namespace Scaffold.Core.Launcher
 
         private void BuildModuleFile()
         {
+            Debug.Log("Building File");
             PackageModules modules = PackageUtilities.GetPackageModules();
             List<PackagePath> packages = modules.packages;
             foreach(PackagePath package in packages)
             {
-                package.dependencies = _dependencyGraph[package.key];
+                package.dependencies = _dependencyGraph[package.Key];
             }
 
             string json = JsonConvert.SerializeObject(modules, Formatting.Indented);

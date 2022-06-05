@@ -36,13 +36,13 @@ namespace Scaffold.Core.Launcher
 
         public static void GetModuleManifest(this PackagePath package, Action<PackageManifest> callback)
         {
-            string path = package.manifestPath;
+            string path = package.Manifest;
             GitFetcher.Fetch<PackageManifest>(path, onRequestCompleted: callback);
         }
 
         public static void GetModuleDependencies(this PackagePath package, Action<List<PackagePath>> callback)
         {
-            string path = package.manifestPath;
+            string path = package.Manifest;
             GitFetcher.Fetch<PackageManifest>(path, onRequestCompleted: Callback);
 
             void Callback(PackageManifest manifest)

@@ -1,0 +1,13 @@
+{
+  "packages": [
+    {
+      "name": "Core",
+      "key": "com.scaffold.core",
+      "path": "https://github.com/MgCohen/Scaffold-Core.git?path=/Assets/Scaffold/Core",
+      "manifestPath": "https://github.com/MgCohen/Scaffold-Core/raw/main/Packages/manifest.json",
+      "dependencies": []
+    }
+  ],
+  "name": "Modules",
+  "hideFlags": 0
+}

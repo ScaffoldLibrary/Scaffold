@@ -215,9 +215,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1419937058}
-  - component: {fileID: 1419937057}
-  - component: {fileID: 1419937059}
-  - component: {fileID: 1419937060}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -225,23 +222,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1419937057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419937056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3905fdcdc364e14eb41308fff389e22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  editableFile: {fileID: 4900000, guid: 6bc830b57c81f534a8ff6593d027096a, type: 3}
-  paths:
-  - name: com.mgc.scaffold.screens2
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git
 --- !u!4 &1419937058
 Transform:
   m_ObjectHideFlags: 0
@@ -256,41 +236,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1419937059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419937056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14e4b23c213d82f48998bb91444e7f04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1419937060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419937056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b61193cc1c38c240b8040e79abcb155, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modules: {fileID: 11400000, guid: 1b6f1eab2ea072b40ba02dae4c484dd2, type: 2}
-  paths:
-  - name: com.mgc.scaffold.screens
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git
-  - name: com.mgc.scaffold.screens1
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git
-  - name: com.mgc.scaffold.screens2
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git
-  - name: com.mgc.scaffold.screens3
-    reference: 
-    path: https://github.com/MgCohen/ScaffoldScreens.git

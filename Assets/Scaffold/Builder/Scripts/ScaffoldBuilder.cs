@@ -7,11 +7,11 @@ namespace Scaffold.Core.Launcher.Builder
 {
     public class ScaffoldBuilder
     {
-        private PackageModuleBuilder _moduleBuilder = new PackageModuleBuilder();
-        
+
         [MenuItem("Scaffold/Build Module File")]
-        public void BuildModules()
+        public static void BuildModules()
         {
+            PackageModuleBuilder _moduleBuilder = new PackageModuleBuilder();
             _moduleBuilder.BuildGraph();
         }
     }

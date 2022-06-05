@@ -5,54 +5,20 @@ using Scaffold.Core.Launcher.ModuleHandler;
 using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
+using Scaffold.Core.Launcher.Utilities;
 
 namespace Scaffold.Core.Launcher
 {
-
-
-    public class ScaffoldLauncher : MonoBehaviour
+    public class ScaffoldLauncher
     {
-        public List<PackagePath> paths = new List<PackagePath>();
-
-        private PackageModules _modules;
-
-
-        //TODO: Update file based on git
-        public void InitLauncher()
-        {
-            _modules = Resources.Load<PackageModules>("Modules");
-            if (_modules == null) return;
-            PackageManifest manifest = GetManifest();
-            List<PackagePath> currentModules = manifest.FilterScaffoldModules();
-
-        }
-
-        //TODO: Fetch current *PROJECT* manifest
-        private PackageManifest GetManifest()
-        {
-            string path = ".Packages/manifest.json";
-            string manifestText = File.ReadAllText(path);
-            PackageManifest manifest = JsonConvert.DeserializeObject<PackageManifest>(manifestText);
-            return manifest;
-        }
-
-        //TODO: Fetch manifest of each installed module
-        private void GetScaffoldModuleManifest(PackagePath package)
-        {
-            string path = package.manifestPath;
-            //_gitFetcher.Fetch<PackageManifest>(path, onRequestCompleted: GetModuleDependencies);
-        }
-
-        private void GetModuleDependencies(PackageManifest manifest)
+        public void Init()
         {
 
         }
-        //TODO: Filter pending modules
-        //TODO: Create Graph
-        //TODO: Add needed modules to project
-        //TODO: Create UI
 
-
+        public void UpdateModules()
+        {
+        }
     }
 }
 

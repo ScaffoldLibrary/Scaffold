@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Modules
   m_EditorClassIdentifier: 
   packages:
-  - name: Events
+  - name: Core
     key: com.scaffold.core
     path: https://github.com/MgCohen/Scaffold-Core.git?path=/Assets/Scaffold/Core
     manifestPath: https://github.com/MgCohen/Scaffold-Core/raw/main/Packages/manifest.json

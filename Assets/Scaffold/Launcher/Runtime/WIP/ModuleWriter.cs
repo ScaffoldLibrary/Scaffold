@@ -24,7 +24,7 @@ namespace Scaffold.Core.Launcher.ModuleHandler
             var file = _reader.ReadFile();
             foreach(var entry in paths)
             {
-                file.Add(entry.name, entry.path);
+                file.Add(entry.Name, entry.Path);
             }
 
             string json = JsonConvert.SerializeObject(file, Formatting.Indented);

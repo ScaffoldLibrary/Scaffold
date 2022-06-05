@@ -1,7 +1,9 @@
 {
-    "name": "Scaffold.Core.Events",
+    "name": "Scaffold.Builder",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:0a21f52f3f1ee67459d5cf5aa090fd88"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

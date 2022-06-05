@@ -1,31 +1,21 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class PackageManifest
+namespace Scaffold.Core.Launcher
 {
-    public Dictionary<string, string> dependencies;
-}
-
-[System.Serializable]
-public class PackagePath
-{
-    public PackagePath(string packageName, string packageKey, string packagePath)
+    public class PackageManifest
     {
-        name = packageName;
-        key = packageKey;
-        path = packagePath;
+        public Dictionary<string, string> dependencies;
     }
 
-    public PackagePath(string packageKey, string packagePath)
+    [System.Serializable]
+    public class PackagePath
     {
-        key = packageKey;
-        path = packagePath;
+        public string Name;
+        public string Key;
+        public string Path;
+        public string Manifest;
+
+        public List<string> dependencies = new List<string>();
     }
-
-
-    public string name;
-    public string key;
-    public string path;
-
-    public string manifestPath;
-    public List<string> dependencies = new List<string>();
 }
