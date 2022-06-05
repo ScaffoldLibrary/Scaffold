@@ -20,19 +20,13 @@ namespace Scaffold.Launcher.Utilities
             if (request.result == UnityWebRequest.Result.Success)
             {
                 string text = request.downloadHandler.text;
-                Debug.Log(text);
                 if(typeof(T) == typeof(string))
                 {
-                    Debug.Log(1);
                     T convertedValue = (T)Convert.ChangeType(text, typeof(T));
-                    Debug.Log(2);
                     callback?.Invoke(convertedValue);
                     return;
                 }
-                Debug.Log(3);
-                Debug.Log(text);
                 T content = JsonConvert.DeserializeObject<T>(text);
-                Debug.Log(content);
                 callback?.Invoke(content);
             }
             else

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -21,6 +23,13 @@ namespace Scaffold.Launcher.Utilities
             return Modules;
         }
 
+        public static PackageManifest GetProjectManifest()
+        {
+            string path = "./Packages/manifest.json";
+            string text = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<PackageManifest>(text);
+        }
+
         public static List<PackagePath> FilterScaffoldModules(this PackageManifest manifest)
         {
             PackageModules modules = GetPackageModules();
@@ -34,7 +43,7 @@ namespace Scaffold.Launcher.Utilities
         public static void GetModuleManifest(this PackagePath package, Action<PackageManifest> callback)
         {
             string path = package.Manifest;
-            GitFetcher.Fetch<PackageManifest>(path, onRequestCompleted: callback);
+            GitFetcher.Fetch(path, onRequestCompleted: callback);
         }
 
         public static void GetModuleDependencies(this PackagePath package, Action<List<PackagePath>> callback)

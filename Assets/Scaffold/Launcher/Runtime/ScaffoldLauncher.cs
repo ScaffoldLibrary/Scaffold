@@ -10,15 +10,14 @@ namespace Scaffold.Launcher
 {
     public class ScaffoldLauncher: MonoBehaviour
     {
-
-        public void Start()
-        {
-            UpdateModules();
-        }
-
         public void Init()
         {
 
+        }
+
+        public void CheckForMissingDependencies()
+        {
+            PackageUtilities.GetPackageModules();
         }
 
         [ContextMenu("Update")]
@@ -31,7 +30,7 @@ namespace Scaffold.Launcher
             void Callback(string rawData)
             {
                 JObject rawModules = JObject.Parse(rawData);
-                modules.Packages = rawModules["packages"].ToObject<List<PackagePath>>();
+                modules.Packages = rawModules["Packages"].ToObject<List<PackagePath>>();
                 File.WriteAllText(PackageUtilities.RawModuleLocal, rawData);
             }
         }
