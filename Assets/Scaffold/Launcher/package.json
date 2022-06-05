@@ -1,0 +1,12 @@
+{
+  "name": "com.scaffold.launcher",
+  "version": "0.0.1",
+  "displayName": "Scaffold Launcher",
+  "description": "Scaffold Framework Package controller, managing and installing dependencies",
+  "unity": "2018.4",
+  "author": {
+    "name": "Matheus",
+    "email": "matheus@hotmail.com",
+    "url": "https://www.matheuscohen.com.br"
+  }
+}
