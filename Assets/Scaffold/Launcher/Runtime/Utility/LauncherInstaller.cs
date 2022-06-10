@@ -14,7 +14,7 @@ namespace Scaffold.Launcher.Installer
             {
                 ScaffoldLauncherUtility.SetLauncherInitialized(true);
                 ScaffoldLauncher launcher = new ScaffoldLauncher();
-                launcher.Init();
+                //launcher.Init();
             }
         }
     }

@@ -16,5 +16,14 @@ MonoBehaviour:
   - Name: Launcher
     Key: com.scaffold.launcher
     Path: https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher
+    Version: 0.0.1
     Manifest: 
+    Description: My own custom package manager for the scaffold project
+    dependencies: []
+  - Name: Events
+    Key: com.scaffold.events
+    Path: https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events
+    Version: 0.0.1
+    Manifest: 
+    Description: A event module for communication between games
     dependencies: []

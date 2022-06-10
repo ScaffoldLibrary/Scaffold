@@ -1,10 +1,16 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Scaffold.Launcher
 {
     public class PackageManifest
     {
         public Dictionary<string, string> dependencies;
+
+        public bool Contains(string package)
+        {
+            return dependencies.ContainsKey(package);
+        }
     }
 
     [System.Serializable]
@@ -13,7 +19,10 @@ namespace Scaffold.Launcher
         public string Name;
         public string Key;
         public string Path;
+        public string Version;
         public string Manifest;
+
+        [TextArea] public string Description;
 
         public List<string> dependencies = new List<string>();
     }
