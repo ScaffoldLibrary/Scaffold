@@ -93,6 +93,7 @@ namespace Scaffold.Launcher.Editor
             string packageState = installed ? "Installed" : "Install";
             if (CornerButton(packageState, module, verticalRight))
             {
+                Debug.Log("Trying to install");
                 Launcher.InstallPackage(package);
             }
             EditorGUI.EndDisabledGroup();

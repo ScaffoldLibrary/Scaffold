@@ -31,6 +31,11 @@ namespace Scaffold.Launcher
         }
         public void InstallPackage(PackagePath package)
         {
+            List<string> dependencies = new List<string>(package.dependencies) { package.Key };
+            foreach(string dependency in dependencies){
+                Debug.Log(dependency);
+            }
+            InstallPackages(dependencies);
             //try Install
             //Show Popup
         }
@@ -44,7 +49,7 @@ namespace Scaffold.Launcher
             void Callback(string rawData)
             {
                 JObject rawModules = JObject.Parse(rawData);
-                modules.Modules = rawModules["Packages"].ToObject<List<PackagePath>>();
+                modules.Modules = rawModules["Modules"].ToObject<List<PackagePath>>();
                 File.WriteAllText(PackageUtilities.RawModuleLocal, rawData);
             }
         }
@@ -60,13 +65,13 @@ namespace Scaffold.Launcher
             return missing != null && missing.Count > 0;
         }
 
-        public void InstallPackages(List<string> packages)
+        private void InstallPackages(List<string> packages)
         {
             PackageInstaller installer = new PackageInstaller(PackageUtilities.ManifestLocal, _modules);
             installer.Install(packages);
         }
 
-        public void InstallPackage(string package)
+        private void InstallPackage(string package)
         {
             InstallPackages(new List<string>() { package });
         }
@@ -78,10 +83,5 @@ namespace Scaffold.Launcher
                 InstallPackages(missing);
             }
         }
-    }
-
-    public enum LauncherStatus
-    {
-
     }
 }

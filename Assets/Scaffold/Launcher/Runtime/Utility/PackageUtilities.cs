@@ -12,6 +12,7 @@ namespace Scaffold.Launcher.Utilities
         public const string LauncherGit = "https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher";
         public const string RawModuleGit = "https://github.com/MgCohen/Scaffold-Launcher/raw/main/Assets/Scaffold/Launcher/Runtime/Resources/RawModules.json";
         public const string RawModuleLocal = "./Assets/Scaffold/Launcher/Runtime/Resources/RawModules.json";
+        public const string TestFile = "./Assets/Scaffold/Launcher/Runtime/Resources/TestFile.json";
         public const string ManifestLocal = "./Packages/manifest.json";
 
         private static PackageModules Modules;
