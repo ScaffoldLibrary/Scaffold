@@ -21,7 +21,7 @@ namespace Scaffold.Launcher
 
         public List<PackagePath> GetPackages()
         {
-            return _modules.Packages;
+            return _modules.Modules;
         }
 
         public bool IsPackageInstalled(PackagePath package)
@@ -44,7 +44,7 @@ namespace Scaffold.Launcher
             void Callback(string rawData)
             {
                 JObject rawModules = JObject.Parse(rawData);
-                modules.Packages = rawModules["Packages"].ToObject<List<PackagePath>>();
+                modules.Modules = rawModules["Packages"].ToObject<List<PackagePath>>();
                 File.WriteAllText(PackageUtilities.RawModuleLocal, rawData);
             }
         }

@@ -8,18 +8,19 @@ namespace Scaffold.Launcher
     [CreateAssetMenu(menuName = "Package Module")]
     public class PackageModules : ScriptableObject
     {
-        public List<PackagePath> Packages = new List<PackagePath>();
+        public PackagePath Launcher = new PackagePath();
+        public List<PackagePath> Modules = new List<PackagePath>();
 
         public bool ContainModule(string packageName)
         {
-            return Packages.Any(package => package.Key == packageName);
+            return Modules.Any(package => package.Key == packageName);
         }
 
         public PackagePath GetPackage(string packageName)
         {
             if (ContainModule(packageName))
             {
-                return Packages.First(package => package.Key == packageName);
+                return Modules.First(package => package.Key == packageName);
             }
             else
             {
@@ -30,7 +31,7 @@ namespace Scaffold.Launcher
 
         public List<PackagePath> GetPackageDependencies(PackagePath package)
         {
-            if (!Packages.Contains(package))
+            if (!Modules.Contains(package))
             {
                 return null;
             }

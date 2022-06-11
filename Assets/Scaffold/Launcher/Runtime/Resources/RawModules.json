@@ -1,10 +1,21 @@
 {
-  "Packages": [
+  "Launcher": {
+    "Name": "Launcher",
+    "Key": "com.scaffold.launcher",
+    "Path": "https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher",
+    "Version": "0.0.1",
+    "Manifest": "",
+    "Description": "",
+    "dependencies": []
+  },
+  "Modules": [
     {
-      "name": "Core",
-      "key": "com.scaffold.core",
-      "path": "https://github.com/MgCohen/Scaffold-Core.git?path=/Assets/Scaffold/Core",
-      "manifestPath": "https://github.com/MgCohen/Scaffold-Core/raw/main/Packages/manifest.json",
+      "Name": "Events",
+      "Key": "com.scaffold.events",
+      "Path": "https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events",
+      "Version": "0.0.1",
+      "Manifest": "https://github.com/MgCohen/Scaffold-Events/raw/main/Packages/manifest.json",
+      "Description": "Handles communication between classes using Signals and Requests",
       "dependencies": []
     }
   ],

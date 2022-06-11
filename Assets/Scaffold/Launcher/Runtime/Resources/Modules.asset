@@ -12,18 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10abd1473eb27b9489eb7bb90db250fa, type: 3}
   m_Name: Modules
   m_EditorClassIdentifier: 
-  Packages:
-  - Name: Launcher
+  Launcher:
+    Name: Launcher
     Key: com.scaffold.launcher
     Path: https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher
     Version: 0.0.1
     Manifest: 
-    Description: My own custom package manager for the scaffold project
+    Description: 
     dependencies: []
+  Modules:
   - Name: Events
     Key: com.scaffold.events
     Path: https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events
     Version: 0.0.1
-    Manifest: 
-    Description: A event module for communication between games
+    Manifest: https://github.com/MgCohen/Scaffold-Events/raw/main/Packages/manifest.json
+    Description: Handles communication between classes using Signals and Requests
     dependencies: []

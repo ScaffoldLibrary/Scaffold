@@ -25,7 +25,7 @@ namespace Scaffold.Launcher
             _buildingGraph = true;
             _dependencyGraph = new Dictionary<string, List<string>>();
             PackageModules modules = PackageUtilities.GetPackageModules();
-            List<PackagePath> packages = modules.Packages;
+            List<PackagePath> packages = modules.Modules;
 
             requestCount = packages.Count;
             foreach (PackagePath package in packages)
@@ -80,7 +80,7 @@ namespace Scaffold.Launcher
         {
             Debug.Log("Building File");
             PackageModules modules = PackageUtilities.GetPackageModules();
-            List<PackagePath> packages = modules.Packages;
+            List<PackagePath> packages = modules.Modules;
             foreach(PackagePath package in packages)
             {
                 package.dependencies = _dependencyGraph[package.Key];
