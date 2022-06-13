@@ -18,9 +18,16 @@ MonoBehaviour:
     Path: https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher
     Version: 0.0.1
     Manifest: 
-    Description: 
+    Description: Scaffold Framework Package controller, managing and installing dependencies
     dependencies: []
   Modules:
+  - Name: Builder
+    Key: com.scaffold.builder
+    Path: https://github.com/MgCohen/Scaffold-Builder.git?path=/Assets/Scaffold/Builder
+    Version: 0.0.1
+    Manifest: https://github.com/MgCohen/Scaffold-Builder/raw/main/Packages/manifest.json
+    Description: 
+    dependencies: []
   - Name: Events
     Key: com.scaffold.events
     Path: https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events
