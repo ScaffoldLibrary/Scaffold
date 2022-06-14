@@ -8,20 +8,21 @@ namespace Scaffold.Launcher.PackageHandler
 {
     public class PackageInstaller
     {
-        public PackageInstaller(string path, PackageModules modules)
+        public PackageInstaller(string path, ScaffoldManifest modules)
         {
             _manifestFilePath = path;
             _modules = modules;
         }
 
         private string _manifestFilePath;
-        private PackageModules _modules;
+        private ScaffoldManifest _modules;
 
         private JObject GetManifest()
         {
             string text = File.ReadAllText(_manifestFilePath);
             return JObject.Parse(text);
         }
+
         private IDictionary<string, string> GetDependency(JObject jObject)
         {
             Dictionary<string, string> rawManifest = jObject["dependencies"].ToObject<Dictionary<string, string>>();
@@ -35,11 +36,13 @@ namespace Scaffold.Launcher.PackageHandler
             foreach (var dependency in dependencies)
             {
                 PackagePath package = _modules.GetPackage(dependency);
+                if (manifestDependencies.ContainsKey(package.Key))
+                {
+                    continue;
+                }
                 manifestDependencies.Add(package.Key, package.Path);
             }
-            UnityEngine.Debug.Log(manifest);
             manifest["dependencies"] = JToken.FromObject(manifestDependencies);
-            UnityEngine.Debug.Log(manifest);
             string json = JsonConvert.SerializeObject(manifest, Formatting.Indented);
             File.WriteAllText(_manifestFilePath, json);
         }

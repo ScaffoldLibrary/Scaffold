@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace Scaffold.Launcher.Editor
 {
-    public class LauncherWindow : EditorWindow
+    public class ScaffoldWindow : EditorWindow
     {
-        [MenuItem("Scaffold/Launcher")]
-        private static void OpenWindow()
+        [MenuItem("Scaffold/Open Launcher")]
+        public static void OpenLauncher()
         {
             Window.Show();
             Window.minSize = _minWindowSize;
@@ -18,27 +18,27 @@ namespace Scaffold.Launcher.Editor
         private static Vector2 CurrentWindowSize => Window.position.size;
         private static Vector2 _minWindowSize = new Vector2(400, 400);
 
-        private static LauncherWindow Window
+        private static ScaffoldWindow Window
         {
             get
             {
                 if (_window == null)
                 {
-                    _window = (LauncherWindow)EditorWindow.GetWindow(typeof(LauncherWindow));
+                    _window = (ScaffoldWindow)EditorWindow.GetWindow(typeof(ScaffoldWindow));
                 }
                 return _window;
             }
         }
-        private static LauncherWindow _window;
-        private static ScaffoldLauncher Launcher
+        private static ScaffoldWindow _window;
+        private static ScaffoldManager Launcher
         {
             get
             {
-                if (_launcher == null) _launcher = new ScaffoldLauncher();
+                if (_launcher == null) _launcher = new ScaffoldManager();
                 return _launcher;
             }
         }
-        private static ScaffoldLauncher _launcher;
+        private static ScaffoldManager _launcher;
 
         private Vector2 _scrollView;
 
@@ -48,7 +48,7 @@ namespace Scaffold.Launcher.Editor
 
             _scrollView = EditorGUILayout.BeginScrollView(_scrollView, GUIStyle.none, GUIStyle.none);
             EditorGUILayout.BeginVertical();
-            GUILayout.Box("Scaffold", LauncherStyles.HeaderBox);
+            GUILayout.Box("Scaffold", EditorStyles.HeaderBox);
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
                 EditorGUILayout.HelpBox("Please check your internet connection, connection is needed to install and update the packages", MessageType.Error);
@@ -57,7 +57,7 @@ namespace Scaffold.Launcher.Editor
             EditorGUILayout.LabelField("this is my scaffold project description, version 0.1");
             EditorGUILayout.BeginHorizontal();
             DrawProjectState();
-            if (GUILayout.Button("Update Modules", LauncherStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
+            if (GUILayout.Button("Update Modules", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
             {
                 Launcher.UpdateModules();
             }
@@ -73,18 +73,18 @@ namespace Scaffold.Launcher.Editor
 
         private void DrawProjectState()
         {
-            EditorGUILayout.LabelField("Package State", LauncherStyles.ProjectState, GUILayout.Width(150));
+            EditorGUILayout.LabelField("Package State", EditorStyles.ProjectState, GUILayout.Width(150));
         }
 
         private void DrawModuleViewer(PackagePath package, bool installed)
         {
             float maxWidth = CurrentWindowSize.x;
-            Rect module = EditorGUILayout.BeginHorizontal(LauncherStyles.ModuleBox);
+            Rect module = EditorGUILayout.BeginHorizontal(EditorStyles.ModuleBox);
 
             //Div 1
             Rect verticalLeft = EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3 * 2));
-            GUILayout.Label($"{package.Name} - {package.Version}", LauncherStyles.ModuleName);
-            GUILayout.Label(package.Description, LauncherStyles.ModuleDescription);
+            GUILayout.Label($"{package.Name} - {package.Version}", EditorStyles.ModuleName);
+            GUILayout.Label(package.Description, EditorStyles.ModuleDescription);
             EditorGUILayout.EndVertical();
 
             //Div 2
@@ -109,7 +109,7 @@ namespace Scaffold.Launcher.Editor
             buttonRect.y += 5;
 
             buttonRect.size = buttonSize;
-            return GUI.Button(buttonRect, text, LauncherStyles.CornerButton);
+            return GUI.Button(buttonRect, text, EditorStyles.CornerButton);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Scaffold.Launcher
+namespace Scaffold.Launcher.PackageHandler
 {
     public class PackageManifest
     {

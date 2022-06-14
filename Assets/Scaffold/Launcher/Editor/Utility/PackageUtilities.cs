@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Scaffold.Launcher.PackageHandler;
 
 namespace Scaffold.Launcher.Utilities
 {
@@ -15,13 +16,13 @@ namespace Scaffold.Launcher.Utilities
         public const string TestFile = "./Assets/Scaffold/Launcher/Runtime/Resources/TestFile.json";
         public const string ManifestLocal = "./Packages/manifest.json";
 
-        private static PackageModules Modules;
+        private static ScaffoldManifest Modules;
 
-        public static PackageModules GetPackageModules()
+        public static ScaffoldManifest GetPackageModules()
         {
             if (Modules == null)
             {
-                Modules = Resources.Load<PackageModules>("Modules");
+                Modules = Resources.Load<ScaffoldManifest>("Modules");
             }
             return Modules;
         }
@@ -34,7 +35,7 @@ namespace Scaffold.Launcher.Utilities
 
         public static List<PackagePath> FilterScaffoldModules(this PackageManifest manifest)
         {
-            PackageModules modules = GetPackageModules();
+            ScaffoldManifest modules = GetPackageModules();
             var currentModules = manifest.dependencies
                                 .Where(dependency => modules.ContainModule(dependency.Key))
                                 .Select(depency => modules.GetPackage(depency.Key))

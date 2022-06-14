@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Scaffold.Launcher.Editor
 {
-    internal static class LauncherStyles
+    internal static class EditorStyles
     {
 
         public static GUIStyle HeaderBox = new GUIStyle(GUI.skin.window)

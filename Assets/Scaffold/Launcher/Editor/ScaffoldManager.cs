@@ -7,17 +7,18 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using Scaffold.Launcher.PackageHandler;
+using System;
 
 namespace Scaffold.Launcher
 {
-    public class ScaffoldLauncher
+    public partial class ScaffoldManager
     {
-        public ScaffoldLauncher()
+        public ScaffoldManager()
         {
             _modules = PackageUtilities.GetPackageModules();
         }
 
-        private PackageModules _modules;
+        private ScaffoldManifest _modules;
 
         public List<PackagePath> GetPackages()
         {
@@ -29,6 +30,7 @@ namespace Scaffold.Launcher
             PackageManifest manifest = PackageUtilities.GetProjectManifest();
             return manifest.Contains(package.Key);
         }
+
         public void InstallPackage(PackagePath package)
         {
             List<string> dependencies = new List<string>(package.dependencies) { package.Key };
@@ -43,7 +45,7 @@ namespace Scaffold.Launcher
         public void UpdateModules()
         {
             string moduleUrl = PackageUtilities.RawModuleGit;
-            PackageModules modules = PackageUtilities.GetPackageModules();
+            ScaffoldManifest modules = PackageUtilities.GetPackageModules();
             GitFetcher.Fetch<string>(moduleUrl, onRequestCompleted: Callback);
 
             void Callback(string rawData)
