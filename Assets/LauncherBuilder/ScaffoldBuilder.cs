@@ -35,17 +35,17 @@ namespace Scaffold.Launcher.PackageHandler
 
             _buildingGraph = true;
             _dependencyGraph = new Dictionary<string, List<string>>();
-            ScaffoldManifest modules = PackageUtilities.GetPackageModules();
-            List<PackagePath> packages = modules.Modules;
+            ScaffoldManifest modules = ScaffoldManifest.Fetch();
+            List<ScaffoldModule> packages = modules.Modules;
 
             requestCount = packages.Count;
-            foreach (PackagePath package in packages)
+            foreach (ScaffoldModule package in packages)
             {
                 package.GetModuleDependencies((list) => AddToGraph(package, list));
             }
             TryResolveCircularDependencies();
         }
-        private void AddToGraph(PackagePath rootPackage, List<PackagePath> packages)
+        private void AddToGraph(ScaffoldModule rootPackage, List<ScaffoldModule> packages)
         {
             if (packages == null)
             {
@@ -85,9 +85,9 @@ namespace Scaffold.Launcher.PackageHandler
         private void BuildModuleFile()
         {
             Debug.Log("Building File");
-            ScaffoldManifest modules = PackageUtilities.GetPackageModules();
-            List<PackagePath> packages = modules.Modules;
-            foreach (PackagePath package in packages)
+            ScaffoldManifest modules = ScaffoldManifest.Fetch();
+            List<ScaffoldModule> packages = modules.Modules;
+            foreach (ScaffoldModule package in packages)
             {
                 package.dependencies = _dependencyGraph[package.Key];
             }

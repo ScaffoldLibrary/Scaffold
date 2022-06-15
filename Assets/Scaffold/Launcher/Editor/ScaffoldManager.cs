@@ -15,23 +15,23 @@ namespace Scaffold.Launcher
     {
         public ScaffoldManager()
         {
-            _modules = PackageUtilities.GetPackageModules();
+            _modules = ScaffoldManifest.Fetch();
         }
 
         private ScaffoldManifest _modules;
 
-        public List<PackagePath> GetPackages()
+        public List<ScaffoldModule> GetPackages()
         {
             return _modules.Modules;
         }
 
-        public bool IsPackageInstalled(PackagePath package)
+        public bool IsPackageInstalled(ScaffoldModule package)
         {
-            PackageManifest manifest = PackageUtilities.GetProjectManifest();
+            ProjectManifest manifest = new ProjectManifest();
             return manifest.Contains(package.Key);
         }
 
-        public void InstallPackage(PackagePath package)
+        public void InstallPackage(ScaffoldModule package)
         {
             List<string> dependencies = new List<string>(package.dependencies) { package.Key };
             foreach(string dependency in dependencies){
@@ -45,21 +45,21 @@ namespace Scaffold.Launcher
         public void UpdateModules()
         {
             string moduleUrl = PackageUtilities.RawModuleGit;
-            ScaffoldManifest modules = PackageUtilities.GetPackageModules();
+            ScaffoldManifest modules = ScaffoldManifest.Fetch();
             GitFetcher.Fetch<string>(moduleUrl, onRequestCompleted: Callback);
 
             void Callback(string rawData)
             {
                 JObject rawModules = JObject.Parse(rawData);
-                modules.Modules = rawModules["Modules"].ToObject<List<PackagePath>>();
+                modules.Modules = rawModules["Modules"].ToObject<List<ScaffoldModule>>();
                 File.WriteAllText(PackageUtilities.RawModuleLocal, rawData);
             }
         }
 
         public bool CheckForMissingDependencies(out List<string> missing)
         {
-            PackageManifest manifest = PackageUtilities.GetProjectManifest();
-            List<PackagePath> installedModules =  manifest.FilterScaffoldModules();
+            ProjectManifest manifest = ProjectManifest.Fetch();
+            List<ScaffoldModule> installedModules =  manifest.FilterScaffoldModules();
             missing = installedModules.SelectMany(m => m.dependencies)
                                            .Distinct()
                                            .Where(d => !installedModules.Any(m => m.Key == d))

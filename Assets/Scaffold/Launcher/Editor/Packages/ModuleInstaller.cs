@@ -35,7 +35,7 @@ namespace Scaffold.Launcher.PackageHandler
             IDictionary<string, string> manifestDependencies = GetDependency(manifest);
             foreach (var dependency in dependencies)
             {
-                PackagePath package = _modules.GetPackage(dependency);
+                ScaffoldModule package = _modules.GetPackage(dependency);
                 if (manifestDependencies.ContainsKey(package.Key))
                 {
                     continue;

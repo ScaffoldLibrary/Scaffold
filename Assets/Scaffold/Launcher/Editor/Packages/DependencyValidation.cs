@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Scaffold.Launcher.Utilities;
+using System.Collections;
 using UnityEngine;
 
 namespace Scaffold.Launcher.PackageHandler
@@ -7,10 +8,10 @@ namespace Scaffold.Launcher.PackageHandler
     {
         public PackageValidator()
         {
-
+            _manifest = ScaffoldManifest.Fetch();
         }
 
-        private ScaffoldManifest module;
+        private ScaffoldManifest _manifest;
 
         public bool ValidateDependencies()
         {

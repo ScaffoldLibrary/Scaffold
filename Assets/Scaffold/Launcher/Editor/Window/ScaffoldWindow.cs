@@ -44,7 +44,7 @@ namespace Scaffold.Launcher.Editor
 
         private void OnGUI()
         {
-            List<PackagePath> scaffoldPackages = Launcher.GetPackages();
+            List<ScaffoldModule> scaffoldPackages = Launcher.GetPackages();
 
             _scrollView = EditorGUILayout.BeginScrollView(_scrollView, GUIStyle.none, GUIStyle.none);
             EditorGUILayout.BeginVertical();
@@ -62,7 +62,7 @@ namespace Scaffold.Launcher.Editor
                 Launcher.UpdateModules();
             }
             EditorGUILayout.EndHorizontal();
-            foreach (PackagePath package in scaffoldPackages)
+            foreach (ScaffoldModule package in scaffoldPackages)
             {
                 bool installed = Launcher.IsPackageInstalled(package);
                 DrawModuleViewer(package, installed);
@@ -76,7 +76,7 @@ namespace Scaffold.Launcher.Editor
             EditorGUILayout.LabelField("Package State", EditorStyles.ProjectState, GUILayout.Width(150));
         }
 
-        private void DrawModuleViewer(PackagePath package, bool installed)
+        private void DrawModuleViewer(ScaffoldModule package, bool installed)
         {
             float maxWidth = CurrentWindowSize.x;
             Rect module = EditorGUILayout.BeginHorizontal(EditorStyles.ModuleBox);

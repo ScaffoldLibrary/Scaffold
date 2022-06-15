@@ -16,26 +16,9 @@ namespace Scaffold.Launcher.Utilities
         public const string TestFile = "./Assets/Scaffold/Launcher/Runtime/Resources/TestFile.json";
         public const string ManifestLocal = "./Packages/manifest.json";
 
-        private static ScaffoldManifest Modules;
-
-        public static ScaffoldManifest GetPackageModules()
+        public static List<ScaffoldModule> FilterScaffoldModules(this ProjectManifest manifest)
         {
-            if (Modules == null)
-            {
-                Modules = Resources.Load<ScaffoldManifest>("Modules");
-            }
-            return Modules;
-        }
-
-        public static PackageManifest GetProjectManifest()
-        {
-            string text = File.ReadAllText(ManifestLocal);
-            return JsonConvert.DeserializeObject<PackageManifest>(text);
-        }
-
-        public static List<PackagePath> FilterScaffoldModules(this PackageManifest manifest)
-        {
-            ScaffoldManifest modules = GetPackageModules();
+            ScaffoldManifest modules = ScaffoldManifest.Fetch();
             var currentModules = manifest.dependencies
                                 .Where(dependency => modules.ContainModule(dependency.Key))
                                 .Select(depency => modules.GetPackage(depency.Key))
@@ -43,18 +26,18 @@ namespace Scaffold.Launcher.Utilities
             return currentModules;
         }
 
-        public static void GetModuleManifest(this PackagePath package, Action<PackageManifest> callback)
+        public static void GetModuleManifest(this ScaffoldModule package, Action<ProjectManifest> callback)
         {
             string path = package.Manifest;
             GitFetcher.Fetch(path, onRequestCompleted: callback);
         }
 
-        public static void GetModuleDependencies(this PackagePath package, Action<List<PackagePath>> callback)
+        public static void GetModuleDependencies(this ScaffoldModule package, Action<List<ScaffoldModule>> callback)
         {
             string path = package.Manifest;
-            GitFetcher.Fetch<PackageManifest>(path, onRequestCompleted: Callback);
+            GitFetcher.Fetch<ProjectManifest>(path, onRequestCompleted: Callback);
 
-            void Callback(PackageManifest manifest)
+            void Callback(ProjectManifest manifest)
             {
                 callback?.Invoke(FilterScaffoldModules(manifest));
             }
