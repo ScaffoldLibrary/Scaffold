@@ -13,13 +13,20 @@ namespace Scaffold.Launcher.PackageHandler
         [MenuItem("Scaffold/Launcher/Update Scaffold Manifest")]
         public static void BuildScaffold()
         {
-            ScaffoldBuilder builder = new ScaffoldBuilder();
+            ScaffoldManifest manifest = ScaffoldManifest.Fetch();
+            ScaffoldBuilder builder = new ScaffoldBuilder(manifest);
             builder.UpdateModuleFile();
         }
     }
 
     public class ScaffoldBuilder
     {
+        public ScaffoldBuilder(ScaffoldManifest manifest)
+        {
+            _manifest = manifest;
+        }
+
+        private ScaffoldManifest _manifest;
         private int requestCount = 0;
         private bool _buildingGraph = false;
         private string _rawFilePath = "./Assets/Scaffold/Launcher/Runtime/Resources/RawModules.json";
@@ -35,16 +42,16 @@ namespace Scaffold.Launcher.PackageHandler
 
             _buildingGraph = true;
             _dependencyGraph = new Dictionary<string, List<string>>();
-            ScaffoldManifest modules = ScaffoldManifest.Fetch();
-            List<ScaffoldModule> packages = modules.Modules;
+            List<ScaffoldModule> modules = _manifest.Modules;
+            requestCount = modules.Count;
 
-            requestCount = packages.Count;
-            foreach (ScaffoldModule package in packages)
+            foreach (ScaffoldModule module in modules)
             {
-                package.GetModuleDependencies((list) => AddToGraph(package, list));
+                module.GetModuleDependencies((list) => AddToGraph(module, list));
             }
             TryResolveCircularDependencies();
         }
+
         private void AddToGraph(ScaffoldModule rootPackage, List<ScaffoldModule> packages)
         {
             if (packages == null)
@@ -63,6 +70,7 @@ namespace Scaffold.Launcher.PackageHandler
             _dependencyGraph[packageKey].AddRange(dependencyKeys);
             TryResolveCircularDependencies();
         }
+
         private void TryResolveCircularDependencies()
         {
             if (requestCount > 0)
@@ -71,6 +79,7 @@ namespace Scaffold.Launcher.PackageHandler
             }
             ResolveCircularDependencies();
         }
+
         private void ResolveCircularDependencies()
         {
             for (int i = _dependencyGraph.Count - 1; i >= 0; i--)
@@ -82,20 +91,21 @@ namespace Scaffold.Launcher.PackageHandler
 
             BuildModuleFile();
         }
+
         private void BuildModuleFile()
         {
             Debug.Log("Building File");
-            ScaffoldManifest modules = ScaffoldManifest.Fetch();
-            List<ScaffoldModule> packages = modules.Modules;
+            List<ScaffoldModule> packages = _manifest.Modules;
             foreach (ScaffoldModule package in packages)
             {
                 package.dependencies = _dependencyGraph[package.Key];
             }
 
-            string json = JsonConvert.SerializeObject(modules, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(_manifest, Formatting.Indented);
             File.WriteAllText(_rawFilePath, json);
             _buildingGraph = false;
         }
+
         private List<string> BuildPackageTree(List<string> entry)
         {
             List<string> closedList = new List<string>();

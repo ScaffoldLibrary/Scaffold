@@ -30,7 +30,10 @@ namespace Scaffold.Launcher.Runners
         [MenuItem("Scaffold/Launcher/Validate Dependencies")]
         private static bool CheckProjectDependencies()
         {
-            PackageValidator validator = new PackageValidator();
+            ScaffoldManifest scaffoldManifest = ScaffoldManifest.Fetch();
+            ProjectManifest projectManifest = ProjectManifest.Fetch();
+
+            DependencyValidator validator = new DependencyValidator(scaffoldManifest, projectManifest);
             bool dependencyState = validator.ValidateDependencies();
             if (dependencyState)
             {

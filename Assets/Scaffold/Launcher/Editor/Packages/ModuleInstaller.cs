@@ -8,10 +8,10 @@ namespace Scaffold.Launcher.PackageHandler
 {
     public class PackageInstaller
     {
-        public PackageInstaller(string path, ScaffoldManifest modules)
+        public PackageInstaller( ScaffoldManifest modules)
         {
-            _manifestFilePath = path;
             _modules = modules;
+            _manifestFilePath = PackageUtilities.ManifestLocal;
         }
 
         private string _manifestFilePath;

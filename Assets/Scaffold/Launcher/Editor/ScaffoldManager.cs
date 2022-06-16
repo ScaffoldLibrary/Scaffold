@@ -11,79 +11,67 @@ using System;
 
 namespace Scaffold.Launcher
 {
-    public partial class ScaffoldManager
+    public class ScaffoldManager
     {
         public ScaffoldManager()
         {
-            _modules = ScaffoldManifest.Fetch();
+            _scaffoldManifest = ScaffoldManifest.Fetch();
+            _projectManifest = ProjectManifest.Fetch();
         }
 
-        private ScaffoldManifest _modules;
+        private ScaffoldManifest _scaffoldManifest;
+        private ProjectManifest _projectManifest;
 
-        public List<ScaffoldModule> GetPackages()
+        public List<ScaffoldModule> GetModules()
         {
-            return _modules.Modules;
+            return _scaffoldManifest.Modules;
         }
 
         public bool IsPackageInstalled(ScaffoldModule package)
         {
-            ProjectManifest manifest = new ProjectManifest();
-            return manifest.Contains(package.Key);
+            return _projectManifest.Contains(package.Key);
         }
 
         public void InstallPackage(ScaffoldModule package)
         {
-            List<string> dependencies = new List<string>(package.dependencies) { package.Key };
-            foreach(string dependency in dependencies){
-                Debug.Log(dependency);
-            }
-            InstallPackages(dependencies);
-            //try Install
-            //Show Popup
+            //List<string> dependencies = new List<string>(package.dependencies) { package.Key };
+            //foreach(string dependency in dependencies){
+            //    Debug.Log(dependency);
+            //}
+
+            ////TODO: Add install request popup here
+            //InstallPackages(dependencies);
+            //PackageInstaller installer = new PackageInstaller(_scaffoldManifest);
+            //installer.Install(packages);
         }
 
         public void UpdateModules()
         {
             string moduleUrl = PackageUtilities.RawModuleGit;
-            ScaffoldManifest modules = ScaffoldManifest.Fetch();
             GitFetcher.Fetch<string>(moduleUrl, onRequestCompleted: Callback);
 
             void Callback(string rawData)
             {
                 JObject rawModules = JObject.Parse(rawData);
-                modules.Modules = rawModules["Modules"].ToObject<List<ScaffoldModule>>();
+                _scaffoldManifest.Modules = rawModules["Modules"].ToObject<List<ScaffoldModule>>();
                 File.WriteAllText(PackageUtilities.RawModuleLocal, rawData);
             }
         }
 
-        public bool CheckForMissingDependencies(out List<string> missing)
+        public bool CheckForMissingDependencies()
         {
-            ProjectManifest manifest = ProjectManifest.Fetch();
-            List<ScaffoldModule> installedModules =  manifest.FilterScaffoldModules();
-            missing = installedModules.SelectMany(m => m.dependencies)
-                                           .Distinct()
-                                           .Where(d => !installedModules.Any(m => m.Key == d))
-                                           .ToList();
-            return missing != null && missing.Count > 0;
-        }
-
-        private void InstallPackages(List<string> packages)
-        {
-            PackageInstaller installer = new PackageInstaller(PackageUtilities.ManifestLocal, _modules);
-            installer.Install(packages);
-        }
-
-        private void InstallPackage(string package)
-        {
-            InstallPackages(new List<string>() { package });
+            DependencyValidator validator = new DependencyValidator(_scaffoldManifest, _projectManifest);
+            return validator.ValidateDependencies();
         }
 
         public void InstallMissingDependencies()
         {
-            if(CheckForMissingDependencies(out List<string> missing))
+            DependencyValidator validator = new DependencyValidator(_scaffoldManifest, _projectManifest);
+            if(validator.ValidateDependencies(out List<ScaffoldModule> missing))
             {
-                InstallPackages(missing);
+                //install
             }
         }
+
     }
 }

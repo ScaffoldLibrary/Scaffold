@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10abd1473eb27b9489eb7bb90db250fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d248268d80c7f94f9f6d1d08dd74024, type: 3}
   m_Name: Modules
   m_EditorClassIdentifier: 
   Launcher:
@@ -18,16 +18,9 @@ MonoBehaviour:
     Path: https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher
     Version: 0.0.1
     Manifest: 
-    Description: Scaffold Framework Package controller, managing and installing dependencies
-    dependencies: []
-  Modules:
-  - Name: Builder
-    Key: com.scaffold.builder
-    Path: https://github.com/MgCohen/Scaffold-Builder.git?path=/Assets/Scaffold/Builder
-    Version: 0.0.1
-    Manifest: https://github.com/MgCohen/Scaffold-Builder/raw/main/Packages/manifest.json
     Description: 
     dependencies: []
+  Modules:
   - Name: Events
     Key: com.scaffold.events
     Path: https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events

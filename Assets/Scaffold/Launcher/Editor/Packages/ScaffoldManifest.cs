@@ -5,18 +5,19 @@ using System.Linq;
 
 namespace Scaffold.Launcher.PackageHandler
 {
+    [CreateAssetMenu(menuName = "Scaffold/Create Manifest")]
     public class ScaffoldManifest : ScriptableObject
     {
         public static ScaffoldManifest Fetch()
         {
-            if (mModules == null)
+            if (_manifest == null)
             {
-                mModules = Resources.Load<ScaffoldManifest>("Modules");
+                _manifest = Resources.Load<ScaffoldManifest>("Modules");
             }
-            return mModules;
+            return _manifest;
         }
 
-        private static ScaffoldManifest mModules;
+        private static ScaffoldManifest _manifest;
 
         public ScaffoldModule Launcher = new ScaffoldModule();
         public List<ScaffoldModule> Modules = new List<ScaffoldModule>();

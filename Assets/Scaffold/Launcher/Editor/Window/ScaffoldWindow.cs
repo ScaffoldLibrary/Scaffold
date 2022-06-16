@@ -30,41 +30,72 @@ namespace Scaffold.Launcher.Editor
             }
         }
         private static ScaffoldWindow _window;
-        private static ScaffoldManager Launcher
+        private static ScaffoldManager Scaffold
         {
             get
             {
-                if (_launcher == null) _launcher = new ScaffoldManager();
-                return _launcher;
+                if (_scaffold == null) _scaffold = new ScaffoldManager();
+                return _scaffold;
             }
         }
-        private static ScaffoldManager _launcher;
+        private static ScaffoldManager _scaffold;
 
         private Vector2 _scrollView;
 
         private void OnGUI()
         {
-            List<ScaffoldModule> scaffoldPackages = Launcher.GetPackages();
+            List<ScaffoldModule> modules = Scaffold.GetModules();
+            bool notConnected = Application.internetReachability != NetworkReachability.NotReachable;
 
             _scrollView = EditorGUILayout.BeginScrollView(_scrollView, GUIStyle.none, GUIStyle.none);
             EditorGUILayout.BeginVertical();
             GUILayout.Box("Scaffold", EditorStyles.HeaderBox);
-            if (Application.internetReachability == NetworkReachability.NotReachable)
+            EditorGUILayout.LabelField("this is my scaffold project description, version 0.1");
+            if (notConnected)
             {
                 EditorGUILayout.HelpBox("Please check your internet connection, connection is needed to install and update the packages", MessageType.Error);
+                EditorGUILayout.Space();
             }
 
-            EditorGUILayout.LabelField("this is my scaffold project description, version 0.1");
-            EditorGUILayout.BeginHorizontal();
-            DrawProjectState();
-            if (GUILayout.Button("Update Modules", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
+            EditorGUI.BeginDisabledGroup(notConnected);
             {
-                Launcher.UpdateModules();
+                TryDrawDependencyFixer();
+                EditorGUILayout.BeginHorizontal();
+                DrawProjectState();
+                if (GUILayout.Button("Update Modules", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
+                {
+                    Scaffold.UpdateModules();
+                }
+                EditorGUILayout.EndHorizontal();
+                DrawModules(modules);
             }
-            EditorGUILayout.EndHorizontal();
-            foreach (ScaffoldModule package in scaffoldPackages)
+        }
+
+        private void TryDrawDependencyFixer()
+        {
+            if (Scaffold.CheckForMissingDependencies())
             {
-                bool installed = Launcher.IsPackageInstalled(package);
+                //draw red box with button to install everything
+                Rect module = EditorGUILayout.BeginVertical(EditorStyles.ModuleBox);
+                EditorGUILayout.Space();
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("PING");
+                GUILayout.Label("You have a few missing dependencies, want to fix it?");
+                if (GUILayout.Button("Fix dependencies"))
+                {
+
+                }
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.Space();
+                EditorGUILayout.EndVertical();
+            }
+        }
+
+        private void DrawModules(List<ScaffoldModule> modules)
+        {
+            foreach (ScaffoldModule package in modules)
+            {
+                bool installed = Scaffold.IsPackageInstalled(package);
                 DrawModuleViewer(package, installed);
             }
             EditorGUILayout.EndVertical();
@@ -94,7 +125,7 @@ namespace Scaffold.Launcher.Editor
             if (CornerButton(packageState, module, verticalRight))
             {
                 Debug.Log("Trying to install");
-                Launcher.InstallPackage(package);
+                Scaffold.InstallPackage(package);
             }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndVertical();
