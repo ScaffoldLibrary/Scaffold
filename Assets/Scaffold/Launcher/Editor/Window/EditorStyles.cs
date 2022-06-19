@@ -33,6 +33,13 @@ namespace Scaffold.Launcher.Editor
             stretchHeight = false,
         };
 
+        public static GUIStyle WarningBox = new GUIStyle(GUI.skin.window)
+        {
+            margin = new RectOffset(5, 5, 20, 20),
+            padding = new RectOffset(5, 5, 5, 5),
+            stretchHeight = false,
+        };  
+
         public static GUIStyle Button = new GUIStyle(GUI.skin.button)
         {
             stretchWidth = false,
@@ -55,6 +62,11 @@ namespace Scaffold.Launcher.Editor
             wordWrap = true,
             padding = new RectOffset(5, 5, 0, 5),
             normal = new GUIStyleState() { textColor = Color.white }
+        };
+
+        public static GUIStyle CenterLabel = new GUIStyle(GUI.skin.label)
+        {
+            alignment = TextAnchor.UpperCenter,
         };
 
         public static Texture2D ColoredTexture(Color color)

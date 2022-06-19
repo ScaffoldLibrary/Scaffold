@@ -14,8 +14,8 @@ namespace Scaffold.Launcher.Runners
         [InitializeOnLoadMethod]
         private static void ValidateProject()
         {
-            bool lastInstall = GetKey(InstallKey);
-            bool lastValidation = GetKey(ValidationKey);
+            bool lastInstall = GetKey(InstallKey, true);
+            bool lastValidation = GetKey(ValidationKey, false);
             if(lastInstall == lastValidation)
             {
                 return;
@@ -48,9 +48,9 @@ namespace Scaffold.Launcher.Runners
             }
         }
 
-        private static bool GetKey(string key)
+        private static bool GetKey(string key, bool defaultValue)
         {
-            return PlayerPrefs.GetInt(key) == 1;
+            return PlayerPrefs.GetInt(key, defaultValue) == 1;
         }
 
         private static void SetKey(string key, bool state)

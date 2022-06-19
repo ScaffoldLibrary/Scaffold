@@ -3,13 +3,15 @@ using UnityEngine;
 using Scaffold.Launcher.PackageHandler;
 using Scaffold.Launcher;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace Scaffold.Launcher.Editor
 {
     public class ScaffoldWindow : EditorWindow
     {
         [MenuItem("Scaffold/Open Launcher")]
-        public static void OpenLauncher()
+        private static void OpenLauncher()
         {
             Window.Show();
             Window.minSize = _minWindowSize;
@@ -42,51 +44,88 @@ namespace Scaffold.Launcher.Editor
 
         private Vector2 _scrollView;
 
+        private List<ModuleOption> InstalledOptions
+        {
+            get
+            {
+                if (_installedOptions == null)
+                {
+                    _installedOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Uninstall", Scaffold.UninstallModule), new ModuleOption("Update", Scaffold.UpdateModule) };
+                }
+                return _installedOptions;
+            }
+        }
+        private List<ModuleOption> _installedOptions;
+
+        private List<ModuleOption> UninstalledOptions
+        {
+            get
+            {
+                if (_uninstalledOptions == null)
+                {
+                    _uninstalledOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Install", Scaffold.InstallModule), new ModuleOption("Check for Update", Scaffold.CheckForUpdates) };
+                }
+                return _uninstalledOptions;
+            }
+        }
+        private List<ModuleOption> _uninstalledOptions;
+
         private void OnGUI()
         {
             List<ScaffoldModule> modules = Scaffold.GetModules();
-            bool notConnected = Application.internetReachability != NetworkReachability.NotReachable;
+            ScaffoldModule launcher = Scaffold.GetLauncher();
+            bool notConnected = Application.internetReachability == NetworkReachability.NotReachable;
 
             _scrollView = EditorGUILayout.BeginScrollView(_scrollView, GUIStyle.none, GUIStyle.none);
-            EditorGUILayout.BeginVertical();
-            GUILayout.Box("Scaffold", EditorStyles.HeaderBox);
-            EditorGUILayout.LabelField("this is my scaffold project description, version 0.1");
-            if (notConnected)
             {
-                EditorGUILayout.HelpBox("Please check your internet connection, connection is needed to install and update the packages", MessageType.Error);
-                EditorGUILayout.Space();
-            }
-
-            EditorGUI.BeginDisabledGroup(notConnected);
-            {
-                TryDrawDependencyFixer();
-                EditorGUILayout.BeginHorizontal();
-                DrawProjectState();
-                if (GUILayout.Button("Update Modules", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
+                EditorGUILayout.BeginVertical();
                 {
-                    Scaffold.UpdateModules();
+                    GUILayout.Box("Scaffold", EditorStyles.HeaderBox);
+                    EditorGUILayout.LabelField(launcher.InstalledVersion, EditorStyles.CenterLabel);
+                    if (notConnected)
+                    {
+                        EditorGUILayout.HelpBox("Please check your internet connection, connection is needed to install and update the packages", MessageType.Error);
+                        EditorGUILayout.Space();
+                    }
+
+                    EditorGUI.BeginDisabledGroup(notConnected);
+                    {
+                        TryDrawDependencyFixer();
+                        EditorGUILayout.BeginHorizontal();
+                        {
+                            DrawProjectState();
+                            if (GUILayout.Button("Update Modules", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
+                            {
+                                Scaffold.CheckForUpdates();
+                            }
+                        }
+                        EditorGUILayout.EndHorizontal();
+                        DrawModules(modules);
+                    }
                 }
-                EditorGUILayout.EndHorizontal();
-                DrawModules(modules);
+                EditorGUILayout.EndVertical();
             }
+            EditorGUILayout.EndScrollView();
         }
 
         private void TryDrawDependencyFixer()
         {
             if (Scaffold.CheckForMissingDependencies())
             {
-                //draw red box with button to install everything
-                Rect module = EditorGUILayout.BeginVertical(EditorStyles.ModuleBox);
-                EditorGUILayout.Space();
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("PING");
-                GUILayout.Label("You have a few missing dependencies, want to fix it?");
-                if (GUILayout.Button("Fix dependencies"))
+                Rect module = EditorGUILayout.BeginVertical(EditorStyles.WarningBox);
                 {
-
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        GUIContent icon = EditorGUIUtility.IconContent("_Help");
+                        GUILayout.Label(icon, GUILayout.MaxWidth(25));
+                        GUILayout.Label("You have missing dependencies, fix now?");
+                        if (GUILayout.Button("Fix"))
+                        {
+                            Scaffold.InstallMissingDependencies();
+                        }
+                    }
+                    EditorGUILayout.EndHorizontal();
                 }
-                EditorGUILayout.EndHorizontal();
-                EditorGUILayout.Space();
                 EditorGUILayout.EndVertical();
             }
         }
@@ -95,11 +134,10 @@ namespace Scaffold.Launcher.Editor
         {
             foreach (ScaffoldModule package in modules)
             {
-                bool installed = Scaffold.IsPackageInstalled(package);
+                bool installed = Scaffold.IsModuleInstalled(package);
                 DrawModuleViewer(package, installed);
             }
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.EndScrollView();
+
         }
 
         private void DrawProjectState()
@@ -107,40 +145,55 @@ namespace Scaffold.Launcher.Editor
             EditorGUILayout.LabelField("Package State", EditorStyles.ProjectState, GUILayout.Width(150));
         }
 
-        private void DrawModuleViewer(ScaffoldModule package, bool installed)
+        private void DrawModuleViewer(ScaffoldModule module, bool installed)
         {
             float maxWidth = CurrentWindowSize.x;
-            Rect module = EditorGUILayout.BeginHorizontal(EditorStyles.ModuleBox);
-
-            //Div 1
-            Rect verticalLeft = EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3 * 2));
-            GUILayout.Label($"{package.Name} - {package.Version}", EditorStyles.ModuleName);
-            GUILayout.Label(package.Description, EditorStyles.ModuleDescription);
-            EditorGUILayout.EndVertical();
-
-            //Div 2
-            Rect verticalRight = EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3));
-            EditorGUI.BeginDisabledGroup(installed);
-            string packageState = installed ? "Installed" : "Install";
-            if (CornerButton(packageState, module, verticalRight))
+            Rect rect = EditorGUILayout.BeginHorizontal(EditorStyles.ModuleBox);
             {
-                Debug.Log("Trying to install");
-                Scaffold.InstallPackage(package);
+                EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3 * 2));
+                {
+                    string version = installed ? module.InstalledVersion : module.LatestVersion;
+                    GUILayout.Label($"{module.Name} - {version}", EditorStyles.ModuleName);
+                    GUILayout.Label(module.Description, EditorStyles.ModuleDescription);
+                }
+                EditorGUILayout.EndVertical();
+
+                EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3));
+                {
+                    DrawModuleOptions(rect, module, installed);
+                }
+                EditorGUILayout.EndVertical();
             }
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
         }
 
-        private bool CornerButton(string text, Rect divRect, Rect groupRect)
+        private void DrawModuleOptions(Rect rect, ScaffoldModule module, bool installed)
         {
-            Rect buttonRect = new Rect(divRect);
+            List<ModuleOption> options = installed ? InstalledOptions : UninstalledOptions;
+            Rect buttonRect = new Rect(rect);
             Vector2 buttonSize = new Vector2(100, 20);
             buttonRect.x = buttonRect.width - buttonSize.x;
             buttonRect.y += 5;
-
             buttonRect.size = buttonSize;
-            return GUI.Button(buttonRect, text, EditorStyles.CornerButton);
+
+            string[] optionNames = options.Select(o => o.Label).ToArray();
+            int selectedIndex = EditorGUI.Popup(buttonRect, 0, optionNames);
+            if (selectedIndex > 0)
+            {
+                options[selectedIndex].Action?.Invoke(module);
+            }
         }
+    }
+
+    public struct ModuleOption
+    {
+        public ModuleOption(string label, Action<ScaffoldModule> action)
+        {
+            Label = label;
+            Action = action;
+        }
+
+        public string Label;
+        public Action<ScaffoldModule> Action;
     }
 }

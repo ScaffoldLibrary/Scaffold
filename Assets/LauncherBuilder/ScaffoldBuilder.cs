@@ -98,7 +98,7 @@ namespace Scaffold.Launcher.PackageHandler
             List<ScaffoldModule> packages = _manifest.Modules;
             foreach (ScaffoldModule package in packages)
             {
-                package.dependencies = _dependencyGraph[package.Key];
+                package.Dependencies = _dependencyGraph[package.Key];
             }
 
             string json = JsonConvert.SerializeObject(_manifest, Formatting.Indented);

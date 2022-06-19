@@ -25,40 +25,31 @@ namespace Scaffold.Launcher.PackageHandler
         public bool ValidateDependencies(out List<ScaffoldModule> missingModules)
         {
             List<ScaffoldModule> modules = _projectManifest.FilterScaffoldModules();
-            missingModules = modules.SelectMany(m => m.dependencies)
+            missingModules = modules.SelectMany(m => m.Dependencies)
                                     .Distinct()
                                     .Where(d => !modules.Any(m => m.Key == d))
                                     .Where(d => _scaffoldManifest.ContainModule(d))
-                                    .Select(d => _scaffoldManifest.GetPackage(d))
+                                    .Select(d => _scaffoldManifest.GetModule(d))
                                     .ToList();
 
             return missingModules != null && missingModules.Count > 0;
         }
+
+        public bool CheckForDependingModules(ScaffoldModule module, out List<ScaffoldModule> modules)
+        {
+            List<ScaffoldModule> installedModules = _projectManifest.FilterScaffoldModules();
+            modules = installedModules.Where(m => _scaffoldManifest.GetModuleDependencies(m).Contains(module)).ToList();
+            return modules.Count > 0;
+        }
+
+        public bool CheckForDepencyDependers(ScaffoldModule module)
+        {
+            List<ScaffoldModule> moduleDependencies = _scaffoldManifest.GetModuleDependencies(module);
+            List<ScaffoldModule> installedModules = _projectManifest.FilterScaffoldModules();
+            List<ScaffoldModule> projectDependencies = installedModules.SelectMany(m => _scaffoldManifest.GetModuleDependencies(m))
+                                                                       .Distinct()
+                                                                       .ToList();
+            return moduleDependencies.Except(projectDependencies).Any();
+        }
     }
 }
-        //public List<PackagePath> GetPackageDependencies(PackagePath package)
-        //{
-        //    if (!Modules.Contains(package))
-        //    {
-        //        return null;
-        //    }
-
-        //    List<PackagePath> dependencies = new List<PackagePath>();
-        //    foreach (string packageName in package.dependencies)
-        //    {
-        //        PackagePath dependency = GetPackage(packageName);
-        //        if (dependency == null)
-        //        {
-        //            continue;
-        //        }
-
-        //        if (dependencies.Contains(dependency))
-        //        {
-        //            continue;
-        //        }
-
-        //        dependencies.Add(dependency);
-        //    }
-
-        //    return dependencies;
-        //}

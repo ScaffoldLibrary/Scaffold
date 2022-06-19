@@ -3,48 +3,61 @@ using Newtonsoft.Json.Linq;
 using Scaffold.Launcher.Utilities;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 namespace Scaffold.Launcher.PackageHandler
 {
-    public class PackageInstaller
+    public class ModuleInstaller
     {
-        public PackageInstaller( ScaffoldManifest modules)
+        public ModuleInstaller(ProjectManifest manifest, DependencyValidator dependencies)
         {
-            _modules = modules;
-            _manifestFilePath = PackageUtilities.ManifestLocal;
+            _manifest = manifest;
+            _dependencies = dependencies;
         }
 
-        private string _manifestFilePath;
-        private ScaffoldManifest _modules;
+        private ProjectManifest _manifest;
+        private DependencyValidator _dependencies;
 
-        private JObject GetManifest()
+        public void Install(List<ScaffoldModule> modules)
         {
-            string text = File.ReadAllText(_manifestFilePath);
-            return JObject.Parse(text);
-        }
-
-        private IDictionary<string, string> GetDependency(JObject jObject)
-        {
-            Dictionary<string, string> rawManifest = jObject["dependencies"].ToObject<Dictionary<string, string>>();
-            return rawManifest;
-        }
-
-        public void Install(List<string> dependencies)
-        {
-            JObject manifest = GetManifest();
-            IDictionary<string, string> manifestDependencies = GetDependency(manifest);
-            foreach (var dependency in dependencies)
+            foreach (ScaffoldModule module in modules)
             {
-                ScaffoldModule package = _modules.GetPackage(dependency);
-                if (manifestDependencies.ContainsKey(package.Key))
-                {
-                    continue;
-                }
-                manifestDependencies.Add(package.Key, package.Path);
+                Install(module, false);
             }
-            manifest["dependencies"] = JToken.FromObject(manifestDependencies);
-            string json = JsonConvert.SerializeObject(manifest, Formatting.Indented);
-            File.WriteAllText(_manifestFilePath, json);
+            _manifest.Save();
+        }
+
+        public void Install(ScaffoldModule module, bool saveOnInstall)
+        {
+            if (!_manifest.Contains(module.Key))
+            {
+                module.InstalledVersion = module.LatestVersion;
+                _manifest.dependencies.Add(module.Key, module.Path);
+                if (saveOnInstall)
+                {
+                    _manifest.Save();
+                }
+            }
+        }
+
+        public void TryUninstall(ScaffoldModule module, bool saveOnUninstall)
+        {
+            if (!_manifest.Contains(module.Key))
+            {
+                Debug.Log($"Tried to uninstall a module that was never installed {module.Key}");
+                return;
+            }
+
+            if(_dependencies.CheckForDependingModules(module, out List<ScaffoldModule> dependers))
+            {
+                //you sure you want to remove? other modules depende on this
+            }
+
+            _manifest.dependencies.Remove(module.Key);
+            if (saveOnUninstall)
+            {
+                _manifest.Save();
+            }
         }
     }
 }
