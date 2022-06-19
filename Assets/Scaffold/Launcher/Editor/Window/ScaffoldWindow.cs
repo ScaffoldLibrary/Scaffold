@@ -8,10 +8,10 @@ using System.Linq;
 
 namespace Scaffold.Launcher.Editor
 {
-    public class ScaffoldWindow : EditorWindow
+    internal class ScaffoldWindow : EditorWindow
     {
         [MenuItem("Scaffold/Open Launcher")]
-        private static void OpenLauncher()
+        public static void OpenLauncher()
         {
             Window.Show();
             Window.minSize = _minWindowSize;

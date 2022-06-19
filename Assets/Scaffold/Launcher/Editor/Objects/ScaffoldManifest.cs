@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace Scaffold.Launcher.PackageHandler
+namespace Scaffold.Launcher.Objects
 {
     [CreateAssetMenu(menuName = "Scaffold/Create Manifest")]
     public class ScaffoldManifest : ScriptableObject
@@ -18,17 +18,18 @@ namespace Scaffold.Launcher.PackageHandler
         }
         private static ScaffoldManifest _cachedManifest;
 
+        public string Hash;
         public ScaffoldModule Launcher = new ScaffoldModule();
         public List<ScaffoldModule> Modules = new List<ScaffoldModule>();
 
-        public bool ContainModule(string moduleKey)
+        public bool ContainsModule(string moduleKey)
         {
-            return Modules.Any(package => package.Key == moduleKey);
+            return Modules.Any(module => module.Key == moduleKey);
         }
 
         public ScaffoldModule GetModule(string moduleKey)
         {
-            if (ContainModule(moduleKey))
+            if (ContainsModule(moduleKey))
             {
                 return Modules.First(package => package.Key == moduleKey);
             }
@@ -44,7 +45,7 @@ namespace Scaffold.Launcher.PackageHandler
             List<ScaffoldModule> modules = new List<ScaffoldModule>();
             foreach (string moduleKey in module.Dependencies)
             {
-                if (!ContainModule(moduleKey))
+                if (!ContainsModule(moduleKey))
                 {
                     Debug.Log($"Scaffold Manifest is missing the required module {moduleKey}");
                     continue;
@@ -52,6 +53,16 @@ namespace Scaffold.Launcher.PackageHandler
                 modules.Add(GetModule(moduleKey));
             }
             return modules;
+        }
+
+        public void AddModule(ScaffoldModule module)
+        {
+            if (ContainsModule(module.Key))
+            {
+                return;
+            }
+
+            Modules.Add(module);
         }
     }
 }

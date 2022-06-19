@@ -4,6 +4,7 @@ using Scaffold.Launcher.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Scaffold.Launcher.Objects;
 
 namespace Scaffold.Launcher.PackageHandler
 {
@@ -32,7 +33,7 @@ namespace Scaffold.Launcher.PackageHandler
             if (!_manifest.Contains(module.Key))
             {
                 module.InstalledVersion = module.LatestVersion;
-                _manifest.dependencies.Add(module.Key, module.Path);
+                _manifest.Dependencies.Add(module.Key, module.Path);
                 if (saveOnInstall)
                 {
                     _manifest.Save();
@@ -53,7 +54,7 @@ namespace Scaffold.Launcher.PackageHandler
                 //you sure you want to remove? other modules depende on this
             }
 
-            _manifest.dependencies.Remove(module.Key);
+            _manifest.Dependencies.Remove(module.Key);
             if (saveOnUninstall)
             {
                 _manifest.Save();

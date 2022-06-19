@@ -16,7 +16,7 @@ namespace Scaffold.Launcher.Runners
         {
             bool lastInstall = GetKey(InstallKey, true);
             bool lastValidation = GetKey(ValidationKey, false);
-            if(lastInstall == lastValidation)
+            if (lastInstall == lastValidation)
             {
                 return;
             }
@@ -50,7 +50,8 @@ namespace Scaffold.Launcher.Runners
 
         private static bool GetKey(string key, bool defaultValue)
         {
-            return PlayerPrefs.GetInt(key, defaultValue) == 1;
+            int defaulted = defaultValue ? 1 : 0;
+            return PlayerPrefs.GetInt(key, defaulted) == 1;
         }
 
         private static void SetKey(string key, bool state)

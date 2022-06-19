@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 405916660}
   - component: {fileID: 405916661}
+  - component: {fileID: 405916659}
   m_Layer: 0
   m_Name: Scaffold
   m_TagString: Untagged
@@ -140,6 +141,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &405916659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 405916658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd752f16422f954d89677d89aae83a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &405916660
 Transform:
   m_ObjectHideFlags: 0

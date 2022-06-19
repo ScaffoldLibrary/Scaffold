@@ -2,34 +2,38 @@
 using Scaffold.Launcher.Utilities;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 
-namespace Scaffold.Launcher.PackageHandler
+namespace Scaffold.Launcher.Objects
 {
     public class ProjectManifest
     {
         public static ProjectManifest Fetch()
         {
-            if (_cachedManifest == null)
+            if (CachedManifest == null)
             {
-                string text = File.ReadAllText(PackageUtilities.ManifestLocal);
-                _cachedManifest = JsonConvert.DeserializeObject<ProjectManifest>(text);
+                string text = File.ReadAllText(ManifestPath);
+                CachedManifest = JsonConvert.DeserializeObject<ProjectManifest>(text);
             }
 
-            return _cachedManifest;
+            return CachedManifest;
         }
-        private static ProjectManifest _cachedManifest;
 
-        public Dictionary<string, string> dependencies;
+        private static ProjectManifest CachedManifest;
+        private const string ManifestPath = "./Packages/manifest.json";
+
+        public Dictionary<string, string> Dependencies;
 
         public bool Contains(string package)
         {
-            return dependencies.ContainsKey(package);
+            return Dependencies.ContainsKey(package);
         }
 
         public void Save()
         {
             string manifestText = JsonConvert.SerializeObject(this);
-            File.WriteAllText(PackageUtilities.ManifestLocal, manifestText);
+            File.WriteAllText(ManifestPath, manifestText);
+            AssetDatabase.Refresh();
         }
     }
 }

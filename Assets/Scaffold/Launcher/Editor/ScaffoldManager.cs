@@ -29,6 +29,9 @@ namespace Scaffold.Launcher
         private DependencyValidator _dependecyValidation;
         private ModuleInstaller _moduleInstaller;
 
+        public bool Busy => _operations.Count > 0;
+        private List<string> _operations = new List<string>();
+
         public List<ScaffoldModule> GetModules()
         {
             return _scaffoldManifest.Modules;
@@ -54,7 +57,6 @@ namespace Scaffold.Launcher
             _moduleInstaller.TryUninstall(module, true);
         }
 
-
         public bool CheckForMissingDependencies()
         {
             return _dependecyValidation.ValidateDependencies();
@@ -67,28 +69,43 @@ namespace Scaffold.Launcher
                 _moduleInstaller.Install(missing);
             }
         }
+
         public void CheckForUpdates(ScaffoldModule module)
         {
 
         }
 
-        public void UpdateModule(ScaffoldModule module)
+        public void CheckForAllUpdates()
         {
-
+            //get manifest
+            //foreach one, try to get module
+            //if yes, update info
+            //if no, add new module
         }
 
+        public void UpdateModule(ScaffoldModule module)
+        {
+            if(module.LatestVersion == module.InstalledVersion)
+            {
+                Debug.Log($"Installed version of {module.Name} is already the Latest");
+                return;
+            }
+
+            UpdateModuleAsync(module);
+        }
 
         private async void UpdateModuleAsync(ScaffoldModule module)
         {
             string moduleGitPath = module.Path;
             AddRequest request = Client.Add(moduleGitPath);
-
+            _operations.Add("updating");
             while (!request.IsCompleted)
             {
                 await Task.Delay(100);
             }
-
-            if(request.Status != StatusCode.Success)
+            _operations.Remove("updating");
+            
+            if (request.Status != StatusCode.Success)
             {
                 return;
             }

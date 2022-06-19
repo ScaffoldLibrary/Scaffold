@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using Scaffold.Launcher.PackageHandler;
+using System.Net.Http;
 
 namespace Scaffold.Launcher.Utilities
 {
@@ -14,32 +15,54 @@ namespace Scaffold.Launcher.Utilities
         public const string RawModuleGit = "https://github.com/MgCohen/Scaffold-Launcher/raw/main/Assets/Scaffold/Launcher/Editor/Resources/RawModules.json";
         public const string RawModuleLocal = "./Assets/Scaffold/Launcher/Editor/Resources/RawModules.json";
         public const string TestFile = "./Assets/Scaffold/Launcher/Editor/Resources/TestFile.json";
-        public const string ManifestLocal = "./Packages/manifest.json";
+
+        public const string ManifestUrl = "https://e227iwvnp2dov6ddpl3ujveyyi0vahcu.lambda-url.us-east-1.on.aws/";
 
         public static List<ScaffoldModule> FilterScaffoldModules(this ProjectManifest manifest)
         {
             ScaffoldManifest modules = ScaffoldManifest.Fetch();
-            var currentModules = manifest.dependencies
-                                .Where(dependency => modules.ContainModule(dependency.Key))
+            var currentModules = manifest.Dependencies
+                                .Where(dependency => modules.ContainsModule(dependency.Key))
                                 .Select(depency => modules.GetModule(depency.Key))
                                 .ToList();
             return currentModules;
         }
 
-        public static void GetModuleManifest(this ScaffoldModule package, Action<ProjectManifest> callback)
+        public async static void FetchNewScaffoldManifest()
         {
-            string path = package.Path;
-            GitFetcher.Fetch(path, onRequestCompleted: callback);
-        }
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync(ManifestUrl);
 
-        public static void GetModuleDependencies(this ScaffoldModule package, Action<List<ScaffoldModule>> callback)
-        {
-            string path = package.Path;
-            GitFetcher.Fetch<ProjectManifest>(path, onRequestCompleted: Callback);
-
-            void Callback(ProjectManifest manifest)
+            if (!response.IsSuccessStatusCode)
             {
-                callback?.Invoke(FilterScaffoldModules(manifest));
+                return;
+            }
+
+            string content = response.Content.ReadAsStringAsync().Result;
+            ScaffoldManifest manifest = ScaffoldManifest.Fetch();
+            ScaffoldManifest newManifest = JsonConvert.DeserializeObject<ScaffoldManifest>(content);
+
+            if(newManifest.Hash == manifest.Hash)
+            {
+                Debug.Log("Manifest file is up to date");
+                return;
+            }
+
+            foreach(ScaffoldModule module in newManifest.Modules)
+            {
+                if (!manifest.ContainsModule(module.Key))
+                {
+                    manifest.AddModule(module);
+                    continue;
+                }
+
+                ScaffoldModule currentModule = manifest.GetModule(module.Key);
+                if(currentModule.LatestVersion == module.LatestVersion)
+                {
+                    continue;
+                }
+
+                currentModule.UpdateModuleInfo(module);
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Scaffold.Launcher.Objects;
 
 namespace Scaffold.Launcher.PackageHandler
 {
@@ -28,7 +29,7 @@ namespace Scaffold.Launcher.PackageHandler
             missingModules = modules.SelectMany(m => m.Dependencies)
                                     .Distinct()
                                     .Where(d => !modules.Any(m => m.Key == d))
-                                    .Where(d => _scaffoldManifest.ContainModule(d))
+                                    .Where(d => _scaffoldManifest.ContainsModule(d))
                                     .Select(d => _scaffoldManifest.GetModule(d))
                                     .ToList();
 
