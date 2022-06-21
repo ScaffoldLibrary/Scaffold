@@ -114,6 +114,8 @@ namespace Scaffold.Launcher
                 return;
             }
 
+            manifest.Hash = newManifest.Hash;
+
             foreach (ScaffoldModule module in newManifest.Modules)
             {
                 if (!manifest.ContainsModule(module.Key))
