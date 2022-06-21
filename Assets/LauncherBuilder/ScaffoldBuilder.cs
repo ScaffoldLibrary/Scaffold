@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Scaffold.Launcher.Objects;
 using Scaffold.Launcher.Utilities;
 using System.Collections.Generic;
 using System.IO;
@@ -47,39 +48,24 @@ namespace Scaffold.Launcher.PackageHandler
 
             foreach (ScaffoldModule module in modules)
             {
-                module.GetModuleDependencies((list) => AddToGraph(module, list));
+                AddToGraph(module);
             }
-            TryResolveCircularDependencies();
         }
 
-        private void AddToGraph(ScaffoldModule rootPackage, List<ScaffoldModule> packages)
+        private void AddToGraph(ScaffoldModule rootPackage)
         {
-            if (packages == null)
-            {
-                Debug.LogWarning("Failed to load dependencies of package");
-            }
-
-            requestCount--;
+            List<string> dependencies = rootPackage.Dependencies;
             string packageKey = rootPackage.Key;
             if (!_dependencyGraph.ContainsKey(packageKey))
             {
                 _dependencyGraph.Add(packageKey, new List<string>());
             }
 
-            List<string> dependencyKeys = packages.Select(dependency => dependency.Key).ToList();
-            _dependencyGraph[packageKey].AddRange(dependencyKeys);
-            TryResolveCircularDependencies();
-        }
-
-        private void TryResolveCircularDependencies()
-        {
-            if (requestCount > 0)
-            {
-                return;
-            }
+            _dependencyGraph[packageKey].AddRange(dependencies);
             ResolveCircularDependencies();
         }
 
+  
         private void ResolveCircularDependencies()
         {
             for (int i = _dependencyGraph.Count - 1; i >= 0; i--)

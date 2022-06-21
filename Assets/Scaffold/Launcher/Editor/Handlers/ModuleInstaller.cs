@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Scaffold.Launcher.Objects;
+using UnityEditor.PackageManager;
 
 namespace Scaffold.Launcher.PackageHandler
 {

@@ -1,3 +1,4 @@
+using Scaffold.Launcher.Objects;
 using Scaffold.Launcher.PackageHandler;
 using System.Collections;
 using System.Collections.Generic;

@@ -2,6 +2,7 @@
 using Scaffold.Launcher.Utilities;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 
 namespace Scaffold.Launcher.Objects
@@ -34,6 +35,15 @@ namespace Scaffold.Launcher.Objects
             string manifestText = JsonConvert.SerializeObject(this);
             File.WriteAllText(ManifestPath, manifestText);
             AssetDatabase.Refresh();
+        }
+        
+        public List<ScaffoldModule> FilterScaffoldModules(ScaffoldManifest scaffoldManifest)
+        {
+            var currentModules = Dependencies
+                                .Where(dependency => scaffoldManifest.ContainsModule(dependency.Key))
+                                .Select(depency => scaffoldManifest.GetModule(depency.Key))
+                                .ToList();
+            return currentModules;
         }
     }
 }

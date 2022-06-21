@@ -5,6 +5,7 @@ using Scaffold.Launcher;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Scaffold.Launcher.Objects;
 
 namespace Scaffold.Launcher.Editor
 {
@@ -50,7 +51,7 @@ namespace Scaffold.Launcher.Editor
             {
                 if (_installedOptions == null)
                 {
-                    _installedOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Uninstall", Scaffold.UninstallModule), new ModuleOption("Update", Scaffold.UpdateModule) };
+                    _installedOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Uninstall", Scaffold.UninstallModule), new ModuleOption("Update", Scaffold.UpdateInstalledModule) };
                 }
                 return _installedOptions;
             }
@@ -63,7 +64,7 @@ namespace Scaffold.Launcher.Editor
             {
                 if (_uninstalledOptions == null)
                 {
-                    _uninstalledOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Install", Scaffold.InstallModule), new ModuleOption("Check for Update", Scaffold.CheckForUpdates) };
+                    _uninstalledOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Install", Scaffold.InstallModule), new ModuleOption("Check for Update", Scaffold.CheckForModuleUpdate) };
                 }
                 return _uninstalledOptions;
             }
@@ -96,7 +97,7 @@ namespace Scaffold.Launcher.Editor
                             DrawProjectState();
                             if (GUILayout.Button("Update Modules", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
                             {
-                                Scaffold.CheckForUpdates();
+                                Scaffold.UpdateManifest();
                             }
                         }
                         EditorGUILayout.EndHorizontal();

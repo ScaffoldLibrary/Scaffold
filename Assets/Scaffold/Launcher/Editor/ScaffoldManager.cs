@@ -11,6 +11,7 @@ using System;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using System.Threading.Tasks;
+using Scaffold.Launcher.Objects;
 
 namespace Scaffold.Launcher
 {
@@ -70,20 +71,13 @@ namespace Scaffold.Launcher
             }
         }
 
-        public void CheckForUpdates(ScaffoldModule module)
+        public async void CheckForModuleUpdate(ScaffoldModule module)
         {
-
+            ScaffoldModule updatedModule = await ModuleFetcher.GetModule(module.Key);
+            module.UpdateModuleInfo(updatedModule);
         }
 
-        public void CheckForAllUpdates()
-        {
-            //get manifest
-            //foreach one, try to get module
-            //if yes, update info
-            //if no, add new module
-        }
-
-        public void UpdateModule(ScaffoldModule module)
+        public async void UpdateInstalledModule(ScaffoldModule module)
         {
             if(module.LatestVersion == module.InstalledVersion)
             {
@@ -91,36 +85,50 @@ namespace Scaffold.Launcher
                 return;
             }
 
-            UpdateModuleAsync(module);
-        }
-
-        private async void UpdateModuleAsync(ScaffoldModule module)
-        {
             string moduleGitPath = module.Path;
             AddRequest request = Client.Add(moduleGitPath);
+
             _operations.Add("updating");
             while (!request.IsCompleted)
             {
                 await Task.Delay(100);
             }
             _operations.Remove("updating");
-            
+
             if (request.Status != StatusCode.Success)
             {
                 return;
             }
         }
 
-        public void CheckForUpdates()
+        public async void UpdateManifest()
         {
-            string moduleUrl = PackageUtilities.RawModuleGit;
-            GitFetcher.Fetch<string>(moduleUrl, onRequestCompleted: Callback);
+            _operations.Add("ManifestUpdate");
+            ScaffoldManifest newManifest = await ModuleFetcher.GetManifest();
+            _operations.Remove("ManifestUpdate");
+            ScaffoldManifest manifest = ScaffoldManifest.Fetch();
 
-            void Callback(string rawData)
+            if (newManifest.Hash == manifest.Hash)
             {
-                JObject rawModules = JObject.Parse(rawData);
-                _scaffoldManifest.Modules = rawModules["Modules"].ToObject<List<ScaffoldModule>>();
-                File.WriteAllText(PackageUtilities.RawModuleLocal, rawData);
+                Debug.Log("Manifest file is up to date");
+                return;
+            }
+
+            foreach (ScaffoldModule module in newManifest.Modules)
+            {
+                if (!manifest.ContainsModule(module.Key))
+                {
+                    manifest.AddModule(module);
+                    continue;
+                }
+
+                ScaffoldModule currentModule = manifest.GetModule(module.Key);
+                if (currentModule.LatestVersion == module.LatestVersion)
+                {
+                    continue;
+                }
+
+                currentModule.UpdateModuleInfo(module);
             }
         }
     }
