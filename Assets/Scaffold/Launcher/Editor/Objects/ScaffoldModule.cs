@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace Scaffold.Launcher.Objects
@@ -14,10 +18,11 @@ namespace Scaffold.Launcher.Objects
 
         [Header("Paths")]
         public string Path;
+        public string Define;
 
         [Header("Versioning")]
         public string LatestVersion;
-        public string InstalledVersion;
+        public string InstalledVersion => GetInstalledVersion();
 
         [Header("Dependencies")]
         public List<string> Dependencies = new List<string>();
@@ -29,6 +34,30 @@ namespace Scaffold.Launcher.Objects
             Path = updatedModule.Path;
             LatestVersion = updatedModule.LatestVersion;
             Dependencies = updatedModule.Dependencies;
+        }
+
+        private string GetInstalledVersion()
+        {
+            string path = $"Packages/{Key}/package.json";
+            if (File.Exists(path))
+            {
+                string content = File.ReadAllText(path);
+                JObject token = JObject.Parse(content);
+                string version = token["version"].ToString();
+                if (IsOutdated()) version += " (new version available)";
+                return version;
+            }
+            else
+            {
+                return "Installing...";
+            }
+        }
+
+        public bool IsOutdated()
+        {
+            Version installed = new Version(InstalledVersion);
+            Version latest = new Version(LatestVersion);
+            return installed < latest;
         }
     }
 }

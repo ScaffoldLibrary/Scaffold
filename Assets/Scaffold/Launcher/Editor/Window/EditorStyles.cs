@@ -16,7 +16,7 @@ namespace Scaffold.Launcher.Editor
             fixedHeight = 70,
         };
 
-        public static GUIStyle ProjectState = new GUIStyle(GUI.skin.textArea)
+        public static GUIStyle ProjectStateRead = new GUIStyle(GUI.skin.textArea)
         {
             border = new RectOffset(6, 6, 4, 4),
             padding = new RectOffset(2, 2, 1, 3),
@@ -24,7 +24,31 @@ namespace Scaffold.Launcher.Editor
             alignment = TextAnchor.LowerCenter,
             fontSize = 12,
             clipping = TextClipping.Clip,
+            normal = new GUIStyleState() { textColor = Color.white }
         };
+
+        public static GUIStyle ProjectStateError = new GUIStyle(GUI.skin.textArea)
+        {
+            border = new RectOffset(6, 6, 4, 4),
+            padding = new RectOffset(2, 2, 1, 3),
+            margin = new RectOffset(6, 6, 2, 3),
+            alignment = TextAnchor.LowerCenter,
+            fontSize = 12,
+            clipping = TextClipping.Clip,
+            normal = new GUIStyleState() { textColor = Color.red }
+        };
+
+        public static GUIStyle ProjectStatePending = new GUIStyle(GUI.skin.textArea)
+        {
+            border = new RectOffset(6, 6, 4, 4),
+            padding = new RectOffset(2, 2, 1, 3),
+            margin = new RectOffset(6, 6, 2, 3),
+            alignment = TextAnchor.LowerCenter,
+            fontSize = 12,
+            clipping = TextClipping.Clip,
+            normal = new GUIStyleState() { textColor = Color.yellow }
+        };
+
 
         public static GUIStyle ModuleBox = new GUIStyle(GUI.skin.window)
         {
@@ -38,7 +62,7 @@ namespace Scaffold.Launcher.Editor
             margin = new RectOffset(5, 5, 20, 20),
             padding = new RectOffset(5, 5, 5, 5),
             stretchHeight = false,
-        };  
+        };
 
         public static GUIStyle Button = new GUIStyle(GUI.skin.button)
         {

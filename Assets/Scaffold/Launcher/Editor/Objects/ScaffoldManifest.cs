@@ -40,7 +40,7 @@ namespace Scaffold.Launcher.Objects
             }
         }
 
-        public List<ScaffoldModule> GetModuleDependencies(ScaffoldModule module)
+        public List<ScaffoldModule> GetModuleDirectDependencies(ScaffoldModule module)
         {
             List<ScaffoldModule> modules = new List<ScaffoldModule>();
             foreach (string moduleKey in module.Dependencies)
@@ -53,6 +53,35 @@ namespace Scaffold.Launcher.Objects
                 modules.Add(GetModule(moduleKey));
             }
             return modules;
+        }
+
+        public List<ScaffoldModule> GetModuleDependencies(ScaffoldModule module)
+        {
+            List<ScaffoldModule> dependencies = new List<ScaffoldModule>();
+            Stack<ScaffoldModule> stack = new Stack<ScaffoldModule>();
+            stack.Push(module);
+            while (stack.Count > 0)
+            {
+                ScaffoldModule currentModule = stack.Pop();
+                dependencies.Add(currentModule);
+                foreach (string moduleKey in module.Dependencies)
+                {
+                    if (!ContainsModule(moduleKey))
+                    {
+                        continue;
+                    }
+
+                    if (dependencies.Any(m => m.Key == moduleKey) || stack.Any(m => m.Key == moduleKey))
+                    {
+                        continue;
+                    }
+
+                    ScaffoldModule dependency = GetModule(moduleKey);
+                    stack.Push(dependency);
+                }
+            }
+
+            return dependencies;
         }
 
         public void AddModule(ScaffoldModule module)

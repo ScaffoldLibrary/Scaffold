@@ -12,6 +12,7 @@ using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using System.Threading.Tasks;
 using Scaffold.Launcher.Objects;
+using Scaffold.Launcher.Editor;
 
 namespace Scaffold.Launcher
 {
@@ -43,14 +44,28 @@ namespace Scaffold.Launcher
             return _scaffoldManifest.Launcher;
         }
 
-        public bool IsModuleInstalled(ScaffoldModule package)
+        public bool IsModuleInstalled(ScaffoldModule module)
         {
-            return _projectManifest.Contains(package.Key);
+            return _projectManifest.Contains(module.Key);
         }
 
-        public void InstallModule(ScaffoldModule package)
+        public void InstallModule(ScaffoldModule module)
         {
-            _moduleInstaller.Install(package, true);
+            if(module.Dependencies.Count > 0)
+            {
+               bool installDependencies = Popup.Assert($"Installing {module.Name}",
+                                                       $"{module.Name} has dependencies, do you wish to install them now?",
+                                                       "Yes",
+                                                       "No");
+                if (installDependencies)
+                {
+                    List<ScaffoldModule> dependencies = _scaffoldManifest.GetModuleDependencies(module);
+                    _moduleInstaller.Install(dependencies);
+                    return;
+                }
+            }
+
+            _moduleInstaller.Install(module, true);
         }
 
         public void UninstallModule(ScaffoldModule module)
@@ -77,7 +92,7 @@ namespace Scaffold.Launcher
             module.UpdateModuleInfo(updatedModule);
         }
 
-        public async void UpdateInstalledModule(ScaffoldModule module)
+        public async void UpdatetInstalledModule(ScaffoldModule module)
         {
             if(module.LatestVersion == module.InstalledVersion)
             {
@@ -110,7 +125,7 @@ namespace Scaffold.Launcher
 
             if (newManifest.Hash == manifest.Hash)
             {
-                Debug.Log("Manifest file is up to date");
+                Debug.Log("Manifest is up to date");
                 return;
             }
 
@@ -132,6 +147,19 @@ namespace Scaffold.Launcher
 
                 currentModule.UpdateModuleInfo(module);
             }
+        }
+
+        public bool IsProjectUpToDate()
+        {
+            List<ScaffoldModule> installedModules = _projectManifest.GetInstalledModules(_scaffoldManifest);
+            foreach(ScaffoldModule module in installedModules)
+            {
+                if (module.IsOutdated())
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

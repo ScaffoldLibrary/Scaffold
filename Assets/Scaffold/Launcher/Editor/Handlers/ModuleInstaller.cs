@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 using Scaffold.Launcher.Objects;
 using UnityEditor.PackageManager;
+using Scaffold.Launcher.Editor;
 
 namespace Scaffold.Launcher.PackageHandler
 {
@@ -33,8 +34,7 @@ namespace Scaffold.Launcher.PackageHandler
         {
             if (!_manifest.Contains(module.Key))
             {
-                module.InstalledVersion = module.LatestVersion;
-                _manifest.Dependencies.Add(module.Key, module.Path);
+                _manifest.dependencies.Add(module.Key, module.Path);
                 if (saveOnInstall)
                 {
                     _manifest.Save();
@@ -52,10 +52,12 @@ namespace Scaffold.Launcher.PackageHandler
 
             if(_dependencies.CheckForDependingModules(module, out List<ScaffoldModule> dependers))
             {
-                //you sure you want to remove? other modules depende on this
+                bool confirm = Popup.Assert($"Uninstalling {module.Key}", "There seems to be some dependencies on this Module, do you wish to uninstall anyway?", "Yes", "No");
+                if (!confirm) return;
             }
 
-            _manifest.Dependencies.Remove(module.Key);
+            _manifest.dependencies.Remove(module.Key);
+            DefinesHandler.RemoveDefines(module.Define);
             if (saveOnUninstall)
             {
                 _manifest.Save();

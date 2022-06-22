@@ -23,11 +23,11 @@ namespace Scaffold.Launcher.Objects
         private static ProjectManifest CachedManifest;
         private const string ManifestPath = "./Packages/manifest.json";
 
-        public Dictionary<string, string> Dependencies;
+        public Dictionary<string, string> dependencies;
 
         public bool Contains(string package)
         {
-            return Dependencies.ContainsKey(package);
+            return dependencies.ContainsKey(package);
         }
 
         public void Save()
@@ -37,9 +37,9 @@ namespace Scaffold.Launcher.Objects
             AssetDatabase.Refresh();
         }
         
-        public List<ScaffoldModule> FilterScaffoldModules(ScaffoldManifest scaffoldManifest)
+        public List<ScaffoldModule> GetInstalledModules(ScaffoldManifest scaffoldManifest)
         {
-            var currentModules = Dependencies
+            var currentModules = dependencies
                                 .Where(dependency => scaffoldManifest.ContainsModule(dependency.Key))
                                 .Select(depency => scaffoldManifest.GetModule(depency.Key))
                                 .ToList();

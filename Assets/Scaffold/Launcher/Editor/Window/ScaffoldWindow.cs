@@ -51,7 +51,7 @@ namespace Scaffold.Launcher.Editor
             {
                 if (_installedOptions == null)
                 {
-                    _installedOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Uninstall", Scaffold.UninstallModule), new ModuleOption("Update", Scaffold.UpdateInstalledModule) };
+                    _installedOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Uninstall", Scaffold.UninstallModule), new ModuleOption("Update", Scaffold.UpdatetInstalledModule) };
                 }
                 return _installedOptions;
             }
@@ -95,13 +95,15 @@ namespace Scaffold.Launcher.Editor
                         EditorGUILayout.BeginHorizontal();
                         {
                             DrawProjectState();
-                            if (GUILayout.Button("Update Modules", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
+                            if (GUILayout.Button("Update Manifest", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
                             {
                                 Scaffold.UpdateManifest();
                             }
                         }
                         EditorGUILayout.EndHorizontal();
                         DrawModules(modules);
+                        EditorGUILayout.Space(5);
+                        DrawFooter();
                     }
                 }
                 EditorGUILayout.EndVertical();
@@ -143,7 +145,29 @@ namespace Scaffold.Launcher.Editor
 
         private void DrawProjectState()
         {
-            EditorGUILayout.LabelField("Package State", EditorStyles.ProjectState, GUILayout.Width(150));
+            string stateLabel = "";
+            GUIStyle style;
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                stateLabel = "No Internet";
+                style = EditorStyles.ProjectStateError;
+            }
+            else if (Scaffold.CheckForMissingDependencies())
+            {
+                stateLabel = "Missing Dependencies";
+                style = EditorStyles.ProjectStateError;
+            }
+            else if (!Scaffold.IsProjectUpToDate())
+            {
+                stateLabel = "Updates available";
+                style = EditorStyles.ProjectStatePending;
+            }
+            else if (1 + 2 == 3)
+            {
+                stateLabel = "Ready";
+                style = EditorStyles.ProjectStateRead;
+            }
+            EditorGUILayout.LabelField(stateLabel, style, GUILayout.Width(150));
         }
 
         private void DrawModuleViewer(ScaffoldModule module, bool installed)
@@ -183,6 +207,26 @@ namespace Scaffold.Launcher.Editor
             {
                 options[selectedIndex].Action?.Invoke(module);
             }
+        }
+
+        private void DrawFooter()
+        {
+            EditorGUILayout.BeginHorizontal();
+            {
+                if (GUILayout.Button("Website"))
+                {
+                    //TODO: Website Link
+                }
+                if (GUILayout.Button("GitHub"))
+                {
+                    //TODO: GIT Link
+                }
+                if (GUILayout.Button("License"))
+                {
+                    //TODO: License Link
+                }
+            }
+            EditorGUILayout.EndHorizontal();
         }
     }
 

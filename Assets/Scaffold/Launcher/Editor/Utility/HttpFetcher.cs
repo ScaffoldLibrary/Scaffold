@@ -27,14 +27,12 @@ namespace Scaffold.Launcher.Utilities
                 await Task.Delay(100);
             }
 
-            if (uwr.isNetworkError)
+            if (uwr.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log("Error While Sending: " + uwr.error);
                 return default(T);
             }
             else
             {
-                Debug.Log("Received: " + uwr.downloadHandler.text);
                 JsonConvert.SerializeObject(uwr.downloadHandler.text, Formatting.Indented);
                 T obj = JsonConvert.DeserializeObject<T>(uwr.downloadHandler.text);
                 return obj;

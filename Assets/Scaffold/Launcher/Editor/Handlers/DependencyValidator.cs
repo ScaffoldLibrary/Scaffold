@@ -25,7 +25,7 @@ namespace Scaffold.Launcher.PackageHandler
 
         public bool ValidateDependencies(out List<ScaffoldModule> missingModules)
         {
-            List<ScaffoldModule> modules = _projectManifest.FilterScaffoldModules(_scaffoldManifest);
+            List<ScaffoldModule> modules = _projectManifest.GetInstalledModules(_scaffoldManifest);
             missingModules = modules.SelectMany(m => m.Dependencies)
                                     .Distinct()
                                     .Where(d => !modules.Any(m => m.Key == d))
@@ -38,19 +38,9 @@ namespace Scaffold.Launcher.PackageHandler
 
         public bool CheckForDependingModules(ScaffoldModule module, out List<ScaffoldModule> modules)
         {
-            List<ScaffoldModule> installedModules = _projectManifest.FilterScaffoldModules(_scaffoldManifest);
-            modules = installedModules.Where(m => _scaffoldManifest.GetModuleDependencies(m).Contains(module)).ToList();
+            List<ScaffoldModule> installedModules = _projectManifest.GetInstalledModules(_scaffoldManifest);
+            modules = installedModules.Where(m => _scaffoldManifest.GetModuleDirectDependencies(m).Contains(module)).ToList();
             return modules.Count > 0;
-        }
-
-        public bool CheckForDepencyDependers(ScaffoldModule module)
-        {
-            List<ScaffoldModule> moduleDependencies = _scaffoldManifest.GetModuleDependencies(module);
-            List<ScaffoldModule> installedModules = _projectManifest.FilterScaffoldModules(_scaffoldManifest);
-            List<ScaffoldModule> projectDependencies = installedModules.SelectMany(m => _scaffoldManifest.GetModuleDependencies(m))
-                                                                       .Distinct()
-                                                                       .ToList();
-            return moduleDependencies.Except(projectDependencies).Any();
         }
     }
 }
