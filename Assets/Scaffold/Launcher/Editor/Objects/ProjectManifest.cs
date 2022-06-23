@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.PackageManager;
 
 namespace Scaffold.Launcher.Objects
 {
@@ -34,7 +35,7 @@ namespace Scaffold.Launcher.Objects
         {
             string manifestText = JsonConvert.SerializeObject(this);
             File.WriteAllText(ManifestPath, manifestText);
-            AssetDatabase.Refresh();
+            Client.Resolve();
         }
         
         public List<ScaffoldModule> GetInstalledModules(ScaffoldManifest scaffoldManifest)

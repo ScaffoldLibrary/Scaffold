@@ -12,7 +12,6 @@ namespace Scaffold.Launcher.Utilities
 
         public static async Task<ScaffoldModule> GetModule(string moduleKey)
         {
-            Debug.Log(moduleKey);
             GetModuleRequest request = new GetModuleRequest(moduleKey);
             ScaffoldModule module = await HttpFetcher.Fetch<ScaffoldModule>(ApiUrl, request);
             return module;

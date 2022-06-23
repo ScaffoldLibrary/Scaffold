@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Scaffold.Launcher.PackageHandler;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,18 @@ namespace Scaffold.Launcher.Objects
 
         [Header("Versioning")]
         public string LatestVersion;
-        public string InstalledVersion => GetInstalledVersion();
+        public string InstalledVersion
+        {
+            get
+            {
+                string path = $"Packages/{Key}/package.json";
+                if (!File.Exists(path))
+                {
+                    return "0.0.0";
+                }
+                return GetInstalledVersion();
+            }
+        }
 
         [Header("Dependencies")]
         public List<string> Dependencies = new List<string>();
@@ -44,7 +56,6 @@ namespace Scaffold.Launcher.Objects
                 string content = File.ReadAllText(path);
                 JObject token = JObject.Parse(content);
                 string version = token["version"].ToString();
-                if (IsOutdated()) version += " (new version available)";
                 return version;
             }
             else
@@ -53,8 +64,36 @@ namespace Scaffold.Launcher.Objects
             }
         }
 
+        private bool IsOutdated(string version)
+        {
+            Version installed = new Version(version);
+            Version latest = new Version(LatestVersion);
+            return installed < latest;
+        }
+
+        public bool IsInstalled()
+        {
+            if (!DefinesHandler.CheckDefines(Define))
+            {
+                return false;
+            }
+
+            string path = $"Packages/{Key}/package.json";
+            if (!File.Exists(path))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public bool IsOutdated()
         {
+            if (!IsInstalled())
+            {
+                return false;
+            }
+
             Version installed = new Version(InstalledVersion);
             Version latest = new Version(LatestVersion);
             return installed < latest;

@@ -16,7 +16,7 @@ namespace Scaffold.Launcher.Editor
             fixedHeight = 70,
         };
 
-        public static GUIStyle ProjectStateRead = new GUIStyle(GUI.skin.textArea)
+        public static GUIStyle ProjectStateReady = new GUIStyle(GUI.skin.textArea)
         {
             border = new RectOffset(6, 6, 4, 4),
             padding = new RectOffset(2, 2, 1, 3),

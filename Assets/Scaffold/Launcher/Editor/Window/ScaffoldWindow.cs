@@ -45,37 +45,38 @@ namespace Scaffold.Launcher.Editor
 
         private Vector2 _scrollView;
 
-        private List<ModuleOption> InstalledOptions
+        private WindowTab CurrentTab
         {
             get
             {
-                if (_installedOptions == null)
+                if(_currentTab == null)
                 {
-                    _installedOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Uninstall", Scaffold.UninstallModule), new ModuleOption("Update", Scaffold.UpdatetInstalledModule) };
+                    _currentTab = Tabs[0];
                 }
-                return _installedOptions;
+                return _currentTab;
+            }
+            set
+            {
+                _currentTab = value;
             }
         }
-        private List<ModuleOption> _installedOptions;
-
-        private List<ModuleOption> UninstalledOptions
+        private WindowTab _currentTab;
+        private List<WindowTab> Tabs
         {
             get
             {
-                if (_uninstalledOptions == null)
+                if(_tabs == null)
                 {
-                    _uninstalledOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Install", Scaffold.InstallModule), new ModuleOption("Check for Update", Scaffold.CheckForModuleUpdate) };
+                    _tabs = GetAllTabs();
                 }
-                return _uninstalledOptions;
+                return _tabs;
             }
         }
-        private List<ModuleOption> _uninstalledOptions;
+        private List<WindowTab> _tabs;
 
         private void OnGUI()
         {
-            List<ScaffoldModule> modules = Scaffold.GetModules();
             ScaffoldModule launcher = Scaffold.GetLauncher();
-            bool notConnected = Application.internetReachability == NetworkReachability.NotReachable;
 
             _scrollView = EditorGUILayout.BeginScrollView(_scrollView, GUIStyle.none, GUIStyle.none);
             {
@@ -83,130 +84,31 @@ namespace Scaffold.Launcher.Editor
                 {
                     GUILayout.Box("Scaffold", EditorStyles.HeaderBox);
                     EditorGUILayout.LabelField(launcher.InstalledVersion, EditorStyles.CenterLabel);
-                    if (notConnected)
+                    EditorGUILayout.BeginHorizontal();
                     {
-                        EditorGUILayout.HelpBox("Please check your internet connection, connection is needed to install and update the packages", MessageType.Error);
-                        EditorGUILayout.Space();
-                    }
-
-                    EditorGUI.BeginDisabledGroup(notConnected);
-                    {
-                        TryDrawDependencyFixer();
-                        EditorGUILayout.BeginHorizontal();
+                        foreach(WindowTab tab in Tabs)
                         {
-                            DrawProjectState();
-                            if (GUILayout.Button("Update Manifest", EditorStyles.Button, GUILayout.Width(CurrentWindowSize.x - 170)))
+                            string tabName = tab.TabName;
+                            bool selected = CurrentTab == tab;
+                            EditorGUI.BeginDisabledGroup(selected);
                             {
-                                Scaffold.UpdateManifest();
+                                if (GUILayout.Button(tabName))
+                                {
+                                    CurrentTab = tab;
+                                }
                             }
+                            EditorGUI.EndDisabledGroup();
                         }
-                        EditorGUILayout.EndHorizontal();
-                        DrawModules(modules);
-                        EditorGUILayout.Space(5);
-                        DrawFooter();
                     }
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.Space(5);
+                    CurrentTab.Draw(CurrentWindowSize, Scaffold);
+                    EditorGUILayout.Space(5);
+                    DrawFooter();
                 }
                 EditorGUILayout.EndVertical();
             }
             EditorGUILayout.EndScrollView();
-        }
-
-        private void TryDrawDependencyFixer()
-        {
-            if (Scaffold.CheckForMissingDependencies())
-            {
-                Rect module = EditorGUILayout.BeginVertical(EditorStyles.WarningBox);
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    {
-                        GUIContent icon = EditorGUIUtility.IconContent("_Help");
-                        GUILayout.Label(icon, GUILayout.MaxWidth(25));
-                        GUILayout.Label("You have missing dependencies, fix now?");
-                        if (GUILayout.Button("Fix"))
-                        {
-                            Scaffold.InstallMissingDependencies();
-                        }
-                    }
-                    EditorGUILayout.EndHorizontal();
-                }
-                EditorGUILayout.EndVertical();
-            }
-        }
-
-        private void DrawModules(List<ScaffoldModule> modules)
-        {
-            foreach (ScaffoldModule package in modules)
-            {
-                bool installed = Scaffold.IsModuleInstalled(package);
-                DrawModuleViewer(package, installed);
-            }
-
-        }
-
-        private void DrawProjectState()
-        {
-            string stateLabel = "";
-            GUIStyle style;
-            if (Application.internetReachability == NetworkReachability.NotReachable)
-            {
-                stateLabel = "No Internet";
-                style = EditorStyles.ProjectStateError;
-            }
-            else if (Scaffold.CheckForMissingDependencies())
-            {
-                stateLabel = "Missing Dependencies";
-                style = EditorStyles.ProjectStateError;
-            }
-            else if (!Scaffold.IsProjectUpToDate())
-            {
-                stateLabel = "Updates available";
-                style = EditorStyles.ProjectStatePending;
-            }
-            else if (1 + 2 == 3)
-            {
-                stateLabel = "Ready";
-                style = EditorStyles.ProjectStateRead;
-            }
-            EditorGUILayout.LabelField(stateLabel, style, GUILayout.Width(150));
-        }
-
-        private void DrawModuleViewer(ScaffoldModule module, bool installed)
-        {
-            float maxWidth = CurrentWindowSize.x;
-            Rect rect = EditorGUILayout.BeginHorizontal(EditorStyles.ModuleBox);
-            {
-                EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3 * 2));
-                {
-                    string version = installed ? module.InstalledVersion : module.LatestVersion;
-                    GUILayout.Label($"{module.Name} - {version}", EditorStyles.ModuleName);
-                    GUILayout.Label(module.Description, EditorStyles.ModuleDescription);
-                }
-                EditorGUILayout.EndVertical();
-
-                EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3));
-                {
-                    DrawModuleOptions(rect, module, installed);
-                }
-                EditorGUILayout.EndVertical();
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void DrawModuleOptions(Rect rect, ScaffoldModule module, bool installed)
-        {
-            List<ModuleOption> options = installed ? InstalledOptions : UninstalledOptions;
-            Rect buttonRect = new Rect(rect);
-            Vector2 buttonSize = new Vector2(100, 20);
-            buttonRect.x = buttonRect.width - buttonSize.x;
-            buttonRect.y += 5;
-            buttonRect.size = buttonSize;
-
-            string[] optionNames = options.Select(o => o.Label).ToArray();
-            int selectedIndex = EditorGUI.Popup(buttonRect, 0, optionNames);
-            if (selectedIndex > 0)
-            {
-                options[selectedIndex].Action?.Invoke(module);
-            }
         }
 
         private void DrawFooter()
@@ -228,17 +130,28 @@ namespace Scaffold.Launcher.Editor
             }
             EditorGUILayout.EndHorizontal();
         }
-    }
 
-    public struct ModuleOption
-    {
-        public ModuleOption(string label, Action<ScaffoldModule> action)
+        private List<Type> GetAllTabTypes()
         {
-            Label = label;
-            Action = action;
+            Type type = typeof(WindowTab);
+            return GetType().Assembly.GetTypes()
+                                     .Where(t => t.IsSubclassOf(type))
+                                     .Where(t => !t.IsAbstract)
+                                     .OrderBy(t => (t.GetCustomAttributes(typeof(TabOrder), true).FirstOrDefault() as TabOrder).Order)
+                                     .ToList();
         }
 
-        public string Label;
-        public Action<ScaffoldModule> Action;
+        private List<WindowTab> GetAllTabs()
+        {
+            List<WindowTab> tabs = new List<WindowTab>();
+            List<Type> types = GetAllTabTypes();
+            foreach(Type type in types)
+            {
+                object[] parameters = new object[] { CurrentWindowSize, Scaffold };
+                WindowTab tab = Activator.CreateInstance(type, parameters) as WindowTab;
+                tabs.Add(tab);
+            }
+            return tabs;
+        }
     }
 }
