@@ -1,4 +1,5 @@
 ﻿using Scaffold.Builder.Utilities;
+using Scaffold.Core.Editor.Module;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,10 @@ namespace Scaffold.Builder.FileBuilders
         public InstallerBuilder(BuilderConfigs config) : base(config)
         {
             _config = config;
+            _module = config.Module;
         }
+
+        private Module _module;
 
         public override void Build()
         {
@@ -41,7 +45,7 @@ namespace Scaffold.Builder.FileBuilders
 
         private string ReplaceModuleName(string script)
         {
-            string name = _config.ModuleName;
+            string name = _module.GetPascalName();
             script = script.Replace("MODULENAME", name.ToUpperInvariant());
             script = script.Replace("ModuleName", name);
             return script;
@@ -49,7 +53,7 @@ namespace Scaffold.Builder.FileBuilders
 
         private string ReplaceRequiredDefines(string script)
         {
-            List<string> defines = _config.RequiredDefines;
+            List<string> defines = _module.requiredDefines;
             if (defines.Count <= 0)
             {
                 script = script.Replace("\"#REQUIREMENTS#\"", "");
@@ -65,7 +69,7 @@ namespace Scaffold.Builder.FileBuilders
 
         private string ReplaceInstallDefines(string script)
         {
-            List<string> defines = _config.InstallDefines;
+            List<string> defines = _module.installDefines;
             if (defines.Count <= 0)
             {
                 script = script.Replace("\"#INSTALLS#\"", "");
@@ -93,9 +97,8 @@ namespace Scaffold.Builder.FileBuilders
         {
             if (string.IsNullOrWhiteSpace(_config.InstallerPath)) return false;
             if (string.IsNullOrWhiteSpace(_config.TemplateInstaller)) return false;
-            if (string.IsNullOrWhiteSpace(_config.ModuleName)) return false;
-            if (_config.RequiredDefines == null) return false;
-            if (_config.InstallDefines == null) return false;
+            if (_module.requiredDefines == null) return false;
+            if (_module.installDefines == null) return false;
             return true;
         }
     }

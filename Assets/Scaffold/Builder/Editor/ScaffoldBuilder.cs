@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor.Module;
 
 namespace Scaffold.Builder
 {
@@ -74,13 +75,13 @@ namespace Scaffold.Builder
 
         private static bool CheckPackageManifest()
         {
-            if (_config.Manifest == null)
+            if (_config.Module == null)
             {
                 Debug.LogError("Make sure you have a valid Package Manifest file created");
                 return false;
             }
 
-            if (_config.Manifest.Validate())
+            if (_config.Module.Validate())
             {
                 Debug.LogError("Empty fields on the project manifest, please check");
                 return false;
@@ -98,7 +99,7 @@ namespace Scaffold.Builder
             }
             if (Version.TryParse(version, out Version v))
             {
-                _config.Manifest.SetValue("version", v);
+                _config.Module.version = version;
                 return true;
             }
 
@@ -136,14 +137,14 @@ namespace Scaffold.Builder
                 }
             }
 
-            Config.Manifest.Save(path);
+            //Config.Manifest.Save(path);
             Debug.Log($"Created manifest file at {path}");
         }
 
         [MenuItem("Scaffold/Builder/Config/Reset Manifest")]
         private static void ResetManifest()
         {
-            Config.ResetManifest();
+            //Config.ResetManifest();
         }
     }
 }

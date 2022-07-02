@@ -7,20 +7,24 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Module;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
     [TabOrder(2)]
     public class AssembliesTab : WindowTab
     {
-        public AssembliesTab(BuilderWindow window, BuilderConfigs config) : base(window, config)
+        public AssembliesTab(BuilderConfigs config) : base(config)
         {
             _builder = new DefinesBuilder(config);
             _assemblies = new List<string>(config.Assemblies);
             if (_assemblies.Count <= 0) _assemblies.Add("");
-            _dependencies = _configs.Dependencies;
-            _requiredDefines = _configs.RequiredDefines;
+            _dependencies = config.Module.requiredModules;
+            _requiredDefines = config.Module.requiredDefines;
+            _module = config.Module;
         }
+
+        private Module _module;
 
         public override string TabKey => "Editing Assemblies";
 
@@ -76,9 +80,9 @@ namespace Scaffold.Builder.Editor.Tabs
             defines.AddRange(_requiredDefines);
             defines.AddRange(_customDefines);
             defines.RemoveAll(d => string.IsNullOrWhiteSpace(d));
-            _configs.RequiredDefines = defines;
+            _module.requiredDefines = defines;
 
-            _configs.Manifest.Save(_configs.ManifestPath);
+            //_configs.Manifest.Save(_configs.ManifestPath);
 
             _builder.AddDefinesToAssemblies(_assemblies, defines);
         }

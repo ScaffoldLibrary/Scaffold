@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor.Module;
 
 
 namespace Scaffold.Builder
@@ -35,18 +36,11 @@ namespace Scaffold.Builder
         public string InstallerAssemblyPath = string.Empty; //The Installer Assembly Path for quick building
 
         //VALUES
+        [HideInInspector]
+        public Module Module;
+        [HideInInspector]
         public List<string> Assemblies = new List<string>(); //The list of assemblies used in the project
-        public ModuleManifest Manifest
-        {
-            get
-            {
-                if (_manifest == null) CreateManifest();
-                return _manifest;
-            }
-        } //Object representing the module manifest
-        [SerializeField]
-        private ModuleManifest _manifest;
-        public Credentials Credential
+        public Credentials Credential //Object representing the uploading credentials
         {
             get
             {
@@ -57,59 +51,10 @@ namespace Scaffold.Builder
                 string rawCredentials = File.ReadAllText(CredentialsPath);
                 return JsonConvert.DeserializeObject<Credentials>(rawCredentials);
             }
-        } //Object representing the uploading credentials
-        public List<string> Dependencies
-        {
-            get
-            {
-                return Manifest.GetRawValue<List<string>>("requirements");
-            }
-            set
-            {
-                Manifest.SetValue("requirements", value);
-            }
-        } //List of required dependencies for package
-        public List<string> RequiredDefines
-        {
-            get
-            {
-                return Manifest.GetRawValue<List<string>>("requiredDefines");
-            }
-
-            set
-            {
-                Manifest.SetValue("requiredDefines", value);
-            }
-        } //List of required Defines to install the package
-        public List<string> InstallDefines
-        {
-            get
-            {
-                return Manifest.GetRawValue<List<string>>("installDefines");
-            }
-            set
-            {
-                Manifest.SetValue("installDefines", value);
-            }
-        } //list of defines added when you install the package
-        public string ModuleName => GetNameAsPascal(); //module key formatted to PascalCase
-        public string ModuleDefine => GetNameAsDefine(); //module key formatted to USE_SCAFFOLD_KEY
-
-        //METHODS
-        private void CreateManifest()
-        {
-            string rawManifest;
-            if (string.IsNullOrEmpty(ManifestPath) || !File.Exists(ManifestPath))
-            {
-                rawManifest = TemplateManifest;
-            }
-            else
-            {
-                rawManifest = File.ReadAllText(ManifestPath);
-            }
-            _manifest = new ModuleManifest(rawManifest);
         }
 
+     
+        //METHODS
         public void SetModuleFolder(string path)
         {
             ModuleFolder = path;
@@ -117,12 +62,6 @@ namespace Scaffold.Builder
 
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
-        }
-
-        public void ResetManifest()
-        {
-            CreateManifest();
-            Debug.Log("Manifest Object Recreated!");
         }
 
         //LOCAL SETTERS - Used on the main builder project only
@@ -146,18 +85,5 @@ namespace Scaffold.Builder
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
         }
-
-        //HELPERS
-        private string GetNameAsPascal()
-        {
-            string name = Manifest.GetValue("name");
-            return NameFormatter.KeyToPascal(name);
-        }
-        private string GetNameAsDefine()
-        {
-            string name = Manifest.GetValue("name");
-            return NameFormatter.KeyToDefine(name);
-        }
-
     }
 }

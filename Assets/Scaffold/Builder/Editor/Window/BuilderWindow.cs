@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Module;
 
 namespace Scaffold.Builder.Editor
 {
@@ -56,6 +57,7 @@ namespace Scaffold.Builder.Editor
         private float _targetValue;
         private bool _animating;
 
+        private Module module;
 
         private void OnGUI()
         {
@@ -125,6 +127,20 @@ namespace Scaffold.Builder.Editor
                 WindowTab tab = Activator.CreateInstance(type, parameters) as WindowTab;
                 tabs.Add(tab);
             }
+            return tabs;
+        }
+
+        private List<WindowTab> CreateTabs()
+        {
+            BuilderConfigs config = ScaffoldBuilder.Config;
+            List<WindowTab> tabs = new List<WindowTab>()
+            {
+                new StartupTab(config),
+                new ManifestTab(config),
+                new AssembliesTab(config),
+                new InstallerTab(config),
+                new UploadTab(config)
+            };
             return tabs;
         }
 

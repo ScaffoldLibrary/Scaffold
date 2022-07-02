@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace Scaffold.Core.Editor.Manifest
@@ -11,7 +13,15 @@ namespace Scaffold.Core.Editor.Manifest
     {
         public ManifestWriter(string path)
         {
+            _manifestPath = path;
+        }
 
+        private string _manifestPath;
+
+        public void Save(Manifest manifest)
+        {
+            string rawManifest = JsonConvert.SerializeObject(manifest);
+            File.WriteAllText(_manifestPath, rawManifest);
         }
     }
 }

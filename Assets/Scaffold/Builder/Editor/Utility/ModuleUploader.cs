@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Module;
 
 namespace Scaffold.Builder.Utilities
 {
@@ -13,22 +14,21 @@ namespace Scaffold.Builder.Utilities
     {
         public static async void UploadModule(BuilderConfigs config, Action<string> Result = null)
         {
-            SetModuleRequest request = new SetModuleRequest(config.Manifest, config.Credential.apiKey);
-            Debug.Log(JsonConvert.SerializeObject(request));
+            SetModuleRequest request = new SetModuleRequest(config.Module, config.Credential.apiKey);
             string result = await HttpHandler.Post(config.Credential.apiURL, request);
             Result?.Invoke(result);
         }
 
         private class SetModuleRequest
         {
-            public SetModuleRequest(ModuleManifest module, string key)
+            public SetModuleRequest(Module module, string key)
             {
-                this.module = module.GetValues();
+                this.module = module;
                 this.key = key;
             }
 
             public string requestType = "set";
-            public IDictionary<string, JToken> module;
+            public Module module;
             public string key;
         }
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Scaffold.Core.Editor.Manifest
 {
@@ -21,34 +22,13 @@ namespace Scaffold.Core.Editor.Manifest
 
         public Manifest GetManifest()
         {
-            return null;
+            string rawManifest = GetRawManfest();
+            return JsonConvert.DeserializeObject<Manifest>(rawManifest);
         }
 
-        public Manifest GetFilteredManifest()
+        private string GetRawManfest()
         {
-            return null;
-        }
-
-        public List<string> GetModuleDependencies()
-        {
-            IDictionary<string, JToken> dependencies = GetRawManifest();
-            return dependencies.Where(kp => IsValidModuleKey(kp.Key))
-                                           .Select(kp => kp.Key)
-                                           .ToList();
-        }
-
-        private IDictionary<string, JToken> GetRawManifest()
-        {
-            string manifestPath = "./Packages/manifest.json";
-            string manifest = File.ReadAllText(manifestPath);
-            JObject manifestToken = JObject.Parse(manifest);
-            JObject dependencies = JObject.FromObject(manifestToken["dependencies"]);
-            return dependencies;
-        }
-
-        private bool IsValidModuleKey(string key)
-        {
-            return key.Contains("scaffold") && !key.Contains("scaffold.builder") && !key.Contains("scaffold.launcher");
+            return File.ReadAllText(_manifestPath);
         }
     }
 }

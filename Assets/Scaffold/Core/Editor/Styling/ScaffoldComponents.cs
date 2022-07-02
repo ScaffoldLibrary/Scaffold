@@ -65,7 +65,9 @@ namespace Scaffold.Core.Editor
             {
                 EditorGUI.BeginDisabledGroup(true);
                 {
-                    EditorGUILayout.TextField(fileName);
+                    string iconName = !string.IsNullOrWhiteSpace(folderPath) ? "greenLight" : "redLight";
+                    GUIContent icon = EditorGUIUtility.IconContent(iconName);
+                    EditorGUILayout.TextField(icon, fileName);
                 }
                 EditorGUI.EndDisabledGroup();
 
@@ -91,7 +93,9 @@ namespace Scaffold.Core.Editor
 
             EditorGUILayout.BeginHorizontal();
             {
-                folderPath = EditorGUILayout.TextField(folderPath);
+                string iconName = !string.IsNullOrWhiteSpace(folderPath) ? "greenLight" : "redLight";
+                GUIContent icon = EditorGUIUtility.IconContent(iconName);
+                folderPath = EditorGUILayout.TextField(icon, folderPath);
                 if (GUILayout.Button("Select Folder", GUILayout.Width(100)))
                 {
                     string path = EditorUtility.OpenFolderPanel("Select Folder", "", "");

@@ -1,6 +1,7 @@
 ﻿using Scaffold.Builder.Utilities;
 using System.IO;
 using UnityEngine;
+using Scaffold.Core.Editor.Module;
 
 namespace Scaffold.Builder.FileBuilders
 {
@@ -31,7 +32,7 @@ namespace Scaffold.Builder.FileBuilders
 
         private string EditTemplateAssembly(string assembly)
         {
-            assembly = assembly.Replace("ModuleName", _config.ModuleName);
+            assembly = assembly.Replace("ModuleName", _config.Module.GetPascalName());
             return assembly;
         }
 

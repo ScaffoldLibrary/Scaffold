@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Scaffold.Builder.Utilities;
+using Scaffold.Core.Editor.Module;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,21 +9,23 @@ using UnityEngine;
 
 namespace Scaffold.Builder.FileBuilders
 {
-    internal class DefinesBuilder: ModuleBuilder
+    internal class DefinesBuilder : ModuleBuilder
     {
         public DefinesBuilder(BuilderConfigs configs) : base(configs)
         {
-
+            _module = configs.Module;
         }
+
+        private Module _module;
 
         public override bool Validate()
         {
-            return _config.RequiredDefines != null && _config.Assemblies != null;
+            return _module.requiredDefines != null && _config.Assemblies != null;
         }
 
         public override void Build()
         {
-            List<string> defines = _config.RequiredDefines;
+            List<string> defines = _module.requiredDefines;
             List<string> assemblies = _config.Assemblies;
             AddDefinesToAssemblies(assemblies, defines);
         }

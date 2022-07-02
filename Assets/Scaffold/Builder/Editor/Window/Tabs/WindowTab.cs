@@ -1,4 +1,5 @@
 using Scaffold.Builder.Utilities;
+using Scaffold.Core.Editor.Module;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,13 +8,11 @@ namespace Scaffold.Builder.Editor.Tabs
 {
     public abstract class WindowTab
     {
-        public WindowTab(BuilderWindow window, BuilderConfigs config)
+        public WindowTab(BuilderConfigs config)
         {
-            _window = window;
             _configs = config;
         }
 
-        protected BuilderWindow _window;
         protected BuilderConfigs _configs;
 
         public abstract string TabKey

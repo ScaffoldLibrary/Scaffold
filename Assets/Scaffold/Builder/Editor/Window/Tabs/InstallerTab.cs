@@ -6,23 +6,27 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Module;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
     [TabOrder(3)]
     public class InstallerTab : WindowTab
     {
-        public InstallerTab(BuilderWindow window, BuilderConfigs config) : base(window, config)
+        public InstallerTab(BuilderConfigs config) : base(config)
         {
             _Installerbuilder = new InstallerBuilder(config);
             _assemblyBuilder = new AssemblyBuilder(config);
-            _installDefines = config.InstallDefines;
+            _installDefines = config.Module.installDefines;
+            _module = config.Module;
 
             if (string.IsNullOrWhiteSpace(config.InstallerPath))
             {
                 _installerFolder = Path.GetDirectoryName(config.InstallerPath);
             }
         }
+
+        private Module _module;
 
         public override string TabKey => "Creating Installers...";
 
@@ -213,8 +217,8 @@ namespace Scaffold.Builder.Editor.Tabs
         {
             _configs.InstallerPath = _installerFolder;
             _installDefines.AddRange(_customInstallDefines);
-            _configs.InstallDefines = _installDefines;
-            _configs.Manifest.Save(_configs.ManifestPath);
+            _module.installDefines = _installDefines;
+            //_configs.Manifest.Save(_configs.ManifestPath);
 
             //Update Installer
             _Installerbuilder.Build();

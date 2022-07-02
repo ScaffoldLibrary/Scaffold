@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace Scaffold.Builder.Utilities
+namespace Scaffold.Core.Editor
 {
     public static class NameFormatter
     {

@@ -4,13 +4,14 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Module;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
     [TabOrder(0)]
     public class StartupTab : WindowTab
     {
-        public StartupTab(BuilderWindow window, BuilderConfigs config) : base(window, config)
+        public StartupTab(BuilderConfigs config) : base(config)
         {
             _modulePath = config.ModuleFolder;
         }
@@ -26,23 +27,7 @@ namespace Scaffold.Builder.Editor.Tabs
             EditorGUILayout.LabelField("Welcome to the Scaffold Builder Wizard, let's build your module!");
             EditorGUILayout.Space(10);
 
-            //Project Folder
-            EditorGUILayout.LabelField("Module Folder:", ScaffoldStyles.CornerLabel);
-            EditorGUILayout.BeginHorizontal();
-            {
-                GUIContent icon =  _hasManifest ? EditorGUIUtility.IconContent("greenLight") : EditorGUIUtility.IconContent("redLight");
-                EditorGUILayout.LabelField(icon, GUILayout.Width(20));
-                _modulePath = EditorGUILayout.TextField(_modulePath);
-                if (GUILayout.Button("Select Folder"))
-                {
-                    string path = EditorUtility.OpenFolderPanel("Select module folder", "", "");
-                    if (!string.IsNullOrEmpty(path))
-                    {
-                        _modulePath = path;
-                    }
-                }
-            }
-            EditorGUILayout.EndHorizontal();
+            _modulePath = ScaffoldComponents.FolderField(_modulePath, "Module Folder:");
 
             if (string.IsNullOrEmpty(_modulePath))
             {

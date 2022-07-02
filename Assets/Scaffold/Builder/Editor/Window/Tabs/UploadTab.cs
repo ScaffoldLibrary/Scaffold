@@ -1,15 +1,17 @@
 ﻿using Newtonsoft.Json;
 using Scaffold.Builder.Utilities;
+using Scaffold.Core.Editor.Module;
 using System.Collections;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+
 namespace Scaffold.Builder.Editor.Tabs
 {
     [TabOrder(4)]
     public class UploadTab : WindowTab
     {
-        public UploadTab(BuilderWindow window, BuilderConfigs config) : base(window, config)
+        public UploadTab(BuilderConfigs config) : base(config)
         {
 
         }
@@ -61,7 +63,7 @@ namespace Scaffold.Builder.Editor.Tabs
 
             EditorGUILayout.Space(5);
 
-            
+
             if (!_uploading)
             {
                 if (GUILayout.Button("Upload Module", GUILayout.Width(150)))
