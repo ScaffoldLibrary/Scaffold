@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Scaffold.Builder.Editor.Components;
 using Scaffold.Builder.Utilities;
 using System.Collections;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-
 namespace Scaffold.Builder.Editor.Tabs
 {
     [TabOrder(4)]

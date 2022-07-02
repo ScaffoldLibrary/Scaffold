@@ -3,6 +3,7 @@ using UnityEngine;
 using Scaffold.Launcher.Objects;
 using System;
 using System.Threading.Tasks;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Launcher.Utilities
 {
@@ -13,14 +14,14 @@ namespace Scaffold.Launcher.Utilities
         public static async Task<ScaffoldModule> GetModule(string moduleKey)
         {
             GetModuleRequest request = new GetModuleRequest(moduleKey);
-            ScaffoldModule module = await HttpFetcher.Fetch<ScaffoldModule>(ApiUrl, request);
+            ScaffoldModule module = await HttpHandler.Post<ScaffoldModule>(ApiUrl, request);
             return module;
         }
 
         public static async Task<ScaffoldManifest> GetManifest()
         {
             GetManifestRequest request = new GetManifestRequest();
-            ScaffoldManifest manifest = await HttpFetcher.Fetch<ScaffoldManifest>(ApiUrl, request);
+            ScaffoldManifest manifest = await HttpHandler.Post<ScaffoldManifest>(ApiUrl, request);
             return manifest;
         }
 

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor;
 
-namespace Scaffold.Builder.Editor.Components
+namespace Scaffold.Core.Editor
 {
-    public static class EditorComponents
+    public static class ScaffoldComponents
     {
         public static List<string> StringList(List<string> list, string label = null, bool editable = true)
         {
-            EditorGUILayout.LabelField(label, EditorStyles.CornerLabel);
+            EditorGUILayout.LabelField(label, ScaffoldStyles.CornerLabel);
             if (list != null)
             {
                 for (int i = 0; i < list.Count; i++)
@@ -57,7 +58,7 @@ namespace Scaffold.Builder.Editor.Components
 
             if (!string.IsNullOrEmpty(label))
             {
-                EditorGUILayout.LabelField(label, EditorStyles.CornerLabel);
+                EditorGUILayout.LabelField(label, ScaffoldStyles.CornerLabel);
             }
 
             EditorGUILayout.BeginHorizontal();
@@ -85,7 +86,7 @@ namespace Scaffold.Builder.Editor.Components
         {
             if (!string.IsNullOrEmpty(label))
             {
-                EditorGUILayout.LabelField(label, EditorStyles.CornerLabel);
+                EditorGUILayout.LabelField(label, ScaffoldStyles.CornerLabel);
             }
 
             EditorGUILayout.BeginHorizontal();

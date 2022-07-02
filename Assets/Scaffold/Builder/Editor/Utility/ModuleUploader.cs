@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Builder.Utilities
 {
@@ -14,7 +15,7 @@ namespace Scaffold.Builder.Utilities
         {
             SetModuleRequest request = new SetModuleRequest(config.Manifest, config.Credential.apiKey);
             Debug.Log(JsonConvert.SerializeObject(request));
-            string result = await HttpFetcher.Fetch(config.Credential.apiURL, request);
+            string result = await HttpHandler.Post(config.Credential.apiURL, request);
             Result?.Invoke(result);
         }
 

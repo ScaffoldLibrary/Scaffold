@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Builder.Editor
 {
@@ -58,7 +59,7 @@ namespace Scaffold.Builder.Editor
 
         private void OnGUI()
         {
-            GUILayout.Box("Scaffold Builder", EditorStyles.HeaderBox);
+            GUILayout.Box("Scaffold Builder", ScaffoldStyles.HeaderBox);
             DrawProgress(CurrentTab.TabKey);
             EditorGUILayout.Space(10);
             CurrentTab.Draw();

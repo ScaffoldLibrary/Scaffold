@@ -13,6 +13,7 @@ using UnityEditor.PackageManager.Requests;
 using System.Threading.Tasks;
 using Scaffold.Launcher.Objects;
 using Scaffold.Launcher.Editor;
+using UnityEditor;
 
 namespace Scaffold.Launcher
 {
@@ -53,7 +54,7 @@ namespace Scaffold.Launcher
         {
             if(module.Dependencies.Count > 0)
             {
-               bool installDependencies = Popup.Assert($"Installing {module.Name}",
+               bool installDependencies = EditorUtility.DisplayDialog($"Installing {module.Name}",
                                                        $"{module.Name} has dependencies, do you wish to install them now?",
                                                        "Yes",
                                                        "No");

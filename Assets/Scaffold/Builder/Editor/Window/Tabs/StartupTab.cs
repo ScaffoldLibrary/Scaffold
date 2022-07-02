@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
@@ -26,7 +27,7 @@ namespace Scaffold.Builder.Editor.Tabs
             EditorGUILayout.Space(10);
 
             //Project Folder
-            EditorGUILayout.LabelField("Module Folder:", EditorStyles.CornerLabel);
+            EditorGUILayout.LabelField("Module Folder:", ScaffoldStyles.CornerLabel);
             EditorGUILayout.BeginHorizontal();
             {
                 GUIContent icon =  _hasManifest ? EditorGUIUtility.IconContent("greenLight") : EditorGUIUtility.IconContent("redLight");

@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor.Manifest;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
@@ -52,8 +54,8 @@ namespace Scaffold.Builder.Editor.Tabs
         {
             EditorGUILayout.BeginHorizontal();
             {
-                EditorGUILayout.LabelField($"{label}: ", EditorStyles.CornerLabel, GUILayout.MaxWidth(100));
-                value = EditorGUILayout.TextField(value, EditorStyles.TextField);
+                EditorGUILayout.LabelField($"{label}: ", ScaffoldStyles.CornerLabel, GUILayout.MaxWidth(100));
+                value = EditorGUILayout.TextField(value, ScaffoldStyles.TextField);
                 _manifest.SetValue(label, value);
             }
             EditorGUILayout.EndHorizontal();
@@ -67,7 +69,7 @@ namespace Scaffold.Builder.Editor.Tabs
                 return;
             }
 
-            EditorGUILayout.LabelField($"{label}: ", EditorStyles.CornerLabel);
+            EditorGUILayout.LabelField($"{label}: ", ScaffoldStyles.CornerLabel);
             Dictionary<string, string> objectInput = new Dictionary<string, string>();
             EditorGUILayout.BeginVertical();
             {
@@ -103,7 +105,9 @@ namespace Scaffold.Builder.Editor.Tabs
 
         public override void OnNext()
         {
-            List<string> dependencies = ManifestReader.GetModuleDependencies();
+            ManifestReader reader = new ManifestReader("");
+            Debug.LogError("FAKE READER EXPOSED");
+            List<string> dependencies = reader.GetModuleDependencies();
             _configs.Dependencies = dependencies;
             List<string> requiredDefines = ConvertDependenciesToDefines(dependencies);
             _configs.RequiredDefines = requiredDefines;

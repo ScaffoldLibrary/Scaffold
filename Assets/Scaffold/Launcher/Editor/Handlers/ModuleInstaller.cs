@@ -7,6 +7,7 @@ using UnityEngine;
 using Scaffold.Launcher.Objects;
 using UnityEditor.PackageManager;
 using Scaffold.Launcher.Editor;
+using UnityEditor;
 
 namespace Scaffold.Launcher.PackageHandler
 {
@@ -52,7 +53,7 @@ namespace Scaffold.Launcher.PackageHandler
 
             if(_dependencies.CheckForDependingModules(module, out List<ScaffoldModule> dependers))
             {
-                bool confirm = Popup.Assert($"Uninstalling {module.Key}", "There seems to be some dependencies on this Module, do you wish to uninstall anyway?", "Yes", "No");
+                bool confirm = EditorUtility.DisplayDialog($"Uninstalling {module.Key}", "There seems to be some dependencies on this Module, do you wish to uninstall anyway?", "Yes", "No");
                 if (!confirm) return;
             }
 

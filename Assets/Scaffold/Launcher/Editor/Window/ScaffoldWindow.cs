@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Scaffold.Launcher.Objects;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Launcher.Editor
 {
@@ -82,8 +83,8 @@ namespace Scaffold.Launcher.Editor
             {
                 EditorGUILayout.BeginVertical();
                 {
-                    GUILayout.Box("Scaffold", EditorStyles.HeaderBox);
-                    EditorGUILayout.LabelField(launcher.InstalledVersion, EditorStyles.CenterLabel);
+                    GUILayout.Box("Scaffold", ScaffoldStyles.HeaderBox);
+                    EditorGUILayout.LabelField(launcher.InstalledVersion, ScaffoldStyles.CenterLabel);
                     EditorGUILayout.BeginHorizontal();
                     {
                         foreach(WindowTab tab in Tabs)

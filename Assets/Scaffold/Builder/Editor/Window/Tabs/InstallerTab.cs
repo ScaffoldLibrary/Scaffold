@@ -1,11 +1,11 @@
-﻿using Scaffold.Builder.Editor.Components;
-using Scaffold.Builder.FileBuilders;
+﻿using Scaffold.Builder.FileBuilders;
 using Scaffold.Builder.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
@@ -49,7 +49,7 @@ namespace Scaffold.Builder.Editor.Tabs
 
         public override void Draw()
         {
-            _installerFolder = EditorComponents.FolderField(_installerFolder, "Installer Folder: ");
+            _installerFolder = ScaffoldComponents.FolderField(_installerFolder, "Installer Folder: ");
             EditorGUILayout.Space(5);
             if (string.IsNullOrEmpty(_installerFolder))
             {
@@ -186,9 +186,9 @@ namespace Scaffold.Builder.Editor.Tabs
 
             EditorGUILayout.Space(10);
 
-            EditorComponents.StringList(_installDefines, "Installation Defines: ", false);
+            ScaffoldComponents.StringList(_installDefines, "Installation Defines: ", false);
             EditorGUILayout.Space(-20);
-            _customInstallDefines = EditorComponents.StringList(_customInstallDefines);
+            _customInstallDefines = ScaffoldComponents.StringList(_customInstallDefines);
         }
 
         private bool GetFile(string fileName)

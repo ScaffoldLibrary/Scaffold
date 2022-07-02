@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using Scaffold.Builder.Editor.Components;
 using Scaffold.Builder.FileBuilders;
 using Scaffold.Builder.Utilities;
 using System.Collections;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
@@ -40,12 +40,12 @@ namespace Scaffold.Builder.Editor.Tabs
             }
 
             int assemblyCount = _assemblies.Count;
-            EditorGUILayout.LabelField("Assemblies: ", EditorStyles.CornerLabel);
+            EditorGUILayout.LabelField("Assemblies: ", ScaffoldStyles.CornerLabel);
             for (int i = 0; i < assemblyCount; i++)
             {
                 EditorGUILayout.BeginHorizontal();
                 {
-                    _assemblies[i] = EditorComponents.FileField(_assemblies[i], extension: "*.asmdef");
+                    _assemblies[i] = ScaffoldComponents.FileField(_assemblies[i], extension: "*.asmdef");
                     if (GUILayout.Button("X", GUILayout.Width(20)))
                     {
                         _assemblies.Remove(_assemblies[i]);
@@ -62,9 +62,9 @@ namespace Scaffold.Builder.Editor.Tabs
 
             EditorGUILayout.Space(10);
 
-            EditorComponents.StringList(_requiredDefines, "Defines: ", false);
+            ScaffoldComponents.StringList(_requiredDefines, "Defines: ", false);
             EditorGUILayout.Space(-20);
-            _customDefines = EditorComponents.StringList(_customDefines);
+            _customDefines = ScaffoldComponents.StringList(_customDefines);
         }
 
         public override void OnNext()

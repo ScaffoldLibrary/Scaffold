@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Launcher.Editor
 {
@@ -56,7 +57,7 @@ namespace Scaffold.Launcher.Editor
                 EditorGUILayout.BeginHorizontal();
                 {
                     DrawProjectState();
-                    if (GUILayout.Button("Update Manifest", EditorStyles.Button, GUILayout.Width(windowSize.x - 170)))
+                    if (GUILayout.Button("Update Manifest", ScaffoldStyles.Button, GUILayout.Width(windowSize.x - 170)))
                     {
                         scaffold.UpdateManifest();
                     }
@@ -70,7 +71,7 @@ namespace Scaffold.Launcher.Editor
         {
             if (Scaffold.CheckForMissingDependencies())
             {
-                Rect module = EditorGUILayout.BeginVertical(EditorStyles.WarningBox);
+                Rect module = EditorGUILayout.BeginVertical(ScaffoldStyles.WarningBox);
                 {
                     EditorGUILayout.BeginHorizontal();
                     {
@@ -90,7 +91,7 @@ namespace Scaffold.Launcher.Editor
 
         private void DrawModules(List<ScaffoldModule> modules)
         {
-            EditorGUILayout.BeginVertical(EditorStyles.ProjectStateReady);
+            EditorGUILayout.BeginVertical(ScaffoldStyles.ProjectStateReady);
             foreach (ScaffoldModule package in modules)
             {
                 bool installed = Scaffold.IsModuleInstalled(package);
@@ -106,27 +107,27 @@ namespace Scaffold.Launcher.Editor
             if (Scaffold.Busy)
             {
                 stateLabel = "Loading...";
-                style = EditorStyles.ProjectStateReady;
+                style = ScaffoldStyles.ProjectStateReady;
             }
             else if (Application.internetReachability == NetworkReachability.NotReachable)
             {
                 stateLabel = "No Internet";
-                style = EditorStyles.ProjectStateError;
+                style = ScaffoldStyles.ProjectStateError;
             }
             else if (Scaffold.CheckForMissingDependencies())
             {
                 stateLabel = "Missing Dependencies";
-                style = EditorStyles.ProjectStateError;
+                style = ScaffoldStyles.ProjectStateError;
             }
             else if (!Scaffold.IsProjectUpToDate())
             {
                 stateLabel = "Updates available";
-                style = EditorStyles.ProjectStatePending;
+                style = ScaffoldStyles.ProjectStatePending;
             }
             else if (1 + 2 == 3)
             {
                 stateLabel = "Ready";
-                style = EditorStyles.ProjectStateReady;
+                style = ScaffoldStyles.ProjectStateReady;
             }
             EditorGUILayout.LabelField(stateLabel, style, GUILayout.Width(150));
         }
@@ -134,14 +135,14 @@ namespace Scaffold.Launcher.Editor
         private void DrawModuleViewer(ScaffoldModule module, bool installed)
         {
             float maxWidth = WindowSize.x;
-            Rect rect = EditorGUILayout.BeginHorizontal(EditorStyles.ModuleBox);
+            Rect rect = EditorGUILayout.BeginHorizontal(ScaffoldStyles.ModuleBox);
             {
                 EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3 * 2));
                 {
                     string version = installed ? module.InstalledVersion : module.LatestVersion;
                     if (module.IsOutdated()) version += " (Update Available)";
-                    GUILayout.Label($"{module.Name} - {version}", EditorStyles.ModuleName);
-                    GUILayout.Label(module.Description, EditorStyles.ModuleDescription);
+                    GUILayout.Label($"{module.Name} - {version}", ScaffoldStyles.ModuleName);
+                    GUILayout.Label(module.Description, ScaffoldStyles.ModuleDescription);
                 }
                 EditorGUILayout.EndVertical();
 

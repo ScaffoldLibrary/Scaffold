@@ -1,5 +1,6 @@
 ﻿using Scaffold.Launcher.Editor;
 using UnityEditor;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Launcher
 {
