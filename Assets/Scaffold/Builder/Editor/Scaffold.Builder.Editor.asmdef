@@ -1,5 +1,5 @@
 {
-    "name": "Scaffold.Launcher.Editor",
+    "name": "Scaffold.Builder.Editor",
     "rootNamespace": "",
     "references": [
         "GUID:46e3b16e59c7b3d4f9b1f126afdc746a"

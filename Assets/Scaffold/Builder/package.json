@@ -1,0 +1,18 @@
+{
+  "name": "com.scaffold.sample",
+  "version": "0.0.0",
+  "displayName": "Sample Package",
+  "description": "Sample Description",
+  "unity": "2018.5",
+  "path": "git",
+  "author": {
+    "name": "Matheus",
+    "email": "matheus@hotmail.com",
+    "url": "https://www.matheuscohen.com.br"
+  },
+  "requirements": [],
+  "requiredDefines": [],
+  "installDefines": [
+    "USE_SCAFFOLD_SAMPLE"
+  ]
+}

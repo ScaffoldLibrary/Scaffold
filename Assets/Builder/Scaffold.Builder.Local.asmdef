@@ -1,8 +1,8 @@
 {
-    "name": "Scaffold.Launcher.Editor",
+    "name": "Scaffold.Local.Builder",
     "rootNamespace": "",
     "references": [
-        "GUID:46e3b16e59c7b3d4f9b1f126afdc746a"
+        "GUID:7542c323ab8c3b649bef078eec05d724"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
