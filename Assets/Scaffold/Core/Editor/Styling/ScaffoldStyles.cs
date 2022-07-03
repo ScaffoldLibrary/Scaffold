@@ -103,6 +103,12 @@ namespace Scaffold.Core.Editor
 
         };
 
+        public static GUIStyle WrappedLabel = new GUIStyle(GUI.skin.label)
+        {
+            wordWrap = true,
+        };
+
+
         public static GUIStyle TextFieldError = new GUIStyle(GUI.skin.textField)
         {
             fontStyle = FontStyle.Bold,

@@ -58,14 +58,19 @@ namespace Scaffold.Builder.Editor
         private bool _animating;
 
         private Module module;
+        private Vector2 _scroll;
 
         private void OnGUI()
         {
             GUILayout.Box("Scaffold Builder", ScaffoldStyles.HeaderBox);
             DrawProgress(CurrentTab.TabKey);
             EditorGUILayout.Space(10);
-            CurrentTab.Draw();
+            _scroll = EditorGUILayout.BeginScrollView(_scroll);
+            {
+                CurrentTab.Draw();
+            }
             DrawFooterButtons();
+            EditorGUILayout.EndScrollView();
         }
 
         private void DrawProgress(string description)
@@ -123,7 +128,7 @@ namespace Scaffold.Builder.Editor
             List<Type> types = GetAllTabTypes();
             foreach (Type type in types)
             {
-                object[] parameters = new object[] { this, ScaffoldBuilder.Config };
+                object[] parameters = new object[] { ScaffoldBuilder.Config };
                 WindowTab tab = Activator.CreateInstance(type, parameters) as WindowTab;
                 tabs.Add(tab);
             }
@@ -177,6 +182,8 @@ namespace Scaffold.Builder.Editor
         {
             GUI.FocusControl(null);
             _currentTabIndex -= 1;
+            _scroll.y = 0;
+            CurrentTab.OnDraw();
         }
 
         private bool ValidateNext()
@@ -189,10 +196,15 @@ namespace Scaffold.Builder.Editor
             GUI.FocusControl(null);
             CurrentTab.OnNext();
             _currentTabIndex += 1;
+            _scroll.y = 0;
             if (_currentTabIndex >= Tabs.Count)
             {
                 Window.Close();
                 return;
+            }
+            else
+            {
+                CurrentTab.OnDraw();
             }
         }
     }

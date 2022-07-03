@@ -25,9 +25,9 @@ namespace Scaffold.Builder
 
         //PATHS
         [HideInInspector]
-        public string ManifestPath = string.Empty; //The module manifest file path
+        public string ProjectManifestPath = string.Empty; //The path to the main project manifest file
         [HideInInspector]
-        public string ModuleFolder = string.Empty; //The main package folder, used to find Manifest
+        public string ModuleManifestPath = string.Empty; //The module manifest file path
         [HideInInspector]
         public string CredentialsPath = string.Empty; //The credentials path stored outside of project
         [HideInInspector]
@@ -37,32 +37,10 @@ namespace Scaffold.Builder
 
         //VALUES
         [HideInInspector]
-        public Module Module;
+        public Module Module; //object representing the module manifest(package.json)
         [HideInInspector]
         public List<string> Assemblies = new List<string>(); //The list of assemblies used in the project
-        public Credentials Credential //Object representing the uploading credentials
-        {
-            get
-            {
-                if (!File.Exists(CredentialsPath))
-                {
-                    return null;
-                }
-                string rawCredentials = File.ReadAllText(CredentialsPath);
-                return JsonConvert.DeserializeObject<Credentials>(rawCredentials);
-            }
-        }
 
-     
-        //METHODS
-        public void SetModuleFolder(string path)
-        {
-            ModuleFolder = path;
-            ManifestPath = $"{path}/package.json";
-
-            EditorUtility.SetDirty(this);
-            AssetDatabase.SaveAssets();
-        }
 
         //LOCAL SETTERS - Used on the main builder project only
         public void SetTemplateAssembly(string assembly)

@@ -26,6 +26,11 @@ namespace Scaffold.Builder.Editor.Tabs
         private bool _uploading;
         private string _returnMessage;
 
+        public override void OnDraw()
+        {
+
+        }
+
         public override void Draw()
         {
             EditorGUILayout.LabelField("Package ready to upload! Check your credentials to continue:");
@@ -74,7 +79,7 @@ namespace Scaffold.Builder.Editor.Tabs
                     }
                     _uploading = true;
                     _returnMessage = "";
-                    ModuleUploader.UploadModule(_configs, (s) => { _returnMessage = s; _uploading = false; });
+                    //ModuleUploader.UploadModule(_configs, (s) => { _returnMessage = s; _uploading = false; });
                 }
 
                 EditorGUILayout.LabelField(_returnMessage);
@@ -119,5 +124,6 @@ namespace Scaffold.Builder.Editor.Tabs
         {
             return true;
         }
+
     }
 }

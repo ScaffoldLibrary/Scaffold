@@ -4,6 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor;
+using System;
 
 namespace Scaffold.Core.Editor
 {
@@ -46,11 +47,11 @@ namespace Scaffold.Core.Editor
             return list;
         }
 
-        public static string FileField(string folderPath, string label = null, string directory = null, string extension = null)
+        public static string FileField(string folderPath, string label = null, string directory = null, string extension = null, bool isValidPath = true)
         {
-            directory = directory ?? "";
-            extension = extension ?? "";
-            string fileName = "";
+            directory ??= string.Empty;
+            extension ??= string.Empty;
+            string fileName = string.Empty;
             if (!string.IsNullOrEmpty(folderPath))
             {
                 fileName = Path.GetFileName(folderPath);
@@ -65,9 +66,10 @@ namespace Scaffold.Core.Editor
             {
                 EditorGUI.BeginDisabledGroup(true);
                 {
-                    string iconName = !string.IsNullOrWhiteSpace(folderPath) ? "greenLight" : "redLight";
+                    string iconName = isValidPath ? "greenLight" : "redLight";
                     GUIContent icon = EditorGUIUtility.IconContent(iconName);
-                    EditorGUILayout.TextField(icon, fileName);
+                    EditorGUILayout.LabelField(icon, GUILayout.Width(20));
+                    fileName = EditorGUILayout.TextField(fileName);
                 }
                 EditorGUI.EndDisabledGroup();
 
@@ -84,22 +86,23 @@ namespace Scaffold.Core.Editor
             return folderPath;
         }
 
-        public static string FolderField(string folderPath, string label = null)
+        public static string FolderField(string folderPath, string label = null, bool isValidPath = true)
         {
-            if (!string.IsNullOrEmpty(label))
+            if (!string.IsNullOrWhiteSpace(label))
             {
                 EditorGUILayout.LabelField(label, ScaffoldStyles.CornerLabel);
             }
 
             EditorGUILayout.BeginHorizontal();
             {
-                string iconName = !string.IsNullOrWhiteSpace(folderPath) ? "greenLight" : "redLight";
+                string iconName = isValidPath ? "greenLight" : "redLight";
                 GUIContent icon = EditorGUIUtility.IconContent(iconName);
-                folderPath = EditorGUILayout.TextField(icon, folderPath);
+                EditorGUILayout.LabelField(icon, GUILayout.Width(20));
+                folderPath = EditorGUILayout.TextField(folderPath);
                 if (GUILayout.Button("Select Folder", GUILayout.Width(100)))
                 {
                     string path = EditorUtility.OpenFolderPanel("Select Folder", "", "");
-                    if (!string.IsNullOrEmpty(path))
+                    if (!string.IsNullOrWhiteSpace(path))
                     {
                         folderPath = path;
                     }
@@ -107,6 +110,52 @@ namespace Scaffold.Core.Editor
             }
             EditorGUILayout.EndHorizontal();
             return folderPath;
+        }
+
+        public static string FileSearchOrCreate(string filePath, string label = null, bool isValid = true, string directory = null, string extension = null, Action onCreate = null)
+        {
+            string fileName = string.Empty;
+            directory ??= string.Empty;
+            extension ??= string.Empty; 
+
+            if (!string.IsNullOrWhiteSpace(label))
+            {
+                EditorGUILayout.LabelField(label, ScaffoldStyles.CornerLabel);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filePath))
+            {
+                fileName = Path.GetFileName(filePath);
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            {
+                string iconName = isValid ? "greenLight" : "redLight";
+                GUIContent icon = EditorGUIUtility.IconContent(iconName);
+                EditorGUILayout.LabelField(icon, GUILayout.Width(20));
+
+                EditorGUI.BeginDisabledGroup(true);
+                {
+                    EditorGUILayout.TextField(fileName);
+                }
+                EditorGUI.EndDisabledGroup();
+
+                if (GUILayout.Button("Search", GUILayout.Width(75)))
+                {
+                    string path = EditorUtility.OpenFilePanel("Select File", directory, extension);
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        filePath = path;
+                    }
+                }
+                if (GUILayout.Button("Create", GUILayout.Width(75)))
+                {
+                    onCreate?.Invoke();
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
+            return filePath;
         }
     }
 }

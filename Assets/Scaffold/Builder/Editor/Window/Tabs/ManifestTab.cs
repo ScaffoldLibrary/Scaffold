@@ -10,20 +10,25 @@ using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor.Module;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Manifest;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
     [TabOrder(1)]
     public class ManifestTab : WindowTab
     {
-        public ManifestTab(BuilderConfigs config) : base( config)
+        public ManifestTab(BuilderConfigs config) : base(config)
         {
-            _module = config.Module;
+
         }
 
         private Module _module;
 
         public override string TabKey => "Creating Manifest...";
+        public override void OnDraw()
+        {
+            _module = _configs.Module;
+        }
 
         public override void Draw()
         {
@@ -32,36 +37,24 @@ namespace Scaffold.Builder.Editor.Tabs
             _module.path = EditorGUILayout.TextField("Path: ", _module.path);
             _module.unity = EditorGUILayout.TextField("Unity Version: ", _module.unity);
             _module.version = EditorGUILayout.TextField("Version: ", _module.version);
-            _module.description = EditorGUILayout.TextArea("Description: ", _module.description);
+
+            EditorGUILayout.LabelField("Description: ");
+            _module.description = EditorGUILayout.TextArea(_module.description, GUILayout.Height(65));
         }
 
         public override void OnNext()
         {
-            ModuleReader reader = new ModuleReader("");
-            Debug.LogError("FAKE READER EXPOSED");
-            List<string> dependencies = new List<string>(); 
-            _module.requiredModules = dependencies;
-            List<string> requiredDefines = ConvertDependenciesToDefines(dependencies);
-            _module.requiredDefines = requiredDefines;
-            List<string> installDefines = new List<string>() { /*_configs.ModuleDefine */ "" };
-            _module.installDefines = installDefines;
-            //_manifest.Save(_configs.ManifestPath);
-        }
-
-        private List<string> ConvertDependenciesToDefines(List<string> dependencies)
-        {
-            return dependencies.Select(d => FormatName(d))
-                               .ToList();
-        }
-
-        private string FormatName(string name)
-        {
-            return NameFormatter.KeyToDefine(name);
+            //get dependencies
+            ManifestReader reader = new ManifestReader(_configs.ProjectManifestPath);
+            Manifest manifest = reader.GetManifest();
+            List<string> requiredModules = manifest.GetScaffoldDependencies();
+            _module.requiredModules = requiredModules;
         }
 
         public override bool ValidateNext()
         {
             return _module.Validate();
         }
+
     }
 }

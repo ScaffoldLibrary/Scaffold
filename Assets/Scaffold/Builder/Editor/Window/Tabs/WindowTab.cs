@@ -20,6 +20,8 @@ namespace Scaffold.Builder.Editor.Tabs
             get;
         }
 
+        public abstract void OnDraw();
+
         public abstract void Draw();
 
         public abstract void OnNext();

@@ -13,66 +13,71 @@ namespace Scaffold.Builder.Editor.Tabs
     {
         public StartupTab(BuilderConfigs config) : base(config)
         {
-            _modulePath = config.ModuleFolder;
+            _moduleManifest = config.ModuleManifestPath;
+            _projectManifest = config.ProjectManifestPath;
         }
 
         public override string TabKey => "Setting up module...";
 
-        private string _modulePath;
-        private bool _createdManifest;
-        private bool _hasManifest;
+        private string _moduleManifest;
+        private string _projectManifest;
+        private string _credentials;
+
+        private string _defaultProjectManifestPath = "./Packages/manifest.json";
+
+        public override void OnDraw()
+        {
+            if (string.IsNullOrWhiteSpace(_projectManifest))
+            {
+                _projectManifest = _defaultProjectManifestPath;
+            }
+        }
 
         public override void Draw()
         {
-            EditorGUILayout.LabelField("Welcome to the Scaffold Builder Wizard, let's build your module!");
+            EditorGUILayout.LabelField("Welcome to the Scaffold Builder Wizard, let's build your module!", ScaffoldStyles.WrappedLabel);
+            EditorGUILayout.LabelField("Please, provide the path to the Project Manifest and the Package Manifest", ScaffoldStyles.WrappedLabel);
             EditorGUILayout.Space(10);
 
-            _modulePath = ScaffoldComponents.FolderField(_modulePath, "Module Folder:");
+            bool hasModule = File.Exists(_moduleManifest);
+            _moduleManifest = ScaffoldComponents.FileField(_moduleManifest, "Package Manifest: ", "./", "json", hasModule);
+            bool hasProject = File.Exists(_projectManifest);
+            _projectManifest = ScaffoldComponents.FileField(_projectManifest, "Project Manifest: ", "./", "json", hasProject);
+            bool hasCredentials = File.Exists(_credentials);
+            _credentials = ScaffoldComponents.FileField(_credentials, "Credentials: ", "./", "json", hasCredentials);
 
-            if (string.IsNullOrEmpty(_modulePath))
-            {
-                return;
-            }
-
-            EditorGUILayout.Space(15);
-            _hasManifest = Directory.Exists(_modulePath) &&  Directory.GetFiles(_modulePath, "package.json", SearchOption.TopDirectoryOnly).Length > 0;
-
-            if (!_hasManifest)
-            {
-                EditorGUILayout.HelpBox("There is no package manifest on the selected folder, do you wish to create one?", MessageType.Warning);
-                EditorGUILayout.Space(5);
-                if (GUILayout.Button("Create Manifest"))
-                {
-                    _configs.SetModuleFolder(_modulePath);
-                    ScaffoldBuilder.CreateManifest();
-                    _createdManifest = true;
-                }
-                return;
-            }
-
-            if (_hasManifest && _createdManifest)
-            {
-                EditorGUILayout.HelpBox("Manifest Created!", MessageType.Info);
-                EditorGUILayout.Space(5);
-            }
-
-            EditorGUILayout.LabelField("Follow the next few steps to setup your module.\nPress Next when you are ready.", GUILayout.Height(30));
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Follow the next few steps to setup your module.\nPress Next when you are ready.", ScaffoldStyles.WrappedLabel);
         }
 
         public override void OnNext()
         {
-            _configs.SetModuleFolder(_modulePath);
+            _configs.ModuleManifestPath = _moduleManifest;
+            _configs.ProjectManifestPath = _projectManifest;
+            _configs.CredentialsPath = _credentials;
+
+            ModuleReader reader = new ModuleReader(_configs.ModuleManifestPath);
+            _configs.Module = reader.GetModule();
         }
 
         public override bool ValidateNext()
         {
-            if (string.IsNullOrEmpty(_modulePath))
+            if (string.IsNullOrWhiteSpace(_moduleManifest))
             {
                 return false;
             }
 
-            
-            return _hasManifest;
+            if (string.IsNullOrWhiteSpace(_projectManifest))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(_credentials))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -15,15 +15,7 @@ namespace Scaffold.Builder.Editor.Tabs
     {
         public InstallerTab(BuilderConfigs config) : base(config)
         {
-            _Installerbuilder = new InstallerBuilder(config);
-            _assemblyBuilder = new AssemblyBuilder(config);
-            _installDefines = config.Module.installDefines;
-            _module = config.Module;
 
-            if (string.IsNullOrWhiteSpace(config.InstallerPath))
-            {
-                _installerFolder = Path.GetDirectoryName(config.InstallerPath);
-            }
         }
 
         private Module _module;
@@ -31,205 +23,140 @@ namespace Scaffold.Builder.Editor.Tabs
         public override string TabKey => "Creating Installers...";
 
         //Main Folder
-        private string _installerFolder;
+        private string _installerFolder = string.Empty;
 
         //Files Folders
         private bool _hasInstaller;
-        private string _installerPath;
-        private string _installerName;
+        private string _installerPath = string.Empty;
 
         private bool _hasAssembly;
-        private string _assemblyPath;
-        private string _assemblyName;
+        private string _assemblyPath = string.Empty;
 
 
         //Installation Defines
         private List<string> _installDefines = new List<string>();
         private List<string> _customInstallDefines = new List<string>();
 
-        //Builders
-        private InstallerBuilder _Installerbuilder;
-        private AssemblyBuilder _assemblyBuilder;
+
+        public override void OnDraw()
+        {
+            _module = _configs.Module;
+            _installDefines = _module.installDefines;
+            _installerPath = _configs.InstallerPath;
+            _assemblyPath = _configs.InstallerAssemblyPath;
+
+            if (!string.IsNullOrWhiteSpace(_configs.InstallerPath))
+            {
+                string fileName = Path.GetFileName(_configs.InstallerPath);
+                _installerFolder = _configs.InstallerPath.Substring(0, _configs.InstallerPath.LastIndexOf(fileName));
+            }
+        }
 
         public override void Draw()
         {
-            _installerFolder = ScaffoldComponents.FolderField(_installerFolder, "Installer Folder: ");
+            bool hasFolder = !string.IsNullOrWhiteSpace(_installerFolder);
+            _hasInstaller = !string.IsNullOrWhiteSpace(_installerPath) && File.Exists(_installerPath);
+            _hasAssembly = !string.IsNullOrWhiteSpace(_assemblyPath) && File.Exists(_assemblyPath);
+
+            _installerFolder = ScaffoldComponents.FolderField(_installerFolder, "Installer Folder: ", isValidPath: hasFolder);
             EditorGUILayout.Space(5);
-            if (string.IsNullOrEmpty(_installerFolder))
+
+            if (hasFolder && !Directory.Exists(_installerFolder))
             {
+                EditorGUILayout.LabelField("The folder does not exist, do you wish to create it?");
+                Rect rect = EditorGUILayout.GetControlRect();
+                rect.width = 100;
+                if (GUI.Button(rect, "Create Folder"))
+                {
+                    Directory.CreateDirectory(_installerFolder);
+                }
                 return;
             }
 
-            if (!Directory.Exists(_installerFolder))
+            EditorGUI.BeginDisabledGroup(!hasFolder);
             {
-                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.Space(10);
+
+                string newInstallerPath = ScaffoldComponents.FileSearchOrCreate(_installerPath, "Installer: ", _hasInstaller, _installerFolder, "cs", CreateInstaller);
+                if (!string.IsNullOrWhiteSpace(newInstallerPath))
                 {
-                    EditorGUILayout.LabelField("The folder don't exists, do you wish to create it?");
-                    if (GUILayout.Button("Create Folder"))
+                    if (newInstallerPath.Contains(_installerFolder))
                     {
-                        Directory.CreateDirectory(_installerFolder);
+                        _installerPath = newInstallerPath;
+                    }
+                    else
+                    {
+                        Debug.Log("Installer file must be inside the designated installer folder");
+                        _installerPath = string.Empty;
                     }
                 }
-                EditorGUILayout.EndHorizontal();
+
+                string newAssemblyPath = ScaffoldComponents.FileSearchOrCreate(_assemblyPath, "Assembly: ", _hasAssembly, _installerFolder, "asmdef", CreateAssembly);
+                if (!string.IsNullOrWhiteSpace(newAssemblyPath))
+                {
+                    if (newAssemblyPath.Contains(_installerFolder))
+                    {
+                        _assemblyPath = newAssemblyPath;
+                    }
+                    else
+                    {
+                        Debug.Log("Assembly file must be inside the designated installer folder");
+                        _assemblyPath = string.Empty;
+                    }
+                }
+
+                EditorGUILayout.Space(10);
+
+                ScaffoldComponents.StringList(_installDefines, "Installation Defines: ", false);
+                EditorGUILayout.Space(-20);
+                _customInstallDefines = ScaffoldComponents.StringList(_customInstallDefines);
+            }
+            EditorGUI.EndDisabledGroup();
+        }
+
+        private void CreateInstaller()
+        {
+            string moduleName = _module.GetPascalName();
+            _installerPath = $"{_installerFolder}/{moduleName}Installer.cs";
+            if (File.Exists(_installerPath))
+            {
+                Debug.Log("File already exists");
                 return;
             }
-
-            if (string.IsNullOrWhiteSpace(_installerPath))
-            {
-                ResetInstallerPath();
-            }
-
-
-            _hasInstaller = GetFile(_installerName);
-            if (_hasInstaller)
-            {
-                EditorGUI.BeginDisabledGroup(true);
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    {
-                        var icon = EditorGUIUtility.IconContent("greenLight");
-                        icon.text = "  Installer: ";
-                        EditorGUILayout.TextField(icon, _installerName);
-                    }
-                    EditorGUILayout.EndHorizontal();
-                }
-                EditorGUI.EndDisabledGroup();
-            }
-            else
-            {
-                EditorGUILayout.BeginHorizontal();
-                {
-                    EditorGUI.BeginDisabledGroup(true);
-                    {
-                        var icon = EditorGUIUtility.IconContent("redLight");
-                        icon.text = "  Installer: ";
-                        EditorGUILayout.LabelField(icon);
-                    }
-                    EditorGUI.EndDisabledGroup();
-                    if (GUILayout.Button("Search"))
-                    {
-                        string path = EditorUtility.OpenFilePanel("Select Installer File", _installerFolder, "cs");
-                        if (!string.IsNullOrWhiteSpace(path))
-                        {
-                            if (Directory.GetParent(path).FullName == _installerFolder)
-                            {
-                                _installerPath = path;
-                                _installerName = Path.GetFileName(path);
-                            }
-                            else
-                            {
-                                Debug.Log("The selected file must be inside the installer folder");
-                            }
-                        }
-                    }
-                    if (GUILayout.Button("Create"))
-                    {
-                        ResetInstallerPath();
-                        string rawInstaller = _Installerbuilder.GetRawInstaller();
-                        _Installerbuilder.WriteInstaller(rawInstaller);
-                    }
-                }
-                EditorGUILayout.EndHorizontal();
-            }
-
-            if (string.IsNullOrWhiteSpace(_assemblyPath))
-            {
-                ResetAssemblyPath();
-            }
-
-            _hasAssembly = GetFile(_assemblyName);
-            if (_hasAssembly)
-            {
-                EditorGUI.BeginDisabledGroup(true);
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    {
-                        var icon = EditorGUIUtility.IconContent("greenLight");
-                        icon.text = "  Assembly: ";
-                        EditorGUILayout.TextField(icon, _assemblyName);
-                    }
-                    EditorGUILayout.EndHorizontal();
-                }
-                EditorGUI.EndDisabledGroup();
-            }
-            else
-            {
-                EditorGUILayout.BeginHorizontal();
-                {
-                    EditorGUI.BeginDisabledGroup(true);
-                    {
-                        var icon = EditorGUIUtility.IconContent("redLight");
-                        icon.text = "  Assembly: ";
-                        EditorGUILayout.LabelField(icon);
-                    }
-                    EditorGUI.EndDisabledGroup();
-                    if (GUILayout.Button("Search"))
-                    {
-                        string path = EditorUtility.OpenFilePanel("Select Assembly File", _installerFolder, "asmdef");
-                        if (!string.IsNullOrWhiteSpace(path))
-                        {
-                            if (Path.GetDirectoryName(path) == _installerFolder)
-                            {
-                                _assemblyPath = path;
-                                _assemblyName = Path.GetFileName(path);
-                            }
-                            else
-                            {
-                                Debug.Log("The selected file must be inside the installer folder");
-                            }
-                        }
-                    }
-                    if (GUILayout.Button("Create"))
-                    {
-                        _configs.InstallerAssemblyPath = _assemblyPath;
-                        _assemblyBuilder.Build();
-                    }
-                }
-                EditorGUILayout.EndHorizontal();
-            }
-
-            EditorGUILayout.Space(10);
-
-            ScaffoldComponents.StringList(_installDefines, "Installation Defines: ", false);
-            EditorGUILayout.Space(-20);
-            _customInstallDefines = ScaffoldComponents.StringList(_customInstallDefines);
+            File.WriteAllText(_installerPath, string.Empty);
         }
 
-        private bool GetFile(string fileName)
+        private void CreateAssembly()
         {
-            var files = Directory.GetFiles(_installerFolder, fileName, SearchOption.TopDirectoryOnly);
-            return files.Length > 0;
-        }
-
-        private void ResetInstallerPath()
-        {
-            _installerName = "";
-            _installerPath = "";
-        }
-
-        private void ResetAssemblyPath()
-        {
-            _assemblyName = "";
-            _assemblyPath = "";
+            string moduleName = _module.GetPascalName();
+            string rawAssembly = _configs.TemplateAssembly;
+            rawAssembly = rawAssembly.Replace("ModuleName", moduleName);
+            _assemblyPath = $"{_installerFolder}/Scaffold.{moduleName}.Installer.asmdef";
+            if (File.Exists(_assemblyPath))
+            {
+                Debug.Log("File already exists");
+                return;
+            }
+            File.WriteAllText(_assemblyPath, rawAssembly);
         }
 
         public override void OnNext()
         {
-            _configs.InstallerPath = _installerFolder;
+            //set paths
+            _configs.InstallerAssemblyPath = _assemblyPath;
+            _configs.InstallerPath = _installerPath;
+
+            //cleanup assembly from selection
+            _configs.Assemblies.Remove(_assemblyPath);
+            
             _installDefines.AddRange(_customInstallDefines);
             _module.installDefines = _installDefines;
-            //_configs.Manifest.Save(_configs.ManifestPath);
-
-            //Update Installer
-            _Installerbuilder.Build();
-
-            //UpdateAssembly
-            _assemblyBuilder.Build();
         }
 
         public override bool ValidateNext()
         {
             return (_hasAssembly && _hasInstaller);
         }
+
     }
 }

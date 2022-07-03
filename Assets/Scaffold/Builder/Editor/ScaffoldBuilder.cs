@@ -121,13 +121,13 @@ namespace Scaffold.Builder
                 return;
             }
 
-            ModuleUploader.UploadModule(Config);
+            //ModuleUploader.UploadModule(Config);
         }
 
         [MenuItem("Scaffold/Builder/Build Steps/Create Manifest File")]
         public static void CreateManifest()
         {
-            string path = Config.ManifestPath;
+            string path = Config.ModuleManifestPath;
             if (string.IsNullOrEmpty(path))
             {
                 path = EditorUtility.OpenFolderPanel("Select folder", "", "");

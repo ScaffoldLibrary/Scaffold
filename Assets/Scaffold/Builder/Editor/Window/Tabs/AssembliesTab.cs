@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor;
 using Scaffold.Core.Editor.Module;
+using System.IO;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
@@ -16,32 +17,32 @@ namespace Scaffold.Builder.Editor.Tabs
     {
         public AssembliesTab(BuilderConfigs config) : base(config)
         {
-            _builder = new DefinesBuilder(config);
             _assemblies = new List<string>(config.Assemblies);
-            if (_assemblies.Count <= 0) _assemblies.Add("");
-            _dependencies = config.Module.requiredModules;
             _requiredDefines = config.Module.requiredDefines;
-            _module = config.Module;
         }
-
-        private Module _module;
 
         public override string TabKey => "Editing Assemblies";
 
-        private DefinesBuilder _builder;
-
         private List<string> _assemblies;
-        private List<string> _dependencies;
         private List<string> _requiredDefines;
         private List<string> _customDefines = new List<string>();
 
+        private bool _hasDependencies;
+        public override void OnDraw()
+        {
+            _hasDependencies = _configs.Module.requiredModules.Any();
+        }
+
         public override void Draw()
         {
-            if (!_dependencies.Any(s => !string.IsNullOrEmpty(s)))
+            if (!_hasDependencies)
             {
                 EditorGUILayout.HelpBox("This module has no dependencies, it doesn't require custom defines", MessageType.Info);
                 EditorGUILayout.Space(10);
             }
+
+            EditorGUILayout.LabelField("Select all assembly files used in your module:", ScaffoldStyles.WrappedLabel);
+            EditorGUILayout.Space(5);
 
             int assemblyCount = _assemblies.Count;
             EditorGUILayout.LabelField("Assemblies: ", ScaffoldStyles.CornerLabel);
@@ -49,7 +50,9 @@ namespace Scaffold.Builder.Editor.Tabs
             {
                 EditorGUILayout.BeginHorizontal();
                 {
-                    _assemblies[i] = ScaffoldComponents.FileField(_assemblies[i], extension: "*.asmdef");
+                    bool isAssembly = !string.IsNullOrWhiteSpace(_assemblies[i]) && File.Exists(_assemblies[i]);
+                    
+                    _assemblies[i] = ScaffoldComponents.FileField(_assemblies[i], extension: "*.asmdef", isValidPath: isAssembly);
                     if (GUILayout.Button("X", GUILayout.Width(20)))
                     {
                         _assemblies.Remove(_assemblies[i]);
@@ -66,6 +69,9 @@ namespace Scaffold.Builder.Editor.Tabs
 
             EditorGUILayout.Space(10);
 
+            EditorGUILayout.LabelField("Now, Check if the required defines for this module is correct.\nYou may also add custom defines", ScaffoldStyles.WrappedLabel);
+            EditorGUILayout.Space(5);
+
             ScaffoldComponents.StringList(_requiredDefines, "Defines: ", false);
             EditorGUILayout.Space(-20);
             _customDefines = ScaffoldComponents.StringList(_customDefines);
@@ -73,23 +79,18 @@ namespace Scaffold.Builder.Editor.Tabs
 
         public override void OnNext()
         {
+            //Save target assemblies
             _assemblies.RemoveAll(a => string.IsNullOrWhiteSpace(a));
             _configs.Assemblies = _assemblies;
 
-            List<string> defines = new List<string>();
-            defines.AddRange(_requiredDefines);
-            defines.AddRange(_customDefines);
-            defines.RemoveAll(d => string.IsNullOrWhiteSpace(d));
-            _module.requiredDefines = defines;
-
-            //_configs.Manifest.Save(_configs.ManifestPath);
-
-            _builder.AddDefinesToAssemblies(_assemblies, defines);
+            //Save defines to manifest
+            List<string> defines = _requiredDefines.Union(_customDefines).Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+            _configs.Module.requiredDefines = defines;
         }
 
         public override bool ValidateNext()
         {
-            if (_dependencies == null  || _dependencies.Count <= 0)
+            if (!_hasDependencies)
             {
                 return true;
             }
@@ -101,5 +102,7 @@ namespace Scaffold.Builder.Editor.Tabs
 
             return true;
         }
+
+
     }
 }

@@ -12,10 +12,22 @@ namespace Scaffold.Builder.Utilities
 {
     internal static partial class ModuleUploader
     {
-        public static async void UploadModule(BuilderConfigs config, Action<string> Result = null)
+        public static async void UploadModule(Module module, Credentials credential, Action<string> Result = null)
         {
-            SetModuleRequest request = new SetModuleRequest(config.Module, config.Credential.apiKey);
-            string result = await HttpHandler.Post(config.Credential.apiURL, request);
+            if (credential == null)
+            {
+                Result?.Invoke("Invalid Credentials");
+                return;
+            }
+
+            if (module == null)
+            {
+                Result?.Invoke("Invalid Module");
+                return;
+            }
+
+            SetModuleRequest request = new SetModuleRequest(module, credential.apiKey);
+            string result = await HttpHandler.Post(credential.apiURL, request);
             Result?.Invoke(result);
         }
 
