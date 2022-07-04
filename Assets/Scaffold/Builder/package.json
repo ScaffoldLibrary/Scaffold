@@ -1,16 +1,16 @@
 {
-  "name": "com.scaffold.sample",
-  "version": "0.0.0",
-  "displayName": "Sample Package",
-  "description": "Sample Description",
+  "name": "com.scaffold.builder",
+  "displayName": "Scaffold Editor",
+  "description": "Module Builder, used to create and upload modules.",
   "unity": "2018.5",
-  "path": "git",
+  "path": "https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Builder",
+  "version": "0.0.1",
   "author": {
     "name": "Matheus",
     "email": "matheus@hotmail.com",
     "url": "https://www.matheuscohen.com.br"
   },
-  "requirements": [],
+  "requiredModules": [],
   "requiredDefines": [],
   "installDefines": [
     "USE_SCAFFOLD_SAMPLE"

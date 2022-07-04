@@ -9,10 +9,11 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor.Module;
+using Scaffold.Builder.FileBuilders;
 
 namespace Scaffold.Builder
 {
-    public class ScaffoldBuilder
+    public static class ScaffoldBuilder
     {
         public static BuilderConfigs Config
         {
@@ -31,120 +32,55 @@ namespace Scaffold.Builder
         }
         private static BuilderConfigs _config;
 
+        private static bool _lastValidation;
+
         [MenuItem("Scaffold/Builder/Build", priority = 0)]
-        private static void Build()
+        public static void Build()
         {
             BuilderWindow.OpenBuilder();
         }
 
         [MenuItem("Scaffold/Builder/Quick Build %#Q", priority = 1)]
-        private static void QuickBuild()
+        public static void QuickBuild()
         {
-            if (!ValidateModuleStructure())
+            if(ValidateBuilders(out List<ModuleBuilder> builders))
             {
-                return;
+                foreach(ModuleBuilder builder in builders)
+                {
+                    builder.Build();
+                }
             }
-            ChangeVersionNumber();
-            BuildModuleFiles();
-            UploadModuleManifest();
         }
 
         [MenuItem("Scaffold/Builder/Quick Build %#Q", true)]
         private static bool ValidateQuickBuild()
         {
-            return false;
+            return _lastValidation;
         }
 
-        [MenuItem("Scaffold/Builder/Build Steps/Validate Module Structure")]
-        private static bool ValidateModuleStructure()
+        private static bool ValidateBuilders(out List<ModuleBuilder> builders)
         {
-            //check for package
-            if (!CheckPackageManifest())
+            builders = GetBuilders();
+            foreach (ModuleBuilder builder in builders)
             {
-                return false;
-            }
-
-            //check for assemblies
-            if (Directory.GetFiles("./Assets/", "*.asmdef", SearchOption.AllDirectories).Length <= 0)
-            {
-                Debug.LogError("Make sure you have at least one assembly in your project");
-            }
-
-            return true;
-        }
-
-        private static bool CheckPackageManifest()
-        {
-            if (_config.Module == null)
-            {
-                Debug.LogError("Make sure you have a valid Package Manifest file created");
-                return false;
-            }
-
-            if (_config.Module.Validate())
-            {
-                Debug.LogError("Empty fields on the project manifest, please check");
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool ChangeVersionNumber()
-        {
-            var version = EditorInputDialog.Show("Building Module", "Please enter the new version", "");
-            if (!string.IsNullOrEmpty(version))
-            {
-                return false;
-            }
-            if (Version.TryParse(version, out Version v))
-            {
-                _config.Module.version = version;
-                return true;
-            }
-
-            return false;
-        }
-
-        [MenuItem("Scaffold/Builder/Build Steps/Build Files")]
-        private static void BuildModuleFiles()
-        {
-            //ModuleBuilder.Build(Config);
-        }
-
-        [MenuItem("Scaffold/Builder/Build Steps/Upload Manifest")]
-        private static void UploadModuleManifest()
-        {
-            if (!CheckPackageManifest())
-            {
-                Debug.Log("Failed to read module manifest");
-                return;
-            }
-
-            //ModuleUploader.UploadModule(Config);
-        }
-
-        [MenuItem("Scaffold/Builder/Build Steps/Create Manifest File")]
-        public static void CreateManifest()
-        {
-            string path = Config.ModuleManifestPath;
-            if (string.IsNullOrEmpty(path))
-            {
-                path = EditorUtility.OpenFolderPanel("Select folder", "", "");
-                if (string.IsNullOrEmpty(path))
+                if (!builder.Validate())
                 {
-                    return;
+                    _lastValidation = false;
+                    return false;
                 }
             }
-
-            //Config.Manifest.Save(path);
-            Debug.Log($"Created manifest file at {path}");
+            _lastValidation = true;
+            return true;
         }
 
-        [MenuItem("Scaffold/Builder/Config/Reset Manifest")]
-        private static void ResetManifest()
+        private static List<ModuleBuilder> GetBuilders()
         {
-            //Config.ResetManifest();
+            return new List<ModuleBuilder>()
+            {
+                new AssemblyBuilder(Config),
+                new DefinesBuilder(Config),
+                new InstallerBuilder(Config)
+            };
         }
     }
 }

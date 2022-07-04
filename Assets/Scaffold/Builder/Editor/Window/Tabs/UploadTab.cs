@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace Scaffold.Builder.Editor.Tabs
 {
-    [TabOrder(4)]
     public class UploadTab : WindowTab
     {
         public UploadTab(BuilderConfigs config) : base(config)

@@ -15,6 +15,7 @@ namespace Scaffold.Builder.Editor.Tabs
         {
             _moduleManifest = config.ModuleManifestPath;
             _projectManifest = config.ProjectManifestPath;
+            _credentials = config.CredentialsPath;
         }
 
         public override string TabKey => "Setting up module...";

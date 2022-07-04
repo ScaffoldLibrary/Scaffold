@@ -45,7 +45,7 @@ namespace Scaffold.Builder.Editor
             {
                 if (_tabs == null)
                 {
-                    _tabs = GetAllTabs();
+                    _tabs = CreateTabs();
                 }
                 return _tabs;
             }
@@ -112,28 +112,28 @@ namespace Scaffold.Builder.Editor
             _animating = false;
         }
 
-        private List<Type> GetAllTabTypes()
-        {
-            Type type = typeof(WindowTab);
-            return GetType().Assembly.GetTypes()
-                                     .Where(t => t.IsSubclassOf(type))
-                                     .Where(t => !t.IsAbstract)
-                                     .OrderBy(t => (t.GetCustomAttributes(typeof(TabOrder), true).FirstOrDefault() as TabOrder).Order)
-                                     .ToList();
-        }
+        //private List<Type> GetAllTabTypes()
+        //{
+        //    Type type = typeof(WindowTab);
+        //    return GetType().Assembly.GetTypes()
+        //                             .Where(t => t.IsSubclassOf(type))
+        //                             .Where(t => !t.IsAbstract)
+        //                             .OrderBy(t => (t.GetCustomAttributes(typeof(TabOrder), true).FirstOrDefault() as TabOrder).Order)
+        //                             .ToList();
+        //}
 
-        private List<WindowTab> GetAllTabs()
-        {
-            List<WindowTab> tabs = new List<WindowTab>();
-            List<Type> types = GetAllTabTypes();
-            foreach (Type type in types)
-            {
-                object[] parameters = new object[] { ScaffoldBuilder.Config };
-                WindowTab tab = Activator.CreateInstance(type, parameters) as WindowTab;
-                tabs.Add(tab);
-            }
-            return tabs;
-        }
+        //private List<WindowTab> GetAllTabs()
+        //{
+        //    List<WindowTab> tabs = new List<WindowTab>();
+        //    List<Type> types = GetAllTabTypes();
+        //    foreach (Type type in types)
+        //    {
+        //        object[] parameters = new object[] { ScaffoldBuilder.Config };
+        //        WindowTab tab = Activator.CreateInstance(type, parameters) as WindowTab;
+        //        tabs.Add(tab);
+        //    }
+        //    return tabs;
+        //}
 
         private List<WindowTab> CreateTabs()
         {
@@ -144,7 +144,8 @@ namespace Scaffold.Builder.Editor
                 new ManifestTab(config),
                 new AssembliesTab(config),
                 new InstallerTab(config),
-                new UploadTab(config)
+                //new UploadTab(config),
+                new BuildTab(config)
             };
             return tabs;
         }

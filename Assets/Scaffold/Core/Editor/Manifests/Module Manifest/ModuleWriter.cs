@@ -20,7 +20,7 @@ namespace Scaffold.Core.Editor.Module
 
         public void Save(Module module)
         {
-            string rawModule = JsonConvert.SerializeObject(module);
+            string rawModule = JsonConvert.SerializeObject(module, Formatting.Indented);
             File.WriteAllText(_modulePath, rawModule);
         }
     }
