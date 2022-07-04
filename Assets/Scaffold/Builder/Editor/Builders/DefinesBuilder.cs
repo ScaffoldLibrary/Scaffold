@@ -45,7 +45,7 @@ namespace Scaffold.Builder.FileBuilders
                 {
                     JToken definesToken = assembly["defineConstraints"];
                     List<string> rawDefines = definesToken.ToObject<List<string>>();
-                    rawDefines.AddRange(defines);
+                    rawDefines = rawDefines.Union(defines).ToList();
                     assembly["defineConstraints"] = JToken.FromObject(rawDefines);
                 }
                 File.WriteAllText(assemblyPath, assembly.ToString());
