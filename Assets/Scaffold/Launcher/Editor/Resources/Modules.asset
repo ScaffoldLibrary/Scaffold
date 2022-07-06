@@ -14,18 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Hash: 9bf60a0b-279f-4f49-975e-da0e4cdb8cee
   Launcher:
-    Key: com.scaffold.launcher
-    Name: Launcher
-    Description: 
-    Path: https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher
-    LatestVersion: 
-    InstalledVersion: 
-    Dependencies: []
-  Modules:
-  - Key: com.scaffold.events
-    Name: Events
-    Description: Handles communication between classes using Signals and Requests
-    Path: https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events
-    LatestVersion: 0.0.2
-    InstalledVersion: 
-    Dependencies: []
+    name: 
+    displayName: 
+    description: 
+    unity: 
+    path: 
+    version: 
+    author:
+      name: 
+      email: 
+      url: 
+    requiredModules: []
+    requiredDefines: []
+    installDefines: []
+  Modules: []

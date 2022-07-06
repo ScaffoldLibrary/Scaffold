@@ -561,7 +561,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: USE_SCAFFOLD_LAUNCHER;IS_SCAFFOLD_BUILDER;IS_SCAFFOLD_LAUNCHER
+    1: USE_SCAFFOLD_LAUNCHER;IS_SCAFFOLD_BUILDER;IS_SCAFFOLD_LAUNCHER;USE_SCAFFOLD_BUILDER
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

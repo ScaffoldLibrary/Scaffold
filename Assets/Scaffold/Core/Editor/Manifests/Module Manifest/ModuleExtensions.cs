@@ -2,7 +2,7 @@
 using UnityEngine;
 using Scaffold.Core.Editor;
 
-namespace Scaffold.Core.Editor.Module
+namespace Scaffold.Core.Editor.Modules
 {
     public static class ModuleExtensions
     {

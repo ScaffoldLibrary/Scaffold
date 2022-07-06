@@ -1,3 +1,4 @@
+using Scaffold.Core.Editor.Manifest;
 using Scaffold.Launcher.Objects;
 using Scaffold.Launcher.PackageHandler;
 using System.Collections;
@@ -31,8 +32,8 @@ namespace Scaffold.Launcher.Runners
         [MenuItem("Scaffold/Launcher/Validate Dependencies")]
         private static bool CheckProjectDependencies()
         {
-            ScaffoldManifest scaffoldManifest = ScaffoldManifest.Fetch();
-            ProjectManifest projectManifest = ProjectManifest.Fetch();
+            ScaffoldLibrary scaffoldManifest = ScaffoldLibrary.Load();
+            Manifest projectManifest = new Manifest();
 
             DependencyValidator validator = new DependencyValidator(scaffoldManifest, projectManifest);
             bool dependencyState = validator.ValidateDependencies();

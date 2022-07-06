@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using Scaffold.Core.Editor.Modules;
 
 namespace Scaffold.Core.Editor.Manifest
 {
@@ -10,5 +11,10 @@ namespace Scaffold.Core.Editor.Manifest
     public class Manifest
     {
         public Dictionary<string, string> dependencies = new Dictionary<string, string>();
+
+        public List<Module> GetInstalledModules()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

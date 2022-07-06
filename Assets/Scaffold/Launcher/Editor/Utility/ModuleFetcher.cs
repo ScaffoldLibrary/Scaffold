@@ -4,6 +4,7 @@ using Scaffold.Launcher.Objects;
 using System;
 using System.Threading.Tasks;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Modules;
 
 namespace Scaffold.Launcher.Utilities
 {
@@ -11,17 +12,17 @@ namespace Scaffold.Launcher.Utilities
     {
         private static string ApiUrl = "https://4gy3gio67e2eiaea4qrajylonm0tukgv.lambda-url.sa-east-1.on.aws/";
 
-        public static async Task<ScaffoldModule> GetModule(string moduleKey)
+        public static async Task<Module> GetModule(string moduleKey)
         {
             GetModuleRequest request = new GetModuleRequest(moduleKey);
-            ScaffoldModule module = await HttpHandler.Post<ScaffoldModule>(ApiUrl, request);
+            Module module = await HttpHandler.Post<Module>(ApiUrl, request);
             return module;
         }
 
-        public static async Task<ScaffoldManifest> GetManifest()
+        public static async Task<ScaffoldLibrary> GetManifest()
         {
             GetManifestRequest request = new GetManifestRequest();
-            ScaffoldManifest manifest = await HttpHandler.Post<ScaffoldManifest>(ApiUrl, request);
+            ScaffoldLibrary manifest = await HttpHandler.Post<ScaffoldLibrary>(ApiUrl, request);
             return manifest;
         }
 

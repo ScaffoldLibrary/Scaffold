@@ -7,16 +7,18 @@ using System;
 using System.Linq;
 using Scaffold.Launcher.Objects;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Modules;
 
 namespace Scaffold.Launcher.Editor
 {
     internal class ScaffoldWindow : EditorWindow
     {
-        [MenuItem("Scaffold/Open Launcher")]
-        public static void OpenLauncher()
+
+        public static void OpenLauncher(ScaffoldManager scaffold)
         {
             Window.Show();
             Window.minSize = _minWindowSize;
+            _Scaffold = scaffold;
         }
 
         private static Vector2 CurrentWindowSize => Window.position.size;
@@ -34,15 +36,8 @@ namespace Scaffold.Launcher.Editor
             }
         }
         private static ScaffoldWindow _window;
-        private static ScaffoldManager Scaffold
-        {
-            get
-            {
-                if (_scaffold == null) _scaffold = new ScaffoldManager();
-                return _scaffold;
-            }
-        }
-        private static ScaffoldManager _scaffold;
+
+        private static ScaffoldManager _Scaffold;
 
         private Vector2 _scrollView;
 
@@ -77,14 +72,14 @@ namespace Scaffold.Launcher.Editor
 
         private void OnGUI()
         {
-            ScaffoldModule launcher = Scaffold.GetLauncher();
+            Module launcher = _Scaffold.GetLauncher();
 
             _scrollView = EditorGUILayout.BeginScrollView(_scrollView, GUIStyle.none, GUIStyle.none);
             {
                 EditorGUILayout.BeginVertical();
                 {
                     GUILayout.Box("Scaffold", ScaffoldStyles.HeaderBox);
-                    EditorGUILayout.LabelField(launcher.InstalledVersion, ScaffoldStyles.CenterLabel);
+                    EditorGUILayout.LabelField(launcher.version, ScaffoldStyles.CenterLabel);
                     EditorGUILayout.BeginHorizontal();
                     {
                         foreach(WindowTab tab in Tabs)
@@ -103,7 +98,7 @@ namespace Scaffold.Launcher.Editor
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.Space(5);
-                    CurrentTab.Draw(CurrentWindowSize, Scaffold);
+                    CurrentTab.Draw(CurrentWindowSize, _Scaffold);
                     EditorGUILayout.Space(5);
                     DrawFooter();
                 }
@@ -148,7 +143,7 @@ namespace Scaffold.Launcher.Editor
             List<Type> types = GetAllTabTypes();
             foreach(Type type in types)
             {
-                object[] parameters = new object[] { CurrentWindowSize, Scaffold };
+                object[] parameters = new object[] { CurrentWindowSize, _Scaffold };
                 WindowTab tab = Activator.CreateInstance(type, parameters) as WindowTab;
                 tabs.Add(tab);
             }

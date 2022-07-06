@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using Scaffold.Core.Editor.Module;
+using Scaffold.Core.Editor.Modules;
 using Scaffold.Core.Editor;
 using Scaffold.Core.Editor.Manifest;
 

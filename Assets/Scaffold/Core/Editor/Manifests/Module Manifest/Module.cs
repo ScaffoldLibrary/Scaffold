@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Scaffold.Core.Editor.Module
+namespace Scaffold.Core.Editor.Modules
 {
     /// <summary>
     /// Models a manifest.json File found in the project's package folder

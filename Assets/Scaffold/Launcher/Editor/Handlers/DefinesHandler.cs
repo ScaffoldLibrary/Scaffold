@@ -20,14 +20,10 @@ namespace Scaffold.Launcher.PackageHandler
         }
 
 
-        public static void RemoveDefines(string define)
+        public static void RemoveDefines(List<string> moduleDefines)
         {
             List<string> defines = GetProjectDefines();
-            if (!defines.Contains(define))
-            {
-                return;
-            }
-            defines.Remove(define);
+            defines = defines.Except(moduleDefines).ToList();
             string defineString = string.Join(";", defines.ToArray());
             PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defineString);
         }

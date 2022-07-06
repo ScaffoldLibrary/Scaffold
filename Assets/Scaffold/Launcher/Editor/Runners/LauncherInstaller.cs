@@ -17,7 +17,7 @@ namespace Scaffold.Launcher.Runners
         {
             if (!IsLauncherInstalled())
             {
-                TryInstallLauncherDefine();
+                TryInstallLauncherDefine();  
             }
         }
 

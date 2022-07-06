@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Scaffold.Builder.Utilities;
-using Scaffold.Core.Editor.Module;
+using Scaffold.Core.Editor.Modules;
 using System.Collections;
 using System.IO;
 using UnityEditor;

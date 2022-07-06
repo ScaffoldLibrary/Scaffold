@@ -1,7 +1,7 @@
 ﻿using Scaffold.Builder.Utilities;
 using System.IO;
 using UnityEngine;
-using Scaffold.Core.Editor.Module;
+using Scaffold.Core.Editor.Modules;
 
 namespace Scaffold.Builder.FileBuilders
 {

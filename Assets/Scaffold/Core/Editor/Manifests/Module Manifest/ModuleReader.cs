@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace Scaffold.Core.Editor.Module
+namespace Scaffold.Core.Editor.Modules
 {
     /// <summary>
     /// Reads and Create a <c>Module</c> object from disk

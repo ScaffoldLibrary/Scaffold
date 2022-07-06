@@ -14,153 +14,69 @@ using System.Threading.Tasks;
 using Scaffold.Launcher.Objects;
 using Scaffold.Launcher.Editor;
 using UnityEditor;
+using Scaffold.Core.Editor.Modules;
+using Scaffold.Core.Editor.Manifest;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Launcher
 {
     public class ScaffoldManager
     {
-        public ScaffoldManager()
+        public ScaffoldManager(ScaffoldLibrary library, ModuleInstaller installer, ModuleUpdater updater, DependencyValidator validator)
         {
-            _scaffoldManifest = ScaffoldManifest.Fetch();
-            _projectManifest = ProjectManifest.Fetch();
-            _dependecyValidation = new DependencyValidator(_scaffoldManifest, _projectManifest);
-            _moduleInstaller = new ModuleInstaller(_projectManifest, _dependecyValidation);
+            _library = library;
+            _installer = installer;
+            _updater = updater;
+            _validator = validator;
         }
 
-        private ScaffoldManifest _scaffoldManifest;
-        private ProjectManifest _projectManifest;
-        private DependencyValidator _dependecyValidation;
-        private ModuleInstaller _moduleInstaller;
+        private ScaffoldLibrary _library;
+        private ModuleInstaller _installer;
+        private ModuleUpdater _updater;
+        private DependencyValidator _validator;
 
-        public bool Busy => _operations.Count > 0;
-        private List<string> _operations = new List<string>();
+        private List<Module> _missingDependencies = new List<Module>();
 
-        public List<ScaffoldModule> GetModules()
+        public List<Module> GetModules()
         {
-            return _scaffoldManifest.Modules;
+            return _library.Modules;
         }
 
-        public ScaffoldModule GetLauncher()
+        public Module GetLauncher()
         {
-            return _scaffoldManifest.Launcher;
+            return _library.Launcher;
         }
 
-        public bool IsModuleInstalled(ScaffoldModule module)
+        public void AddModule(Module module)
         {
-            return _projectManifest.Contains(module.Key);
+            _installer.Install(module);
         }
 
-        public void InstallModule(ScaffoldModule module)
+        public void RemoveModule(Module module)
         {
-            if(module.Dependencies.Count > 0)
-            {
-               bool installDependencies = EditorUtility.DisplayDialog($"Installing {module.Name}",
-                                                       $"{module.Name} has dependencies, do you wish to install them now?",
-                                                       "Yes",
-                                                       "No");
-                if (installDependencies)
-                {
-                    List<ScaffoldModule> dependencies = _scaffoldManifest.GetModuleDependencies(module);
-                    _moduleInstaller.Install(dependencies);
-                    return;
-                }
-            }
-
-            _moduleInstaller.Install(module, true);
+            _installer.TryUninstall(module, true);
         }
 
-        public void UninstallModule(ScaffoldModule module)
+        public void UpdateModule(Module module)
         {
-            _moduleInstaller.TryUninstall(module, true);
+            _updater.Update(module);
         }
 
+        public async void CheckForModuleUpdates(Module module)
+        {
+            module = await ModuleFetcher.GetModule(module.name);
+            _updater.UpdateInfo(module);
+        }
+
+        public async void UpdateLibrary()
+        {
+            ScaffoldLibrary library = await ModuleFetcher.GetManifest();
+            //do stuff
+        }
+        
         public bool CheckForMissingDependencies()
         {
-            return _dependecyValidation.ValidateDependencies();
-        }
-
-        public void InstallMissingDependencies()
-        {
-            if (_dependecyValidation.ValidateDependencies(out List<ScaffoldModule> missing))
-            {
-                _moduleInstaller.Install(missing);
-            }
-        }
-
-        public async void CheckForModuleUpdate(ScaffoldModule module)
-        {
-            ScaffoldModule updatedModule = await ModuleFetcher.GetModule(module.Key);
-            module.UpdateModuleInfo(updatedModule);
-        }
-
-        public async void UpdatetInstalledModule(ScaffoldModule module)
-        {
-            if(module.LatestVersion == module.InstalledVersion)
-            {
-                Debug.Log($"Installed version of {module.Name} is already the Latest");
-                return;
-            }
-
-            string moduleGitPath = module.Path;
-            AddRequest request = Client.Add(moduleGitPath);
-
-            _operations.Add("updating");
-            while (!request.IsCompleted)
-            {
-                await Task.Delay(100);
-            }
-            _operations.Remove("updating");
-
-            if (request.Status != StatusCode.Success)
-            {
-                return;
-            }
-        }
-
-        public async void UpdateManifest()
-        {
-            _operations.Add("ManifestUpdate");
-            ScaffoldManifest newManifest = await ModuleFetcher.GetManifest();
-            _operations.Remove("ManifestUpdate");
-            ScaffoldManifest manifest = ScaffoldManifest.Fetch();
-
-            if (newManifest.Hash == manifest.Hash)
-            {
-                Debug.Log("Manifest is up to date");
-                return;
-            }
-
-            manifest.Hash = newManifest.Hash;
-
-            foreach (ScaffoldModule module in newManifest.Modules)
-            {
-                if (!manifest.ContainsModule(module.Key))
-                {
-                    manifest.AddModule(module);
-                    continue;
-                }
-
-                ScaffoldModule currentModule = manifest.GetModule(module.Key);
-                if (currentModule.LatestVersion == module.LatestVersion)
-                {
-                    continue;
-                }
-
-                currentModule.UpdateModuleInfo(module);
-            }
-        }
-
-        public bool IsProjectUpToDate()
-        {
-            List<ScaffoldModule> installedModules = _projectManifest.GetInstalledModules(_scaffoldManifest);
-            foreach(ScaffoldModule module in installedModules)
-            {
-                if (module.IsOutdated())
-                {
-                    return false;
-                }
-            }
-            return true;
+            return _validator.ValidateDependencies(out _missingDependencies);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor;
+using Scaffold.Core.Editor.Modules;
 
 namespace Scaffold.Launcher.Editor
 {
@@ -43,7 +44,7 @@ namespace Scaffold.Launcher.Editor
 
         public override void Draw(Vector2 windowSize, ScaffoldManager scaffold)
         {
-            List<ScaffoldModule> modules = scaffold.GetModules();
+            List<Module> modules = scaffold.GetModules();
             bool notConnected = Application.internetReachability == NetworkReachability.NotReachable;
             if (notConnected)
             {
@@ -89,10 +90,10 @@ namespace Scaffold.Launcher.Editor
             }
         }
 
-        private void DrawModules(List<ScaffoldModule> modules)
+        private void DrawModules(List<Module> modules)
         {
             EditorGUILayout.BeginVertical(ScaffoldStyles.ProjectStateReady);
-            foreach (ScaffoldModule package in modules)
+            foreach (Module package in modules)
             {
                 bool installed = Scaffold.IsModuleInstalled(package);
                 DrawModuleViewer(package, installed);
@@ -132,17 +133,17 @@ namespace Scaffold.Launcher.Editor
             EditorGUILayout.LabelField(stateLabel, style, GUILayout.Width(150));
         }
 
-        private void DrawModuleViewer(ScaffoldModule module, bool installed)
+        private void DrawModuleViewer(Module module, bool installed)
         {
             float maxWidth = WindowSize.x;
             Rect rect = EditorGUILayout.BeginHorizontal(ScaffoldStyles.ModuleBox);
             {
                 EditorGUILayout.BeginVertical(GUILayout.MaxWidth(maxWidth / 3 * 2));
                 {
-                    string version = installed ? module.InstalledVersion : module.LatestVersion;
-                    if (module.IsOutdated()) version += " (Update Available)";
-                    GUILayout.Label($"{module.Name} - {version}", ScaffoldStyles.ModuleName);
-                    GUILayout.Label(module.Description, ScaffoldStyles.ModuleDescription);
+                    //string version = installed ? module.InstalledVersion : module.LatestVersion;
+                    //if (module.IsOutdated()) version += " (Update Available)";
+                    GUILayout.Label($"{module.name} - {module.version}", ScaffoldStyles.ModuleName);
+                    GUILayout.Label(module.description, ScaffoldStyles.ModuleDescription);
                 }
                 EditorGUILayout.EndVertical();
 
@@ -155,7 +156,7 @@ namespace Scaffold.Launcher.Editor
             EditorGUILayout.EndHorizontal();
         }
 
-        private void DrawModuleOptions(Rect rect, ScaffoldModule module, bool installed)
+        private void DrawModuleOptions(Rect rect, Module module, bool installed)
         {
             List<ModuleOption> options = installed ? InstalledOptions : UninstalledOptions;
             Rect buttonRect = new Rect(rect);
@@ -174,14 +175,14 @@ namespace Scaffold.Launcher.Editor
 
         public struct ModuleOption
         {
-            public ModuleOption(string label, Action<ScaffoldModule> action)
+            public ModuleOption(string label, Action<Module> action)
             {
                 Label = label;
                 Action = action;
             }
 
             public string Label;
-            public Action<ScaffoldModule> Action;
+            public Action<Module> Action;
         }
     }
 }

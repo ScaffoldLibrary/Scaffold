@@ -4,7 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Scaffold.Core.Editor;
-using Scaffold.Core.Editor.Module;
+using Scaffold.Core.Editor.Modules;
 
 namespace Scaffold.Builder.Editor.Tabs
 {

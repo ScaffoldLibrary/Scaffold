@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-using Scaffold.Core.Editor.Module;
+using Scaffold.Core.Editor.Modules;
 using Scaffold.Builder.FileBuilders;
 
 namespace Scaffold.Builder

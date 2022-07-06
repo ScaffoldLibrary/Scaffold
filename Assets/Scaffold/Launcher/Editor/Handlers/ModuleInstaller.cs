@@ -1,67 +1,62 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Scaffold.Launcher.Utilities;
 using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
-using Scaffold.Launcher.Objects;
-using UnityEditor.PackageManager;
-using Scaffold.Launcher.Editor;
 using UnityEditor;
+using Scaffold.Core.Editor.Modules;
+using Scaffold.Core.Editor.Manifest;
+using Scaffold.Core.Editor;
 
 namespace Scaffold.Launcher.PackageHandler
 {
     public class ModuleInstaller
     {
-        public ModuleInstaller(ProjectManifest manifest, DependencyValidator dependencies)
+        public ModuleInstaller(Manifest manifest, DependencyValidator dependencies, FileService files)
         {
             _manifest = manifest;
             _dependencies = dependencies;
         }
 
-        private ProjectManifest _manifest;
+        private Manifest _manifest;
         private DependencyValidator _dependencies;
 
-        public void Install(List<ScaffoldModule> modules)
+        public void Install(List<Module> modules)
         {
-            foreach (ScaffoldModule module in modules)
+            foreach (Module module in modules)
             {
-                Install(module, false);
+                Install(module);
             }
-            _manifest.Save();
+            //_manifest.Save();
         }
 
-        public void Install(ScaffoldModule module, bool saveOnInstall)
+        public void Install(Module module)
         {
-            if (!_manifest.Contains(module.Key))
-            {
-                _manifest.dependencies.Add(module.Key, module.Path);
-                if (saveOnInstall)
-                {
-                    _manifest.Save();
-                }
-            }
+            //if (!_manifest.Contains(module.name))
+            //{
+            //    _manifest.dependencies.Add(module.name, module.path);
+            //    if (saveOnInstall)
+            //    {
+            //       // _manifest.Save();
+            //    }
+            //}
         }
 
-        public void TryUninstall(ScaffoldModule module, bool saveOnUninstall)
+        public void TryUninstall(Module module, bool saveOnUninstall)
         {
-            if (!_manifest.Contains(module.Key))
-            {
-                Debug.Log($"Tried to uninstall a module that was never installed {module.Key}");
-                return;
-            }
+            //if (!_manifest.Contains(module.name))
+            //{
+            //    Debug.Log($"Tried to uninstall a module that was never installed {module.name}");
+            //    return;
+            //}
 
-            if(_dependencies.CheckForDependingModules(module, out List<ScaffoldModule> dependers))
+            if(_dependencies.CheckForDependingModules(module, out List<Module> dependers))
             {
-                bool confirm = EditorUtility.DisplayDialog($"Uninstalling {module.Key}", "There seems to be some dependencies on this Module, do you wish to uninstall anyway?", "Yes", "No");
+                bool confirm = EditorUtility.DisplayDialog($"Uninstalling {module.name}", "There seems to be some dependencies on this Module, do you wish to uninstall anyway?", "Yes", "No");
                 if (!confirm) return;
             }
 
-            _manifest.dependencies.Remove(module.Key);
-            DefinesHandler.RemoveDefines(module.Define);
+            _manifest.dependencies.Remove(module.name);
+            DefinesHandler.RemoveDefines(module.installDefines);
             if (saveOnUninstall)
             {
-                _manifest.Save();
+                //_manifest.Save();
             }
         }
     }
