@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d248268d80c7f94f9f6d1d08dd74024, type: 3}
+  m_Name: ScaffoldLibrary
+  m_EditorClassIdentifier: 
+  Hash: 66c0ad3c-8608-4b49-8538-cdaf3beb2b92
+  Launcher:
+    name: com.scaffold.launcher
+    displayName: Scaffold Launcher
+    description: Main manager
+    unity: 
+    path: 
+    version: 0.0.1
+    author:
+      name: 
+      email: 
+      url: 
+    requiredModules: []
+    requiredDefines: []
+    installDefines: []
+  Modules:
+  - name: Scaffold Events
+    displayName: a
+    description: Handles communication between classes using Signals and Requests
+    unity: b
+    path: c
+    version: 0.0.1
+    author:
+      name: 
+      email: 
+      url: 
+    requiredModules: []
+    requiredDefines: []
+    installDefines: []
+  - name: Sample Package
+    displayName: sd
+    description: Sample Description
+    unity: 32
+    path: sad
+    version: 0.0.3
+    author:
+      name: 
+      email: 
+      url: 
+    requiredModules: []
+    requiredDefines: []
+    installDefines: []
+  - name: new tests
+    displayName: 1
+    description: ' asecond description'
+    unity: 2
+    path: new path
+    version: 0.1.0
+    author:
+      name: 
+      email: 
+      url: 
+    requiredModules: []
+    requiredDefines: []
+    installDefines: []

@@ -1,0 +1,18 @@
+{
+  "name": "com.scaffold.core",
+  "displayName": "Scaffold Core",
+  "description": "Core class containing most abstractions used by the builders and launchers.",
+  "unity": "2018.5",
+  "path": "https://github.com/MgCohen/Scaffold.git?path=/Assets/Scaffold/Core",
+  "version": "0.0.2",
+  "author": {
+    "name": "Matheus",
+    "email": "matheus@hotmail.com",
+    "url": "https://www.matheuscohen.com.br"
+  },
+  "requiredModules": [],
+  "requiredDefines": [],
+  "installDefines": [
+    "USE_SCAFFOLD_CORE"
+  ]
+}

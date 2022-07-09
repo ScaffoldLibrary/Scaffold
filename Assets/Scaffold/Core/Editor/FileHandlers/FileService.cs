@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace Scaffold.Core.Editor
@@ -31,6 +32,7 @@ namespace Scaffold.Core.Editor
             string path = _filePaths[type];
             string json = JsonConvert.SerializeObject(instance, Formatting.Indented);
             File.WriteAllText(path, json);
+            AssetDatabase.Refresh();
         }
     }
 }

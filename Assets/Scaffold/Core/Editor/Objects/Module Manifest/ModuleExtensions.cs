@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Scaffold.Core.Editor;
+using System;
 
 namespace Scaffold.Core.Editor.Modules
 {
@@ -23,6 +24,11 @@ namespace Scaffold.Core.Editor.Modules
         public static string GetDefine(this Module module)
         {
             return NameFormatter.KeyToDefine(module.name);
+        }
+
+        public static Version Latest(this Module module)
+        {
+            return new Version(module.version);
         }
     }
 }

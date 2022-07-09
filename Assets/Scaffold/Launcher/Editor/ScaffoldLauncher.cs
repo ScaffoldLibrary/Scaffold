@@ -4,7 +4,7 @@ using Scaffold.Core.Editor;
 using Scaffold.Core.Editor.Modules;
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
-using Scaffold.Launcher.PackageHandler;
+using Scaffold.Launcher.Workers;
 using Scaffold.Core.Editor.Manifest;
 using Scaffold.Launcher.Objects;
 
@@ -12,7 +12,7 @@ namespace Scaffold.Launcher
 {
     public class ScaffoldLauncher
     {
-        [MenuItem("Scaffold/Open Launcher")]
+        [MenuItem("Scaffold/Open Launcher %#L")]
         public static void Launch() 
         {
             ScaffoldManager scaffold = BuildScaffold();
@@ -27,9 +27,9 @@ namespace Scaffold.Launcher
             ScaffoldLibrary library = ScaffoldLibrary.Load();
 
             //Operations
-            DependencyValidator dependencyValidator = new DependencyValidator(library, manifest);
-            ModuleInstaller installer = new ModuleInstaller(manifest, dependencyValidator, files); //install, remove
-            ModuleUpdater updater = new ModuleUpdater(library, files); //updates
+            DependencyHandler dependencyValidator = new DependencyHandler(library, manifest);
+            IModuleInstaller installer = new ModuleWriterInstaller(manifest, dependencyValidator, files); //install, remove
+            IModuleUpdater updater = new ModuleLockUpdater(library, files); //updates
 
             return new ScaffoldManager(library, installer, updater, dependencyValidator);
         }

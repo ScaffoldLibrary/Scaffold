@@ -7,11 +7,11 @@ using Scaffold.Launcher.Objects;
 using Scaffold.Core.Editor.Modules;
 using Scaffold.Core.Editor.Manifest;
 
-namespace Scaffold.Launcher.PackageHandler
+namespace Scaffold.Launcher.Workers
 {
-    public class DependencyValidator
+    public class DependencyHandler
     {
-        public DependencyValidator(ScaffoldLibrary scaffoldManifest, Manifest projectManifest)
+        public DependencyHandler(ScaffoldLibrary scaffoldManifest, Manifest projectManifest)
         {
             _scaffoldManifest = scaffoldManifest;
             _projectManifest = projectManifest;
@@ -28,12 +28,13 @@ namespace Scaffold.Launcher.PackageHandler
         public bool ValidateDependencies(out List<Module> missingModules)
         {
             List<Module> installedModules = new List<Module>();
-            missingModules = installedModules.SelectMany(m => m.requiredModules)
-                                    .Distinct()
-                                    .Where(d => !installedModules.Any(m => m.name == d))
-                                    .Where(d => _scaffoldManifest.ContainsModule(d))
-                                    .Select(d => _scaffoldManifest.GetModule(d))
-                                    .ToList();
+            //missingModules = installedModules.SelectMany(m => m.requiredModules)
+            //                        .Distinct()
+            //                        .Where(d => !installedModules.Any(m => m.name == d))
+            //                        .Where(d => _scaffoldManifest.ContainsModule(d))
+            //                        .Select(d => _scaffoldManifest.GetModule(d))
+            //                        .ToList();
+            missingModules = null;
 
             return missingModules != null && missingModules.Count > 0;
         }
@@ -41,8 +42,13 @@ namespace Scaffold.Launcher.PackageHandler
         public bool CheckForDependingModules(Module module, out List<Module> modules)
         {
             List<Module> installedModules = new List<Module>();
-            modules = installedModules.Where(m => _scaffoldManifest.GetModuleDirectDependencies(m).Contains(module)).ToList();
+            modules = installedModules.Where(m => GetModuleDependencies(m, false).Contains(module)).ToList();
             return modules.Count > 0;
+        }
+
+        public List<Module> GetModuleDependencies(Module module, bool includeSelf)
+        {
+            return null;
         }
     }
 }

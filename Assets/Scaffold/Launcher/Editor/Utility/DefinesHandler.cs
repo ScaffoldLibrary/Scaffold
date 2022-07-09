@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEditor;
 
-namespace Scaffold.Launcher.PackageHandler
+namespace Scaffold.Launcher.Workers
 {
     internal static class DefinesHandler
     {
@@ -32,6 +32,12 @@ namespace Scaffold.Launcher.PackageHandler
         {
             List<string> defines = GetProjectDefines();
             return defines.Contains(define);
+        }
+
+        public static bool CheckDefines(List<string> defines)
+        {
+            List<string> projectDefines = GetProjectDefines();
+            return defines.Except(projectDefines).Any();
         }
 
         private static List<string> GetProjectDefines()

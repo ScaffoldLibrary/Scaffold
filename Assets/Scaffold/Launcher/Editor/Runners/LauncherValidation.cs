@@ -1,6 +1,6 @@
 using Scaffold.Core.Editor.Manifest;
 using Scaffold.Launcher.Objects;
-using Scaffold.Launcher.PackageHandler;
+using Scaffold.Launcher.Workers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -35,7 +35,7 @@ namespace Scaffold.Launcher.Runners
             ScaffoldLibrary scaffoldManifest = ScaffoldLibrary.Load();
             Manifest projectManifest = new Manifest();
 
-            DependencyValidator validator = new DependencyValidator(scaffoldManifest, projectManifest);
+            DependencyHandler validator = new DependencyHandler(scaffoldManifest, projectManifest);
             bool dependencyState = validator.ValidateDependencies();
             if (dependencyState)
             {

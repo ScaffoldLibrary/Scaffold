@@ -10,9 +10,13 @@
     "email": "matheus@hotmail.com",
     "url": "https://www.matheuscohen.com.br"
   },
-  "requiredModules": [],
-  "requiredDefines": [],
+  "requiredModules": [
+    "com.scaffold.core"
+  ],
+  "requiredDefines": [
+    "USE_SCAFFOLD_CORE"
+  ],
   "installDefines": [
-    "USE_SCAFFOLD_SAMPLE"
+    "USE_SCAFFOLD_BUILDER"
   ]
 }

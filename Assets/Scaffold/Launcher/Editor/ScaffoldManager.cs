@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
-using Scaffold.Launcher.PackageHandler;
+using Scaffold.Launcher.Workers;
 using System;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
@@ -22,24 +22,40 @@ namespace Scaffold.Launcher
 {
     public class ScaffoldManager
     {
-        public ScaffoldManager(ScaffoldLibrary library, ModuleInstaller installer, ModuleUpdater updater, DependencyValidator validator)
+        public ScaffoldManager(ScaffoldLibrary library, IModuleInstaller installer, IModuleUpdater updater, DependencyHandler dependencies)
         {
             _library = library;
+            _dependencies = dependencies;
             _installer = installer;
             _updater = updater;
-            _validator = validator;
         }
 
         private ScaffoldLibrary _library;
-        private ModuleInstaller _installer;
-        private ModuleUpdater _updater;
-        private DependencyValidator _validator;
+        private DependencyHandler _dependencies;
+        private IModuleInstaller _installer;
+        private IModuleUpdater _updater;
 
         private List<Module> _missingDependencies = new List<Module>();
 
         public List<Module> GetModules()
         {
             return _library.Modules;
+        }
+
+        public Dictionary<Module, Version> GetInstalledModules()
+        {
+            List<Module> modules = GetModules();
+            List<Install> installs = _library.InstalledModules;
+            Dictionary<Module, Version> installedModules = new Dictionary<Module, Version>();
+            foreach (var install in installs)
+            {
+                Module module = modules.FirstOrDefault(m => m.name == install.ModuleName);
+                if (module != null)
+                {
+                    installedModules.Add(module, install.Version);
+                }
+            }
+            return installedModules;
         }
 
         public Module GetLauncher()
@@ -54,29 +70,35 @@ namespace Scaffold.Launcher
 
         public void RemoveModule(Module module)
         {
-            _installer.TryUninstall(module, true);
+            _installer.Uninstall(module);
         }
 
         public void UpdateModule(Module module)
         {
-            _updater.Update(module);
+            _updater.UpdateModule(module);
         }
 
         public async void CheckForModuleUpdates(Module module)
         {
             module = await ModuleFetcher.GetModule(module.name);
-            _updater.UpdateInfo(module);
+            _updater.UpdateModuleInfo(module);
         }
 
         public async void UpdateLibrary()
         {
             ScaffoldLibrary library = await ModuleFetcher.GetManifest();
-            //do stuff
+            _library.Modules = library.Modules;
+            _library.Hash = library.Hash;
         }
-        
+
         public bool CheckForMissingDependencies()
         {
-            return _validator.ValidateDependencies(out _missingDependencies);
+            return _dependencies.ValidateDependencies(out _missingDependencies);
+        }
+
+        public void ResolveDependencies()
+        {
+            _installer.Install(_missingDependencies);   
         }
     }
 }

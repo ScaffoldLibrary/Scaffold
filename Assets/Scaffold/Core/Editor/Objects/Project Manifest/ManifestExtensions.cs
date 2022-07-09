@@ -28,12 +28,14 @@ namespace Scaffold.Core.Editor.Manifest
             manifest.dependencies.Add(moduleName, modulePath);
         }
 
-        public static void AddMany(this Manifest manifest, Dictionary<string, string> modules)
+        public static void Remove(this Manifest manifest, string moduleName)
         {
-            foreach(var module in modules)
+            if (!manifest.Contains(moduleName))
             {
-                manifest.Add(module.Key, module.Value);
+                return;
             }
+
+            manifest.dependencies.Remove(moduleName);
         }
     }
 }
