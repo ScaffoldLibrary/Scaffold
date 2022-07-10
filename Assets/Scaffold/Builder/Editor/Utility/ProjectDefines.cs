@@ -2,7 +2,7 @@
 //using System.Linq;
 //using UnityEditor;
 
-//namespace Scaffold.Launcher.Utilities
+//namespace Scaffold.Builder.Utilities
 //{
 //    internal static class ProjectDefines
 //    {

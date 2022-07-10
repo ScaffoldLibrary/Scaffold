@@ -4,6 +4,7 @@ using Scaffold.Core.Editor.Modules;
 using Scaffold.Core.Editor.Manifest;
 using Scaffold.Core.Editor;
 using System.Linq;
+using Scaffold.Launcher.Utilities;
 
 namespace Scaffold.Launcher.Workers
 {
@@ -67,8 +68,8 @@ namespace Scaffold.Launcher.Workers
                 if (!confirm) return;
             }
 
+            RemoveDefines(module.installDefines);
             RemoveFromManifest(new List<Module>() { module });
-            ProjectDefines.RemoveDefines(module.installDefines);
         }
 
         public void Uninstall(List<Module> modules)
@@ -79,7 +80,7 @@ namespace Scaffold.Launcher.Workers
                 defines.AddRange(module.installDefines);
             }
 
-            ProjectDefines.RemoveDefines(defines);
+            RemoveDefines(defines);
             RemoveFromManifest(modules);
         }
 
@@ -103,6 +104,15 @@ namespace Scaffold.Launcher.Workers
             }
 
             return false;
+        }
+
+        private void RemoveDefines(List<string> defines)
+        {
+            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            List<string> projectDefines = definesString.Split(';').ToList();
+            projectDefines = projectDefines.Except(defines).ToList();
+            string defineString = string.Join(";", projectDefines.ToArray());
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, defineString);
         }
     }
 }

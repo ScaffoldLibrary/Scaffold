@@ -10,7 +10,10 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "USE_SCAFFOLD_CORE",
+        "USE_SCAFFOLD_BUILDER"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }
