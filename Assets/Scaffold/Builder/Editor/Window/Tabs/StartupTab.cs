@@ -41,7 +41,7 @@ namespace Scaffold.Builder.Editor.Tabs
             EditorGUILayout.Space(10);
 
             bool hasModule = File.Exists(_moduleManifest);
-            _moduleManifest = ScaffoldComponents.FileField(_moduleManifest, "Package Manifest: ", "./", "json", hasModule);
+            _moduleManifest = ScaffoldComponents.FileSearchOrCreate(_moduleManifest, "Package Manifest: ", hasModule, "./Assets", "json", CreateModuleManifest);
             bool hasProject = File.Exists(_projectManifest);
             _projectManifest = ScaffoldComponents.FileField(_projectManifest, "Project Manifest: ", "./", "json", hasProject);
             bool hasCredentials = File.Exists(_credentials);
@@ -49,6 +49,21 @@ namespace Scaffold.Builder.Editor.Tabs
 
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Follow the next few steps to setup your module.\nPress Next when you are ready.", ScaffoldStyles.WrappedLabel);
+        }
+
+        private void CreateModuleManifest()
+        {
+            string path = EditorUtility.OpenFolderPanel("Select manifest folder", "./Assets", "");
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
+            path = $"{path}/package.json";
+            string templateManifest = _configs.TemplateManifest;
+            FileService files = new FileService();
+            files.Save(templateManifest, path);
+            _moduleManifest = path;
         }
 
         public override void OnNext()
