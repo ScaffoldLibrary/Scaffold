@@ -10,7 +10,7 @@ namespace Scaffold.Core.Editor.Manifest
         public static List<string> GetScaffoldDependencies(this Manifest manifest)
         {
             List<string> dependencies = manifest.dependencies.Select(kp => kp.Key).ToList();
-            return dependencies.Where(d => d.Contains("scaffold") && !d.Contains("scaffold.builder") && !d.Contains("scaffold.launcher")).ToList();
+            return dependencies.Where(d => d.Contains("scaffold") && !d.Contains("scaffold.builder") && !d.Contains("scaffold.launcher") && !d.Contains("scaffold.core")).ToList();
         }
 
         public static bool Contains(this Manifest manifest, string moduleName)
