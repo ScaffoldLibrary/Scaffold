@@ -72,7 +72,6 @@ namespace Scaffold.Builder.Editor.Tabs
             _configs.ProjectManifestPath = _projectManifest;
             _configs.CredentialsPath = _credentials;
 
-
             FileService file = new FileService();
             _configs.Module = file.Read<Module>(_configs.ModuleManifestPath);
         }

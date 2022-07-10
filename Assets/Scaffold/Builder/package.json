@@ -1,6 +1,6 @@
 {
   "name": "com.scaffold.builder",
-  "displayName": "Scaffold Editor",
+  "displayName": "Scaffold Builder",
   "description": "Module Builder, used to create and upload modules.",
   "unity": "2018.5",
   "path": "https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Builder",

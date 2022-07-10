@@ -23,7 +23,7 @@ namespace Scaffold.Core.Editor
             string content = File.ReadAllText(path);
             T obj = JsonConvert.DeserializeObject<T>(content);
             _filePaths[typeof(T)] = path;
-            return default(T);
+            return obj;
         }
 
         public void Save<T>(T instance)
