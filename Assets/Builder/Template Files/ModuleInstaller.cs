@@ -7,34 +7,36 @@ using System.Linq;
 using UnityEngine;
 using System;
 
-#if !USE_SCAFFOLD_MODULENAME
+#if _MODULEDEFINES_
 namespace Scaffold.ModuleName.Installer
 {
     internal class ModuleNameInstaller
     {
         private static string LauncherDefine = "USE_SCAFFOLD_LAUNCHER";
         private static string LauncherSkipKey = "LAUNCHERSKIPMODULENAME";
-        private static string InstallKey = "LASTINSTALL";
+        private static string ValidationKey = "PROJECTVALIDATED";
 
         private static readonly string[] RequiredDefines = { "#REQUIREMENTS#" };
         private static readonly string[] InstallDefines = { "#INSTALLS#" };
 
-        //[InitializeOnLoadMethod]
+        [InitializeOnLoadMethod]
         private static void ValidatePackage()
         {
             List<string> Defines = GetProjectDefines();
+
+            bool hasRequiredDefines = !RequiredDefines.Except(Defines).Any();
+            if (!hasRequiredDefines)
+            {
+                RequestLauncher();
+                return;
+            }
+
             bool isPackageInstalled = !InstallDefines.Except(Defines).Any();
             if (isPackageInstalled)
             {
                 return;
             }
-
             InstallModuleDefines(Defines);
-            bool hasRequiredDefines = !RequiredDefines.Except(Defines).Any();
-            if (!hasRequiredDefines)
-            {
-                RequestLauncher();
-            }
         }
 
         private static void RequestLauncher()
@@ -61,9 +63,26 @@ namespace Scaffold.ModuleName.Installer
             OpenInstallPopup();
         }
 
+        private static void OpenInstallPopup()
+        {
+            string title = "Missing dependencies";
+            string description = "This project requires uninstalled modules, do you wish to install the Scaffold Launcher and resolve?";
+            string confirm = "yes";
+            string cancel = "no";
+            bool install = EditorUtility.DisplayDialog(title, description, confirm, cancel);
+            if (!install)
+            {
+                SetKey(LauncherSkipKey, true);
+            }
+            else
+            {
+                InstallLauncher();
+            }
+        }
+
         private static async void InstallLauncher()
         {
-            AddRequest add = Client.Add("https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher");
+            AddRequest add = Client.Add("https://github.com/MgCohen/Scaffold.git?path=/Assets/Scaffold/Launcher");
 
             while (!add.IsCompleted)
             {
@@ -86,8 +105,7 @@ namespace Scaffold.ModuleName.Installer
                 }
             }
 
-            bool installState = GetKey(InstallKey);
-            SetKey(InstallKey, !installState);
+            SetKey(ValidationKey, false);
 
             string defineString = string.Join(";", currentDefines.ToArray());
             BuildTargetGroup target = EditorUserBuildSettings.selectedBuildTargetGroup;
@@ -103,30 +121,13 @@ namespace Scaffold.ModuleName.Installer
 
         private static bool GetKey(string key)
         {
-            return PlayerPrefs.GetInt(key, 0) == 1 ? true : false;
+            return PlayerPrefs.GetInt(key, 0) == 1;
         }
 
         private static void SetKey(string key, bool value)
         {
             int boolean = value ? 1 : 0;
             PlayerPrefs.SetInt(key, boolean);
-        }
-
-        private static void OpenInstallPopup()
-        {
-            string title = "";
-            string description = "";
-            string confirm = "";
-            string cancel = "";
-            bool install = EditorUtility.DisplayDialog(title, description, confirm, cancel);
-            if (!install)
-            {
-                SetKey(LauncherSkipKey, true);
-            }
-            else
-            {
-                InstallLauncher();
-            }
         }
     }
 }

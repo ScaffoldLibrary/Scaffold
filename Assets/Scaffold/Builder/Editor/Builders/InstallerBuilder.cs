@@ -30,6 +30,7 @@ namespace Scaffold.Builder.FileBuilders
             installer = ReplaceModuleName(installer);
             installer = ReplaceRequiredDefines(installer);
             installer = ReplaceInstallDefines(installer);
+            installer = ReplaceCompileDefines(installer);
             return installer;
         }
 
@@ -80,6 +81,22 @@ namespace Scaffold.Builder.FileBuilders
                 script = script.Replace("#INSTALLS#", installs);
             }
 
+            return script;
+        }
+
+        private string ReplaceCompileDefines(string script)
+        {
+            List<string> defines = _module.requiredDefines.Union(_module.installDefines).ToList();
+            if (defines.Count <= 0)
+            {
+                script = script.Replace("#IF _MODULEDEFINES_", "");
+            }
+            else
+            {
+                defines = defines.Select(s => $"!{s}").ToList();
+                string conditional = string.Join(" || !", defines); 
+                script = script.Replace("_MODULEDEFINES_", conditional);
+            }
             return script;
         }
 

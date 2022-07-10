@@ -5,7 +5,7 @@ using Scaffold.Launcher;
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using Scaffold.Launcher.Objects;
+using Scaffold.Launcher.Library;
 using Scaffold.Core.Editor;
 using Scaffold.Core.Editor.Modules;
 

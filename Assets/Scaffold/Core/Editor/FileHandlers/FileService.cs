@@ -30,6 +30,11 @@ namespace Scaffold.Core.Editor
         {
             Type type = typeof(T);
             string path = _filePaths[type];
+            Save(instance, path);
+        }
+
+        public void Save<T>(T instance, string path)
+        {
             string json = JsonConvert.SerializeObject(instance, Formatting.Indented);
             File.WriteAllText(path, json);
             AssetDatabase.Refresh();

@@ -44,8 +44,8 @@ namespace Scaffold.Builder.Editor.Tabs
 
         public override void OnNext()
         {
-            ManifestReader reader = new ManifestReader(_configs.ProjectManifestPath);
-            Manifest manifest = reader.GetManifest();
+            FileService file = new FileService();
+            Manifest manifest = file.Read<Manifest>(_configs.ProjectManifestPath);
             List<string> requiredModules = manifest.GetScaffoldDependencies();
             _module.requiredModules = requiredModules;
         }

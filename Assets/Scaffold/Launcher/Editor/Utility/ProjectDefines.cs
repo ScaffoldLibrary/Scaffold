@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace Scaffold.Launcher.Workers
 {
-    internal static class DefinesHandler
+    internal static class ProjectDefines
     {
 
         public static void AddDefines(string define)

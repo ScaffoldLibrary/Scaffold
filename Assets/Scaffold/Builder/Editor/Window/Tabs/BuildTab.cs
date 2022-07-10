@@ -41,8 +41,8 @@ namespace Scaffold.Builder.Editor.Tabs
             if (GUILayout.Button("Build"))
             {
                 _hasBuilt = true;
-                ModuleWriter writer = new ModuleWriter(_configs.ModuleManifestPath);
-                writer.Save(_configs.Module);
+                FileService file = new FileService();
+                file.Save(_configs.Module, _configs.ModuleManifestPath);
                 ScaffoldBuilder.QuickBuild();
                 Client.Resolve();
             }

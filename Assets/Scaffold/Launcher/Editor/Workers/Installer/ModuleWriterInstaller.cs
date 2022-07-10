@@ -68,7 +68,7 @@ namespace Scaffold.Launcher.Workers
             }
 
             RemoveFromManifest(new List<Module>() { module });
-            DefinesHandler.RemoveDefines(module.installDefines);
+            ProjectDefines.RemoveDefines(module.installDefines);
         }
 
         public void Uninstall(List<Module> modules)
@@ -79,7 +79,7 @@ namespace Scaffold.Launcher.Workers
                 defines.AddRange(module.installDefines);
             }
 
-            DefinesHandler.RemoveDefines(defines);
+            ProjectDefines.RemoveDefines(defines);
             RemoveFromManifest(modules);
         }
 

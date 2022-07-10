@@ -1,5 +1,5 @@
 {
-    "name": "Scaffold.Local.Builder",
+    "name": "Scaffold.Builder.Local",
     "rootNamespace": "",
     "references": [
         "GUID:7542c323ab8c3b649bef078eec05d724"

@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using Scaffold.Launcher.Workers;
 using Scaffold.Core.Editor.Manifest;
-using Scaffold.Launcher.Objects;
+using Scaffold.Launcher.Library;
 
 namespace Scaffold.Launcher
 {
     public class ScaffoldLauncher
     {
-        [MenuItem("Scaffold/Open Launcher %#L")]
+        [MenuItem("Scaffold/Launcher/Open Launcher %#L")]
         public static void Launch() 
         {
             ScaffoldManager scaffold = BuildScaffold();

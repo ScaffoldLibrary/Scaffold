@@ -15,86 +15,80 @@ MonoBehaviour:
   TemplateAssembly: "{\r\n\t\"name\": \"Scaffold.ModuleNameInstaller.Editor\"\r\n}\r\n"
   TemplateInstaller: "using System.Collections.Generic;\r\nusing System.Threading.Tasks;\r\nusing
     UnityEditor;\r\nusing UnityEditor.PackageManager;\r\nusing UnityEditor.PackageManager.Requests;\r\nusing
-    System.Linq;\r\nusing UnityEngine;\r\nusing System;\r\n\r\n#if !USE_SCAFFOLD_MODULENAME\r\nnamespace
-    Scaffold.ModuleName.Installer\r\n{\r\n    internal class ModuleNameInstaller
-    : EditorWindow\r\n    {\r\n        private const string Module = \"MODULENAME\";\r\n       
-    private static string ModuleDefine => $\"USE_SCAFFOLD_{Module}\";\r\n       
-    private static string LauncherDefine => $\"USE_SCAFFOLD_LAUNCHER\";\r\n       
-    private static string LauncherSkipKey => $\"LAUNCHERSKIP{Module}\";\r\n       
-    private static string InstallKey = \"LASTINSTALL\";\r\n\r\n        private static
-    readonly string[] RequiredModules = { \"#REQUIREMENTS#\" };\r\n\r\n        private
-    static List<string> RequiredDefines\r\n        {\r\n            get\r\n           
-    {\r\n                if(_requiredDefines == null)\r\n                {\r\n                   
-    _requiredDefines = GetRequiredDefines();\r\n                }\r\n               
-    return _requiredDefines;\r\n            }\r\n        }\r\n        private static
-    List<string> _requiredDefines;\r\n        private static List<string> ProjectDefines\r\n       
-    {\r\n            get\r\n            {\r\n                if (_projectDefines
-    == null)\r\n                {\r\n                    _projectDefines = GetProjectDefines();\r\n               
-    }\r\n                return _projectDefines;\r\n            }\r\n           
-    set\r\n            {\r\n                _projectDefines = value;\r\n           
-    }\r\n        }\r\n        private static List<string> _projectDefines;\r\n\r\n       
+    System.Linq;\r\nusing UnityEngine;\r\nusing System;\r\n\r\n#if _MODULEDEFINES_\r\nnamespace
+    Scaffold.ModuleName.Installer\r\n{\r\n    internal class ModuleNameInstaller\r\n   
+    {\r\n        private static string LauncherDefine = \"USE_SCAFFOLD_LAUNCHER\";\r\n       
+    private static string LauncherSkipKey = \"LAUNCHERSKIPMODULENAME\";\r\n       
+    private static string ValidationKey = \"PROJECTVALIDATED\";\r\n\r\n        private
+    static readonly string[] RequiredDefines = { \"#REQUIREMENTS#\" };\r\n       
+    private static readonly string[] InstallDefines = { \"#INSTALLS#\" };\r\n\r\n       
     [InitializeOnLoadMethod]\r\n        private static void ValidatePackage()\r\n       
-    {\r\n            bool isPackageInstalled = ProjectDefines.Contains(ModuleDefine);\r\n           
+    {\r\n            List<string> Defines = GetProjectDefines();\r\n\r\n           
+    bool hasRequiredDefines = !RequiredDefines.Except(Defines).Any();\r\n           
+    if (!hasRequiredDefines)\r\n            {\r\n                RequestLauncher();\r\n               
+    return;\r\n            }\r\n\r\n            bool isPackageInstalled = !InstallDefines.Except(Defines).Any();\r\n           
     if (isPackageInstalled)\r\n            {\r\n                return;\r\n           
-    }\r\n\r\n            InstallModuleDefines();\r\n            bool hasRequiredDefines
-    = !RequiredDefines.Except(ProjectDefines).Any();\r\n            if (!hasRequiredDefines)\r\n           
-    {\r\n                RequestLauncher();\r\n            }\r\n        }\r\n\r\n       
-    private static void RequestLauncher()\r\n        {\r\n            if (ProjectDefines.Contains(LauncherDefine))\r\n           
-    {\r\n                return;\r\n            }\r\n            else\r\n           
-    {\r\n                if (GetKey(LauncherSkipKey))\r\n                {\r\n                   
-    Debug.Log(\"Player already decided to skip launcher install from this module\");\r\n                   
-    return;\r\n                }\r\n                TryInstallLauncher();\r\n           
-    }\r\n        }\r\n\r\n#if !USE_SCAFFOLD_LAUNCHER\r\n        [MenuItem(\"Scaffold/Launcher/Install
+    }\r\n            InstallModuleDefines(Defines);\r\n        }\r\n\r\n        private
+    static void RequestLauncher()\r\n        {\r\n            if (GetKey(LauncherSkipKey))\r\n           
+    {\r\n                return;\r\n            }\r\n            TryInstallLauncher();\r\n       
+    }\r\n\r\n#if !USE_SCAFFOLD_LAUNCHER\r\n        [MenuItem(\"Scaffold/Launcher/Install
     Launcher\")]\r\n#endif\r\n        private static void TryInstallLauncher()\r\n       
-    {\r\n            if (ProjectDefines.Contains(LauncherDefine))\r\n           
-    {\r\n                Debug.Log(\"Launcher already installed!\");\r\n               
-    return;\r\n            }\r\n\r\n            OpenInstallPopup();\r\n        }\r\n\r\n       
+    {\r\n            List<string> Defines = GetProjectDefines();\r\n            if
+    (Defines.Contains(LauncherDefine))\r\n            {\r\n                Debug.Log(\"Launcher
+    already installed!\");\r\n                return;\r\n            }\r\n\r\n           
+    OpenInstallPopup();\r\n        }\r\n\r\n        private static void OpenInstallPopup()\r\n       
+    {\r\n            string title = \"Missing dependencies\";\r\n            string
+    description = \"This project requires uninstalled modules, do you wish to install
+    the Scaffold Launcher and resolve?\";\r\n            string confirm = \"yes\";\r\n           
+    string cancel = \"no\";\r\n            bool install = EditorUtility.DisplayDialog(title,
+    description, confirm, cancel);\r\n            if (!install)\r\n            {\r\n               
+    SetKey(LauncherSkipKey, true);\r\n            }\r\n            else\r\n           
+    {\r\n                InstallLauncher();\r\n            }\r\n        }\r\n\r\n       
     private static async void InstallLauncher()\r\n        {\r\n            AddRequest
-    add = Client.Add(\"https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher\");\r\n           
-    \r\n            while (!add.IsCompleted)\r\n            {\r\n               
-    await Task.Delay(100);\r\n            }\r\n\r\n            if (add.Status !=
-    StatusCode.Success)\r\n            {\r\n                Debug.LogError(\"Launcher
-    installation failed, please try again\");\r\n            }\r\n        }\r\n\r\n       
-    private static void InstallModuleDefines()\r\n        {\r\n            if (ProjectDefines.Contains(ModuleDefine))\r\n           
-    {\r\n                return;\r\n            }\r\n\r\n            ProjectDefines.Add(ModuleDefine);\r\n\r\n           
-    bool installState = GetKey(InstallKey);\r\n            SetKey(InstallKey, !installState);\r\n\r\n           
-    string defineString = string.Join(\";\", ProjectDefines.ToArray());\r\n           
-    BuildTargetGroup target = EditorUserBuildSettings.selectedBuildTargetGroup;\r\n           
-    PlayerSettings.SetScriptingDefineSymbolsForGroup(target, defineString);\r\n       
-    }\r\n\r\n        private static List<string> GetProjectDefines()\r\n        {\r\n           
-    string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);\r\n           
+    add = Client.Add(\"https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher\");\r\n\r\n           
+    while (!add.IsCompleted)\r\n            {\r\n                await Task.Delay(100);\r\n           
+    }\r\n\r\n            if (add.Status != StatusCode.Success)\r\n            {\r\n               
+    Debug.LogError(\"Launcher installation failed, please try again\");\r\n           
+    }\r\n        }\r\n\r\n        private static void InstallModuleDefines(List<string>
+    currentDefines)\r\n        {\r\n            foreach (string define in InstallDefines)\r\n           
+    {\r\n                if (!currentDefines.Contains(define))\r\n               
+    {\r\n                    currentDefines.Add(define);\r\n                }\r\n           
+    }\r\n\r\n            SetKey(ValidationKey, false);\r\n\r\n            string
+    defineString = string.Join(\";\", currentDefines.ToArray());\r\n            BuildTargetGroup
+    target = EditorUserBuildSettings.selectedBuildTargetGroup;\r\n            PlayerSettings.SetScriptingDefineSymbolsForGroup(target,
+    defineString);\r\n        }\r\n\r\n        private static List<string> GetProjectDefines()\r\n       
+    {\r\n            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);\r\n           
     List<string> allDefines = definesString.Split(';').ToList();\r\n            return
-    allDefines;\r\n        }\r\n\r\n        private static List<string> GetRequiredDefines()\r\n       
-    {\r\n            List<string> defines = new List<string>();\r\n            foreach(string
-    module in RequiredModules)\r\n            {\r\n                defines.Add($\"USE_SCAFFOLD_{module.ToUpperInvariant()}\");\r\n           
-    }\r\n            return defines;\r\n        }\r\n\r\n        private static bool
-    GetKey(string key)\r\n        {\r\n            return PlayerPrefs.GetInt(key,
-    0) == 1 ? true : false;\r\n        }\r\n\r\n        private static void SetKey(string
-    key, bool value)\r\n        {\r\n            int boolean = value ? 1 : 0;\r\n           
-    PlayerPrefs.SetInt(key, boolean);\r\n        }\r\n\r\n        private static
-    void OpenInstallPopup()\r\n        {\r\n            ModuleNameInstaller window
-    = ScriptableObject.CreateInstance(typeof(ModuleNameInstaller)) as ModuleNameInstaller;\r\n           
-    window.ShowModalUtility();\r\n        }\r\n\r\n        private void OnGUI()\r\n       
-    {\r\n            EditorGUILayout.LabelField(\"This package needs the following
-    modules:\");\r\n            foreach(string dependency in RequiredModules)\r\n           
-    {\r\n                EditorGUILayout.LabelField($\"- {dependency}\");\r\n           
-    }\r\n            EditorGUILayout.LabelField(\"Do you wish to install the Scaffold
-    Launcher to handle the missing modules?\");\r\n            EditorGUILayout.BeginHorizontal();\r\n           
-    if (GUILayout.Button(\"No\"))\r\n            {\r\n                SetKey(LauncherSkipKey,
-    true);\r\n                Close();\r\n            }\r\n            if (GUILayout.Button(\"Yes\"))\r\n           
-    {\r\n                Close();\r\n                InstallLauncher();\r\n           
-    }\r\n            EditorGUILayout.EndHorizontal();\r\n        }\r\n    }\r\n}\r\n#endif\r\n"
+    allDefines;\r\n        }\r\n\r\n        private static bool GetKey(string key)\r\n       
+    {\r\n            return PlayerPrefs.GetInt(key, 0) == 1;\r\n        }\r\n\r\n       
+    private static void SetKey(string key, bool value)\r\n        {\r\n           
+    int boolean = value ? 1 : 0;\r\n            PlayerPrefs.SetInt(key, boolean);\r\n       
+    }\r\n    }\r\n}\r\n#endif\r\n"
   TemplateManifest: "{\r\n  \"name\": \"com.scaffold.sample\",\r\n  \"version\":
     \"0.0.0\",\r\n  \"displayName\": \"Sample Package\",\r\n  \"description\": \"Sample
-    Description\",\r\n  \"unity\": \"2018.5\",\r\n  \"path\": \"git\",\r\n  \"author\":
+    Description\",\r\n  \"unity\": \"2018.5\",\r\n  \"path\": \"\",\r\n  \"author\":
     {\r\n    \"name\": \"Matheus\",\r\n    \"email\": \"matheus@hotmail.com\",\r\n   
     \"url\": \"https://www.matheuscohen.com.br\"\r\n  },\r\n  \"requirements\": [\r\n\r\n 
     ],\r\n  \"requiredDefines\": [\r\n\t\r\n  ],\r\n  \"installDefines\": [\r\n\t\r\n 
     ],\r\n\r\n   \r\n}"
-  ManifestPath: C:/Users/Luanna/Documents/Scaffold-Builder/Assets/Scaffold/Builder/package.json
-  ModuleFolder: C:/Users/Luanna/Documents/Scaffold-Builder/Assets/Scaffold/Builder
+  ProjectManifestPath: 
+  ModuleManifestPath: 
   CredentialsPath: C:/Users/Luanna/Documents/Credentials.json
   InstallerPath: C:/Users/Luanna/Documents/Scaffold-Builder/Assets/Builder/Template
     Files
   InstallerAssemblyPath: 
+  Module:
+    name: 
+    displayName: 
+    description: 
+    unity: 
+    path: 
+    version: 
+    author:
+      name: 
+      email: 
+      url: 
+    requiredModules: []
+    requiredDefines: []
+    installDefines: []
   Assemblies: []

@@ -99,7 +99,7 @@ namespace Scaffold.Builder.Installer
 
         private static async void InstallLauncher()
         {
-            AddRequest add = Client.Add("https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Launcher");
+            AddRequest add = Client.Add("https://github.com/MgCohen/Scaffold.git?path=/Assets/Scaffold/Launcher");
             
             while (!add.IsCompleted)
             {

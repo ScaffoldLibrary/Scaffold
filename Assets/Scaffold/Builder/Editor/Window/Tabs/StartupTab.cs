@@ -57,8 +57,9 @@ namespace Scaffold.Builder.Editor.Tabs
             _configs.ProjectManifestPath = _projectManifest;
             _configs.CredentialsPath = _credentials;
 
-            ModuleReader reader = new ModuleReader(_configs.ModuleManifestPath);
-            _configs.Module = reader.GetModule();
+
+            FileService file = new FileService();
+            _configs.Module = file.Read<Module>(_configs.ModuleManifestPath);
         }
 
         public override bool ValidateNext()

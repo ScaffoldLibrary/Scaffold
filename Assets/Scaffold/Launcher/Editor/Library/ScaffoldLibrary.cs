@@ -6,7 +6,7 @@ using Scaffold.Core.Editor.Modules;
 using System;
 using UnityEditor;
 
-namespace Scaffold.Launcher.Objects
+namespace Scaffold.Launcher.Library
 {
     [CreateAssetMenu(menuName = "Scaffold/Create Manifest")]
     public class ScaffoldLibrary : ScriptableObject
@@ -19,7 +19,6 @@ namespace Scaffold.Launcher.Objects
             return AssetDatabase.LoadAssetAtPath<ScaffoldLibrary>("Package/com.scaffold.launcher/Editor/Library/ScaffoldLibrary.asset");
 #endif
         }
-
 
         public string Hash;
         public Module Launcher = new Module();

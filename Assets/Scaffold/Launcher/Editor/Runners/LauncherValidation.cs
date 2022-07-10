@@ -1,5 +1,6 @@
+using Scaffold.Core.Editor;
 using Scaffold.Core.Editor.Manifest;
-using Scaffold.Launcher.Objects;
+using Scaffold.Launcher.Library;
 using Scaffold.Launcher.Workers;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,34 +11,35 @@ namespace Scaffold.Launcher.Runners
 {
     internal class LauncherValidation
     {
-        private const string ValidationKey = "LASTVALIDATION";
-        private const string InstallKey = "LASTINSTALL";
+        private const string ManifestPath = "./Packages/manifest.json";
+        private const string ValidationKey = "PROJECTVALIDATED";
 
         [InitializeOnLoadMethod]
         private static void ValidateProject()
         {
-            bool lastInstall = GetKey(InstallKey, true);
-            bool lastValidation = GetKey(ValidationKey, false);
-            if (lastInstall == lastValidation)
+            bool isValidated = GetKey(ValidationKey, false);
+            if (isValidated)
             {
                 return;
             }
 
             if (CheckProjectDependencies())
             {
-                SetKey(ValidationKey, lastInstall);
+                SetKey(ValidationKey, true);
             }
         }
 
         [MenuItem("Scaffold/Launcher/Validate Dependencies")]
         private static bool CheckProjectDependencies()
         {
+            FileService files = new FileService();
+            Manifest projectManifest = files.Read<Manifest>(ManifestPath);
             ScaffoldLibrary scaffoldManifest = ScaffoldLibrary.Load();
-            Manifest projectManifest = new Manifest();
+
 
             DependencyHandler validator = new DependencyHandler(scaffoldManifest, projectManifest);
-            bool dependencyState = validator.ValidateDependencies();
-            if (dependencyState)
+            bool hasMissingDependencies = validator.ValidateDependencies();
+            if (hasMissingDependencies)
             {
                 Debug.Log("Project is missing a few Scaffold Modules, initializing Launcher to handle missing dependencies");
                 ScaffoldLauncher.Launch();

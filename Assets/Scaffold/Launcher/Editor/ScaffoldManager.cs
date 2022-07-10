@@ -11,7 +11,7 @@ using System;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using System.Threading.Tasks;
-using Scaffold.Launcher.Objects;
+using Scaffold.Launcher.Library;
 using Scaffold.Launcher.Editor;
 using UnityEditor;
 using Scaffold.Core.Editor.Modules;
@@ -44,18 +44,7 @@ namespace Scaffold.Launcher
 
         public Dictionary<Module, Version> GetInstalledModules()
         {
-            List<Module> modules = GetModules();
-            List<Install> installs = _library.InstalledModules;
-            Dictionary<Module, Version> installedModules = new Dictionary<Module, Version>();
-            foreach (var install in installs)
-            {
-                Module module = modules.FirstOrDefault(m => m.name == install.ModuleName);
-                if (module != null)
-                {
-                    installedModules.Add(module, install.Version);
-                }
-            }
-            return installedModules;
+            return _library.GetInstalledModules();
         }
 
         public Module GetLauncher()

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Scaffold.Core.Editor.Modules;
-using Scaffold.Launcher.Objects;
+using Scaffold.Launcher.Library;
 using Scaffold.Core.Editor;
 using Scaffold.Core.Editor.ManifestLock;
 using System.Linq;
