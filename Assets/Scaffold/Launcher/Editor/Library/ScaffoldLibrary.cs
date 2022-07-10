@@ -16,7 +16,7 @@ namespace Scaffold.Launcher.Library
 #if IS_SCAFFOLD_LAUNCHER
             return AssetDatabase.LoadAssetAtPath<ScaffoldLibrary>("Assets/Scaffold/Launcher/Editor/Library/ScaffoldLibrary.asset");
 #else
-            return AssetDatabase.LoadAssetAtPath<ScaffoldLibrary>("Package/com.scaffold.launcher/Editor/Library/ScaffoldLibrary.asset");
+            return AssetDatabase.LoadAssetAtPath<ScaffoldLibrary>("Packages/com.scaffold.launcher/Editor/Library/ScaffoldLibrary.asset");
 #endif
         }
 

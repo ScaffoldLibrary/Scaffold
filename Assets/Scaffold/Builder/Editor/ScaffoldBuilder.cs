@@ -22,7 +22,7 @@ namespace Scaffold.Builder
                 if (_config == null)
                 {
 #if !IS_SCAFFOLD_BUILDER
-                    _config = AssetDatabase.LoadAssetAtPath<BuilderConfigs>("Package/com.scaffold.builder/Editor/Config/BuilderConfigs.asset");
+                    _config = AssetDatabase.LoadAssetAtPath<BuilderConfigs>("Packages/com.scaffold.builder/Editor/Config/BuilderConfigs.asset");
 #else
                     _config = AssetDatabase.LoadAssetAtPath<BuilderConfigs>("Assets/Scaffold/Builder/Editor/Config/BuilderConfigs.asset");
 #endif

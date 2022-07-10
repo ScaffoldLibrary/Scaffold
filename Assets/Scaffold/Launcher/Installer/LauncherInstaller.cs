@@ -20,7 +20,7 @@ namespace Scaffold.Launcher.Installer
 #endif
 
 #if !USE_SCAFFOLD_LAUNCHER && USE_SCAFFOLD_CORE
-            installLauncher();
+            InstallLauncher();
 #endif
         }
 

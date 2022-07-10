@@ -20,7 +20,7 @@ namespace Scaffold.Builder.Installer
 #endif
 
 #if !USE_SCAFFOLD_BUILDER && USE_SCAFFOLD_CORE
-            installBuilder();
+            InstallBuilder();
 #endif
         }
 
