@@ -43,8 +43,11 @@ namespace Scaffold.Builder.Editor.Tabs
                 _hasBuilt = true;
                 FileService file = new FileService();
                 file.Save(_configs.Module, _configs.ModuleManifestPath);
+
+                Credentials credentials = file.Read<Credentials>(_configs.CredentialsPath);
+                ModuleUploader.UploadModule(_configs.Module, credentials);
+
                 ScaffoldBuilder.QuickBuild();
-                Client.Resolve();
             }
         }
 
