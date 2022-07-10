@@ -89,7 +89,7 @@ namespace Scaffold.Builder.FileBuilders
             List<string> defines = _module.requiredDefines.Union(_module.installDefines).ToList();
             if (defines.Count <= 0)
             {
-                script = script.Replace("#IF _MODULEDEFINES_", "");
+                script = script.Replace("#if _MODULEDEFINES_", "");
             }
             else
             {
