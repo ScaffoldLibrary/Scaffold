@@ -31,7 +31,7 @@ namespace Scaffold.Launcher
             IModuleInstaller installer = new ModuleWriterInstaller(manifest, dependencyValidator, files); //install, remove
             IModuleUpdater updater = new ModuleLockUpdater(library, files); //updates
 
-            return new ScaffoldManager(library, installer, updater, dependencyValidator);
+            return new ScaffoldManager(manifest, library, installer, updater, dependencyValidator);
         }
     }
 }

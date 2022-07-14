@@ -27,7 +27,7 @@ namespace Scaffold.Launcher.Workers
 
         public bool ValidateDependencies(out List<Module> missingModules)
         {
-            List<Module> installedModules = _library.GetInstalledModules().Select(kp => kp.Key).ToList();
+            List<Module> installedModules = _manifest.GetScaffoldDependencies().Select(d => _library.GetModule(d)).ToList();
             missingModules = installedModules.SelectMany(m => m.requiredModules)
                                                         .Distinct()
                                                         .Select(m => _library.GetModule(m))
@@ -39,7 +39,7 @@ namespace Scaffold.Launcher.Workers
 
         public bool CheckForDependingModules(Module module, out List<Module> modules)
         {
-            List<Module> installedModules = _library.GetInstalledModules().Select(kp => kp.Key).ToList();
+            List<Module> installedModules = _manifest.GetScaffoldDependencies().Select(d => _library.GetModule(d)).ToList();
             modules = installedModules.Where(m => m != null && GetModuleDependencies(m, false).Contains(module)).ToList();
             return modules.Count > 0;
         }

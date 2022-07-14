@@ -151,9 +151,8 @@ namespace Scaffold.Launcher.Editor
 
         private void DrawModuleViewer(Module module, Version installedVersion)
         {
-            float maxWidth = WindowSize.x;
             bool installed = installedVersion != null;
-            bool outdated = (installed && installedVersion.CompareTo(module.Latest()) < 0) ? true : false;
+            bool outdated = (installed && installedVersion.CompareTo(module.Latest()) < 0);
 
             EditorGUILayout.BeginVertical(ScaffoldStyles.ModuleBox);
             {
@@ -161,7 +160,7 @@ namespace Scaffold.Launcher.Editor
                 {
                     string version = installed ? installedVersion.ToString() : module.Latest().ToString();
                     if (outdated) version += " (Update Available)";
-                    GUILayout.Label($"{module.name} - {version}", ScaffoldStyles.ModuleName);
+                    GUILayout.Label($"{module.displayName} - {version}", ScaffoldStyles.ModuleName);
                     DrawModuleOptions(rect, module, installed);
                 }
                 EditorGUILayout.EndHorizontal();
@@ -181,11 +180,25 @@ namespace Scaffold.Launcher.Editor
             buttonRect.size = buttonSize;
 
             string[] optionNames = options.Select(o => o.Label).ToArray();
-            int selectedIndex = EditorGUI.Popup(buttonRect, 0, optionNames);
-            if (selectedIndex > 0)
+            //int selectedIndex = EditorGUI.Popup(buttonRect, 0, optionNames);
+            var popupStyle = GUI.skin.FindStyle("IconButton");
+            var popupIcon = EditorGUIUtility.IconContent("_Popup");
+            var buttonRect2 = EditorGUILayout.GetControlRect(false, 20f, GUILayout.MaxWidth(20f));
+            if (GUI.Button(buttonRect2, popupIcon, popupStyle))
             {
-                options[selectedIndex].Action?.Invoke(module);
+                GenericMenu menu = new GenericMenu();
+                foreach(var option in options)
+                {
+                    menu.AddItem(new GUIContent(option.Label), false, () => { option.Action?.Invoke(module);});
+                }
+                menu.ShowAsContext();
+                //Stuff that happens when you click the button
             }
+
+            //if (selectedIndex > 0)
+           //{
+              //  options[selectedIndex].Action?.Invoke(module);
+            //}
         }
 
         public struct ModuleOption

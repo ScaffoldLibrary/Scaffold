@@ -89,12 +89,12 @@ namespace Scaffold.Builder.FileBuilders
             List<string> defines = _module.requiredDefines.Union(_module.installDefines).ToList();
             if (defines.Count <= 0)
             {
-                script = script.Replace("#if _MODULEDEFINES_", "");
+                script = script.Replace("_MODULEDEFINES_", "true");
             }
             else
             {
                 defines = defines.Select(s => $"!{s}").ToList();
-                string conditional = string.Join(" || !", defines); 
+                string conditional = string.Join(" || ", defines); 
                 script = script.Replace("_MODULEDEFINES_", conditional);
             }
             return script;

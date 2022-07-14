@@ -23,13 +23,5 @@ namespace Scaffold.Launcher.Library
         public string Hash;
         public Module Launcher = new Module();
         public List<Module> Modules = new List<Module>();
-
-        public List<Install> InstalledModules = new List<Install>();
-    }
-
-    public class Install
-    {
-        public string ModuleName;
-        public Version Version;
     }
 }

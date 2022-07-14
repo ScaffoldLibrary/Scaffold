@@ -22,14 +22,16 @@ namespace Scaffold.Launcher
 {
     public class ScaffoldManager
     {
-        public ScaffoldManager(ScaffoldLibrary library, IModuleInstaller installer, IModuleUpdater updater, DependencyHandler dependencies)
+        public ScaffoldManager(Manifest manifest, ScaffoldLibrary library, IModuleInstaller installer, IModuleUpdater updater, DependencyHandler dependencies)
         {
+            _manifest = manifest;
             _library = library;
             _dependencies = dependencies;
             _installer = installer;
             _updater = updater;
         }
 
+        private Manifest _manifest;
         private ScaffoldLibrary _library;
         private DependencyHandler _dependencies;
         private IModuleInstaller _installer;
@@ -44,7 +46,17 @@ namespace Scaffold.Launcher
 
         public Dictionary<Module, Version> GetInstalledModules()
         {
-            return _library.GetInstalledModules();
+            Dictionary<Module, Version> installedModules = new Dictionary<Module, Version>();
+            List<Module> modules = _manifest.GetScaffoldDependencies().Select(d => _library.GetModule(d)).ToList();
+            foreach(Module module in modules)
+            {
+                string moduleManifestPath = $"Packages/{module.name}/package.json";
+                string content = AssetDatabase.LoadAssetAtPath<TextAsset>(moduleManifestPath).text;
+                JObject serializedObj = JObject.Parse(content);
+                Version version = new Version(serializedObj["version"].ToString());
+                installedModules.Add(module, version);
+            }
+            return installedModules;
         }
 
         public Module GetLauncher()
@@ -78,6 +90,8 @@ namespace Scaffold.Launcher
             ScaffoldLibrary library = await ModuleFetcher.GetManifest();
             _library.Modules = library.Modules;
             _library.Hash = library.Hash;
+            EditorUtility.SetDirty(_library);
+            AssetDatabase.SaveAssets();
         }
 
         public bool CheckForMissingDependencies()

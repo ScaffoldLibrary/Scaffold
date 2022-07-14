@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d248268d80c7f94f9f6d1d08dd74024, type: 3}
   m_Name: ScaffoldLibrary
   m_EditorClassIdentifier: 
-  Hash: 66c0ad3c-8608-4b49-8538-cdaf3beb2b92
+  Hash: 81a32df9-9314-4025-8b8b-34019bb598d8
   Launcher:
     name: com.scaffold.launcher
     displayName: Scaffold Launcher
     description: Main manager
-    unity: 
+    unity: 2020.3
     path: 
     version: 0.0.1
     author:
@@ -28,42 +28,35 @@ MonoBehaviour:
     requiredDefines: []
     installDefines: []
   Modules:
-  - name: Scaffold Events
-    displayName: a
-    description: Handles communication between classes using Signals and Requests
-    unity: b
-    path: c
+  - name: com.scaffold.events
+    displayName: Scaffold Events
+    description: Handles interactions between modules and systems through signals
+      and requests
+    unity: 2020.1
+    path: https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events
+    version: 0.0.4
+    author:
+      name: Matheus
+      email: matheus@hotmail.com
+      url: https://www.matheuscohen.com.br
+    requiredModules: []
+    requiredDefines: []
+    installDefines:
+    - USE_SCAFFOLD_EVENTS
+  - name: com.scaffold.screens
+    displayName: Scaffold Screens
+    description: Screen and UI system, with abstractions and a few generic prefabs
+    unity: 2020.3
+    path: https://github.com/MgCohen/Scaffold-Screens.git?path=/Assets/Scaffold/Screens
     version: 0.0.1
     author:
-      name: 
-      email: 
-      url: 
-    requiredModules: []
-    requiredDefines: []
-    installDefines: []
-  - name: Sample Package
-    displayName: sd
-    description: Sample Description
-    unity: 32
-    path: sad
-    version: 0.0.3
-    author:
-      name: 
-      email: 
-      url: 
-    requiredModules: []
-    requiredDefines: []
-    installDefines: []
-  - name: new tests
-    displayName: 1
-    description: ' asecond description'
-    unity: 2
-    path: new path
-    version: 0.1.0
-    author:
-      name: 
-      email: 
-      url: 
-    requiredModules: []
-    requiredDefines: []
-    installDefines: []
+      name: Matheus
+      email: matheus@hotmail.com
+      url: https://www.matheuscohen.com.br
+    requiredModules:
+    - com.scaffold.events
+    requiredDefines:
+    - USE_SCAFFOLD_SCREENS
+    - USE_SCAFFOLD_EVENTS
+    installDefines:
+    - USE_SCAFFOLD_SCREENS

@@ -5,6 +5,7 @@ using Scaffold.Core.Editor.Manifest;
 using Scaffold.Core.Editor;
 using System.Linq;
 using Scaffold.Launcher.Utilities;
+using UnityEditor.PackageManager;
 
 namespace Scaffold.Launcher.Workers
 {
@@ -58,6 +59,7 @@ namespace Scaffold.Launcher.Workers
                 _manifest.Add(module.name, module.path);
             }
             _files.Save(_manifest);
+            Client.Resolve();
         }
 
         public void Uninstall(Module module)
@@ -91,6 +93,7 @@ namespace Scaffold.Launcher.Workers
                 _manifest.Remove(module.name);
             }
             _files.Save(_manifest);
+            Client.Resolve();
         }
 
         private bool HasMissingDependencies(List<Module> modules)
