@@ -23,7 +23,7 @@ namespace Scaffold.Launcher.Editor
             {
                 if (_installedOptions == null)
                 {
-                    _installedOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Uninstall", Scaffold.RemoveModule), new ModuleOption("Update", Scaffold.UpdateModule) };
+                    _installedOptions = new List<ModuleOption>() { new ModuleOption("Uninstall", Scaffold.RemoveModule), new ModuleOption("Update", Scaffold.UpdateModule) };
                 }
                 return _installedOptions;
             }
@@ -36,7 +36,7 @@ namespace Scaffold.Launcher.Editor
             {
                 if (_uninstalledOptions == null)
                 {
-                    _uninstalledOptions = new List<ModuleOption>() { new ModuleOption("Options", null), new ModuleOption("Install", Scaffold.AddModule), new ModuleOption("Check for Update", Scaffold.CheckForModuleUpdates) };
+                    _uninstalledOptions = new List<ModuleOption>() { new ModuleOption("Install", Scaffold.AddModule), new ModuleOption("Check for Update", Scaffold.CheckForModuleUpdates) };
                 }
                 return _uninstalledOptions;
             }
