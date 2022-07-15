@@ -10,7 +10,6 @@ using Scaffold.Core.Editor.Modules;
 
 namespace Scaffold.Launcher.Editor
 {
-    [TabOrder(0)]
     public class ModuleTab : WindowTab
     {
         public ModuleTab(Vector2 windowSize, ScaffoldManager scaffold) : base(windowSize, scaffold) { }
@@ -60,7 +59,7 @@ namespace Scaffold.Launcher.Editor
                 EditorGUILayout.BeginHorizontal();
                 {
                     DrawProjectState();
-                    if (GUILayout.Button("Update Manifest", ScaffoldStyles.Button, GUILayout.Width(windowSize.x - 170)))
+                    if (GUILayout.Button("Update Library", ScaffoldStyles.Button, GUILayout.Width(windowSize.x - 170)))
                     {
                         scaffold.UpdateLibrary();
                     }
@@ -113,12 +112,12 @@ namespace Scaffold.Launcher.Editor
         private void DrawProjectState()
         {
             Dictionary<Module, Version> installedModules = Scaffold.GetInstalledModules();
-            bool updateNeeded = installedModules.Count > 0 ? true : false;
+            bool updateNeeded = false;
             foreach (var entry in installedModules)
             {
-                if (entry.Value.CompareTo(entry.Key.Latest()) < 0)
+                if (entry.Value.CompareTo(entry.Key.Latest()) > 0)
                 {
-                    updateNeeded = false;
+                    updateNeeded = true;
                     break;
                 }
             }
@@ -158,6 +157,9 @@ namespace Scaffold.Launcher.Editor
             {
                 Rect rect = EditorGUILayout.BeginHorizontal();
                 {
+                    string iconName = !installed ? "lightRim" : outdated? "orangeLight" : "greenLight";
+                    GUIContent icon = EditorGUIUtility.IconContent(iconName);
+                    EditorGUILayout.LabelField(icon, GUILayout.Width(20));
                     string version = installed ? installedVersion.ToString() : module.Latest().ToString();
                     if (outdated) version += " (Update Available)";
                     GUILayout.Label($"{module.displayName} - {version}", ScaffoldStyles.ModuleName);
@@ -180,7 +182,6 @@ namespace Scaffold.Launcher.Editor
             buttonRect.size = buttonSize;
 
             string[] optionNames = options.Select(o => o.Label).ToArray();
-            //int selectedIndex = EditorGUI.Popup(buttonRect, 0, optionNames);
             var popupStyle = GUI.skin.FindStyle("IconButton");
             var popupIcon = EditorGUIUtility.IconContent("_Popup");
             var buttonRect2 = EditorGUILayout.GetControlRect(false, 20f, GUILayout.MaxWidth(20f));
@@ -192,13 +193,7 @@ namespace Scaffold.Launcher.Editor
                     menu.AddItem(new GUIContent(option.Label), false, () => { option.Action?.Invoke(module);});
                 }
                 menu.ShowAsContext();
-                //Stuff that happens when you click the button
             }
-
-            //if (selectedIndex > 0)
-           //{
-              //  options[selectedIndex].Action?.Invoke(module);
-            //}
         }
 
         public struct ModuleOption

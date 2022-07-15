@@ -64,6 +64,11 @@ namespace Scaffold.Launcher
             return _library.Launcher;
         }
 
+        public Module GetBuilder()
+        {
+            return _library.Builder;
+        }
+
         public void AddModule(Module module)
         {
             _installer.Install(module);

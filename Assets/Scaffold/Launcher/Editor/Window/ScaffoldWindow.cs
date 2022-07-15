@@ -17,7 +17,7 @@ namespace Scaffold.Launcher.Editor
         {
             Window = (ScaffoldWindow)EditorWindow.GetWindow(typeof(ScaffoldWindow));
             Window.minSize = _minWindowSize;
-            _Scaffold = scaffold;
+            _scaffold = scaffold;
             Window.Show();
         }
 
@@ -26,7 +26,7 @@ namespace Scaffold.Launcher.Editor
 
         private static ScaffoldWindow Window;
 
-        private static ScaffoldManager _Scaffold;
+        private static ScaffoldManager _scaffold;
 
         private Vector2 _scrollView;
 
@@ -52,7 +52,7 @@ namespace Scaffold.Launcher.Editor
                     Initialize();
                 }
 
-                Module launcher = _Scaffold.GetLauncher();
+                Module launcher = _scaffold.GetLauncher();
 
                 _scrollView = EditorGUILayout.BeginScrollView(_scrollView, GUIStyle.none, GUIStyle.none);
                 {
@@ -78,13 +78,14 @@ namespace Scaffold.Launcher.Editor
                         }
                         EditorGUILayout.EndHorizontal();
                         EditorGUILayout.Space(5);
-                        CurrentTab.Draw(CurrentWindowSize, _Scaffold);
+                        CurrentTab.Draw(CurrentWindowSize, _scaffold);
                         EditorGUILayout.Space(5);
-                        DrawFooter();
                     }
                     EditorGUILayout.EndVertical();
                 }
                 EditorGUILayout.EndScrollView();
+                EditorGUILayout.Space(5);
+                DrawFooter();
             }
             catch
             {
@@ -114,24 +115,11 @@ namespace Scaffold.Launcher.Editor
 
         private List<WindowTab> GetAllTabs()
         {
-            List<WindowTab> tabs = new List<WindowTab>();
-            List<Type> types = GetAllTabTypes();
-            foreach (Type type in types)
+            List<WindowTab> tabs = new List<WindowTab>()
             {
-                object[] parameters = new object[] { CurrentWindowSize, _Scaffold };
-                WindowTab tab = Activator.CreateInstance(type, parameters) as WindowTab;
-                tabs.Add(tab);
-            }
+                new ModuleTab(CurrentWindowSize, _scaffold)
+            };
             return tabs;
-        }
-        private List<Type> GetAllTabTypes()
-        {
-            Type type = typeof(WindowTab);
-            return GetType().Assembly.GetTypes()
-                                     .Where(t => t.IsSubclassOf(type))
-                                     .Where(t => !t.IsAbstract)
-                                     .OrderBy(t => (t.GetCustomAttributes(typeof(TabOrder), true).FirstOrDefault() as TabOrder).Order)
-                                     .ToList();
         }
     }
 }

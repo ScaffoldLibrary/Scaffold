@@ -22,6 +22,7 @@ namespace Scaffold.Launcher.Library
 
         public string Hash;
         public Module Launcher = new Module();
+        public Module Builder = new Module();
         public List<Module> Modules = new List<Module>();
     }
 }

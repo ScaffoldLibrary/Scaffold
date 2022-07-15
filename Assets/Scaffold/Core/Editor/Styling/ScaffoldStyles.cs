@@ -78,13 +78,15 @@ namespace Scaffold.Core.Editor
         {
             stretchWidth = true,
             wordWrap = true,
+            padding = new RectOffset(5, 5, 5, 5)
         };
 
         public static GUIStyle ModuleName = new GUIStyle()
         {
             stretchWidth = true,
             wordWrap = true,
-            padding = new RectOffset(5, 5, 0, 5),
+            padding = new RectOffset(5, 5, 3, 5),
+            alignment = TextAnchor.LowerLeft,
             normal = new GUIStyleState() { textColor = Color.white }
         };
 
