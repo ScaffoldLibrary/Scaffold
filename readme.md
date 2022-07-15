@@ -29,7 +29,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://avatars.githubusercontent.com/u/109361408?s=400&u=e1530a760f1b11646a0cd9d13e9776a0c6bdf964&v=4">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
