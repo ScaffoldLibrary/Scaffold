@@ -30,19 +30,18 @@
 <br />
 <div align="center">
   <a href="https://avatars.githubusercontent.com/u/109361408?s=400&u=e1530a760f1b11646a0cd9d13e9776a0c6bdf964&v=4">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://avatars.githubusercontent.com/u/109361408?s=400&u=e1530a760f1b11646a0cd9d13e9776a0c6bdf964&v=4" alt="Logo" width="200" height="200">
   </a>
 
-<h3 align="center">project_title</h3>
+<h1 align="center">Scaffold Library</h1>
 
   <p align="center">
-    project_description
+    A toolkit manager! have all your tools at your disposal at any time on your unity projects! 
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    Or use mine!
+    <br />    <br />
+    Explore all of the Scaffolds modules to kickstart your project.
     <br />
-    <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
-    ·
     <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
     ·
     <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
@@ -83,60 +82,63 @@
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
+Scaffold started as a way to keep all my codebase in a single place and share it accross projects without the need for actually looking for links, manually exporting packages or worrying about dependencies.
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+It partially mimics the Package Manager, but allowing me to handle git-dependencies! It's also easy to change the entry-points and use it for your own repositories as well.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-### Built With
-
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+Scaffold also contains a Module-Builder that allows me to delegate and encapsulate the building and updating of new modules to outside of the main scaffold package. This way any module can be freely edited without worrying for the overall library - and without having to memorize any specific structure the Scaffold Library requires.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Using Scaffold's library is really simple, you just have to install it and you will have access to the Scaffold's launcher window, listing all the avaiable modules to you! no further setup is required other than installing the project.
 
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+To use the Module-Builder or swapping the library for your own code base should take you a few more steps, but nothing more than a few button clicks!
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+You can install Scaffold by either downloading the package or adding the package URL to the package manager or manifest! <br/><b>Note: Don't use this git default's URL as the package - it wont work, the package is nested in a internal folder </b>
+
+* <b>Unity Package:</b>
+
+    ...pending...
+
+<b>OR</b>
+
+* <b>Package Git:</b>
    ```sh
    git clone https://github.com/github_username/repo_name.git
    ```
-3. Install NPM packages
+
+  And that's it! no further setup is required.
+
+
+### Installing the Module-Builder
+
+To install the Module-Builder you can either add it manually to the package-manager or just click on the unity tool bar!
+<br />
+note: to use the Builder on the main scaffold project, check <a href="https://github.com/github_username/repo_name/issues">Contributing</a>
+
+* <b> Toolbar:</b>
+
+    [Scaffold -> Builder -> Install Builder]
+
+    ...picture pending....
+
+<b>OR</b>
+
+* <b>Add path to Package Manager: </b>
+
    ```sh
-   npm install
+   git clone https://github.com/github_username/repo_name.git
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+   
+   
+### Swapping the library for your own
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
+Swapping the library modules is as easy as swapping the url for retrieval! Scaffold uses a simple HTTP request to get the list in a json format.
 
 
 <!-- USAGE EXAMPLES -->
