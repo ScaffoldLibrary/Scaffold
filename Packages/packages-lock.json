@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.scaffold.events": {
+      "version": "https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "e6c9152abd7e7413124340649ad9da8161bb66f6"
+    },
     "com.unity.2d.animation": {
       "version": "5.0.10",
       "depth": 0,

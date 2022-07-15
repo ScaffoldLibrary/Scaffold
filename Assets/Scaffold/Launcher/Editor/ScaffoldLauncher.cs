@@ -33,5 +33,15 @@ namespace Scaffold.Launcher
 
             return new ScaffoldManager(manifest, library, installer, updater, dependencyValidator);
         }
+
+#if !USE_SCAFFOLD_BUILDER && !IS_SCAFFOLD_BUILDER
+        [MenuItem("Scaffold/Builder/Install Builder")]
+        public static void InstallBuilder()
+        {
+            ScaffoldLibrary library = ScaffoldLibrary.Load();
+            Module builder = library.Builder;
+            Client.Add(builder.path);
+        }
+#endif
     }
 }

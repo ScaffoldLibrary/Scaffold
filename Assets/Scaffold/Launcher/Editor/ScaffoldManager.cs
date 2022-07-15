@@ -86,13 +86,13 @@ namespace Scaffold.Launcher
 
         public async void CheckForModuleUpdates(Module module)
         {
-            module = await ModuleFetcher.GetModule(module.name);
+            module = await ModuleFetcher.GetModule(module.name, _library.LibraryUrl);
             _updater.UpdateModuleInfo(module);
         }
 
         public async void UpdateLibrary()
         {
-            ScaffoldLibrary library = await ModuleFetcher.GetManifest();
+            ScaffoldLibrary library = await ModuleFetcher.GetManifest(_library.LibraryUrl);
             _library.Modules = library.Modules;
             _library.Hash = library.Hash;
             EditorUtility.SetDirty(_library);

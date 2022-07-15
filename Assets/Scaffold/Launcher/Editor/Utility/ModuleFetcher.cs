@@ -10,19 +10,17 @@ namespace Scaffold.Launcher.Utilities
 {
     internal static class ModuleFetcher
     {
-        private static string ApiUrl = "https://4gy3gio67e2eiaea4qrajylonm0tukgv.lambda-url.sa-east-1.on.aws/";
-
-        public static async Task<Module> GetModule(string moduleKey)
+        public static async Task<Module> GetModule(string moduleKey, string apiUrl)
         {
             GetModuleRequest request = new GetModuleRequest(moduleKey);
-            Module module = await HttpHandler.Post<Module>(ApiUrl, request);
+            Module module = await HttpHandler.Post<Module>(apiUrl, request);
             return module;
         }
 
-        public static async Task<ScaffoldLibrary> GetManifest()
+        public static async Task<ScaffoldLibrary> GetManifest(string apiUrl)
         {
             GetManifestRequest request = new GetManifestRequest();
-            ScaffoldLibrary manifest = await HttpHandler.Post<ScaffoldLibrary>(ApiUrl, request);
+            ScaffoldLibrary manifest = await HttpHandler.Post<ScaffoldLibrary>(apiUrl, request);
             return manifest;
         }
 

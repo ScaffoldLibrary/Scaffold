@@ -29,7 +29,6 @@ namespace Scaffold.Launcher.Runners
             }
         }
 
-        [MenuItem("Scaffold/Launcher/Validate Dependencies")]
         private static bool CheckProjectDependencies()
         {
             FileService files = new FileService();

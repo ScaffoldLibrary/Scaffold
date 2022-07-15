@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d248268d80c7f94f9f6d1d08dd74024, type: 3}
   m_Name: ScaffoldLibrary
   m_EditorClassIdentifier: 
+  LibraryUrl: https://4gy3gio67e2eiaea4qrajylonm0tukgv.lambda-url.sa-east-1.on.aws/
   Hash: 81a32df9-9314-4025-8b8b-34019bb598d8
   Launcher:
     name: com.scaffold.launcher
@@ -20,6 +21,20 @@ MonoBehaviour:
     unity: 2020.3
     path: 
     version: 0.0.1
+    author:
+      name: 
+      email: 
+      url: 
+    requiredModules: []
+    requiredDefines: []
+    installDefines: []
+  Builder:
+    name: 
+    displayName: 
+    description: 
+    unity: 
+    path: 
+    version: 
     author:
       name: 
       email: 
