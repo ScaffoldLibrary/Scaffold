@@ -139,26 +139,59 @@ note: to use the Builder on the main scaffold project, check <a href="https://gi
 ### Swapping the library for your own
 
 Swapping the library modules is as easy as swapping the url for retrieval! Scaffold uses a simple HTTP request to get the list in a json format.
+To swap the url you just have to fork this repository, and edit the url on the Library Object
+
+...image....
+
+To swap the url directly in the package, you will need to either make the scriptable object editable or do it through code! the <b>Libray Url</b> property is public.
 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+* <b> Launcher: </b>
+    Using is as simple as tapping Ctrl+shift+L and choosing which modules to install! Scaffold handles module installing and use custom scripting defines to guarantee your project dependencies are correct.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+    ...image 1....
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+    ...image 2....
 
+    Click on the gear icon at the side of each module to install/update/uninstall - it will handle everything for you.
+    
+* <b> Builder: </b>
 
+    ...builder guide pending....
 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [X] Launch v1
+- [ ] Stability test and bug-fixing
+- [ ] Add auto-updater for Launcher and Builder
+- [ ] Refactor module library repository to accomodate contributers
+- [ ] Add Config tab to facilitate url customizations
+- [ ] Handle git-dependencies outside of the library modules
+- [ ] Version checking for dependencies
+- [ ] Sending local package updates directly to main repository
+
+I also have a bunch of little tools that i plan to refactor and bring into the library!
+Although not in any particular order, you can see that some of the modules in the roadmap are necessary for subsequent modules!
+
+- [X] Events
+- [ ] Screens
+- [ ] Search & Algorithms
+- [ ] PathFinder
+- [ ] Grid system
+- [ ] Draggable system
+- [ ] Card System
+- [ ] Saving System
+- [ ] Simple Dependency Injection
+- [ ] Scenes Crawler & Finder
+- [ ] CSV Importer
+- [ ] Localization
+- [ ] Cached Variables
+- [ ] Http jumpstart kit
+- [ ] Aws & firebase jumpstart kits
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
