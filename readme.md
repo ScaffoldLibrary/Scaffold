@@ -147,6 +147,7 @@ To swap the url directly in the package, you will need to either make the script
 
 - [X] Launch v1
 - [ ] Stability test and bug-fixing
+- [ ] Improve UI/UX for builder
 - [ ] Add auto-updater for Launcher and Builder
 - [ ] Refactor module library repository to accomodate contributers
 - [ ] Add Config tab to facilitate url customizations
