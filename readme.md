@@ -1,22 +1,5 @@
-<div id="top"></div>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
+<div align="center">
 
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -24,6 +7,7 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
+</div>
 
 
 <!-- PROJECT LOGO -->
@@ -42,9 +26,9 @@
     <br />    <br />
     Explore all of the Scaffolds modules to kickstart your project.
     <br />
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    <a href="https://github.com/ScaffoldLibrary/Scaffold/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://github.com/ScaffoldLibrary/Scaffold/issues">Request Feature</a>
   </p>
 </div>
 
@@ -56,15 +40,13 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#Installing the Module-Builder">Installing the Module-Builder</a></li>
+        <li><a href="#Swapping the library for your own">Prerequisites</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -72,7 +54,6 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -81,7 +62,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
 Scaffold started as a way to keep all my codebase in a single place and share it accross projects without the need for actually looking for links, manually exporting packages or worrying about dependencies.
 
 It partially mimics the Package Manager, but allowing me to handle git-dependencies! It's also easy to change the entry-points and use it for your own repositories as well.
@@ -119,7 +99,7 @@ You can install Scaffold by either downloading the package or adding the package
 
 To install the Module-Builder you can either add it manually to the package-manager or just click on the unity tool bar!
 <br />
-note: to use the Builder on the main scaffold project, check <a href="https://github.com/github_username/repo_name/issues">Contributing</a>
+note: to use the Builder on the main scaffold project, check <a href="https://github.com/ScaffoldLibrary/Scaffold/issues">Contributing</a>
 
 * <b> Toolbar:</b>
 
@@ -152,7 +132,7 @@ To swap the url directly in the package, you will need to either make the script
 * <b> Launcher: </b>
     Using is as simple as tapping Ctrl+shift+L and choosing which modules to install! Scaffold handles module installing and use custom scripting defines to guarantee your project dependencies are correct.
 
-    ...image 1....
+    ![Library](https://imgur.com/VMMm5nc.png)
 
     ![Library](https://imgur.com/HCPamRY.png)
 
@@ -211,7 +191,7 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## Adding new modules to the library
+### Adding new modules to the library
 
 If you want to actually share a new Module to the library - i'll be probably refactoring the way i send/fetch modules soon to accomodate a more open-source style.
 
@@ -226,23 +206,23 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Your Name - Matheus Cohen - matheuscohen@hotmail.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/ScaffoldLibrary/Scaffold](https://github.com/ScaffoldLibrary/Scaffold)
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/ScaffoldLibrary/Scaffold.svg?style=for-the-badge
+[contributors-url]: https://github.com/ScaffoldLibrary/Scaffold/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/ScaffoldLibrary/Scaffold.svg?style=for-the-badge
+[forks-url]: https://github.com/ScaffoldLibrary/Scaffold/network/members
+[stars-shield]: https://img.shields.io/github/stars/ScaffoldLibrary/Scaffold.svg?style=for-the-badge
+[stars-url]: https://github.com/ScaffoldLibrary/Scaffold/stargazers
+[issues-shield]: https://img.shields.io/github/issues/ScaffoldLibrary/Scaffold.svg?style=for-the-badge
+[issues-url]: https://github.com/ScaffoldLibrary/Scaffold/issues
+[license-shield]: https://img.shields.io/github/license/ScaffoldLibrary/Scaffold.svg?style=for-the-badge
+[license-url]: https://github.com/ScaffoldLibrary/Scaffold/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
