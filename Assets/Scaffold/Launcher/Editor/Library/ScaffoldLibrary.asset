@@ -17,10 +17,10 @@ MonoBehaviour:
   Launcher:
     name: com.scaffold.launcher
     displayName: Scaffold Launcher
-    description: Main manager
+    description: Scaffold Framework Package controller, managing and installing dependencies
     unity: 2020.3
-    path: 
-    version: 0.0.1
+    path: https://github.com/MgCohen/Scaffold.git?path=/Assets/Scaffold/Launcher
+    version: 1.0.0
     author:
       name: 
       email: 
@@ -29,12 +29,12 @@ MonoBehaviour:
     requiredDefines: []
     installDefines: []
   Builder:
-    name: 
-    displayName: 
-    description: 
-    unity: 
-    path: 
-    version: 
+    name: com.scaffold.builder
+    displayName: Scaffold Builder
+    description: Module Builder, used to create and upload modules.
+    unity: 2020.3
+    path: https://github.com/MgCohen/Scaffold-Launcher.git?path=/Assets/Scaffold/Builder
+    version: 1.0.0
     author:
       name: 
       email: 
@@ -49,7 +49,7 @@ MonoBehaviour:
       and requests
     unity: 2020.1
     path: https://github.com/MgCohen/Scaffold-Events.git?path=/Assets/Scaffold/Events
-    version: 0.0.4
+    version: 1.0.0
     author:
       name: Matheus
       email: matheus@hotmail.com
@@ -58,20 +58,3 @@ MonoBehaviour:
     requiredDefines: []
     installDefines:
     - USE_SCAFFOLD_EVENTS
-  - name: com.scaffold.screens
-    displayName: Scaffold Screens
-    description: Screen and UI system, with abstractions and a few generic prefabs
-    unity: 2020.3
-    path: https://github.com/MgCohen/Scaffold-Screens.git?path=/Assets/Scaffold/Screens
-    version: 0.0.1
-    author:
-      name: Matheus
-      email: matheus@hotmail.com
-      url: https://www.matheuscohen.com.br
-    requiredModules:
-    - com.scaffold.events
-    requiredDefines:
-    - USE_SCAFFOLD_SCREENS
-    - USE_SCAFFOLD_EVENTS
-    installDefines:
-    - USE_SCAFFOLD_SCREENS

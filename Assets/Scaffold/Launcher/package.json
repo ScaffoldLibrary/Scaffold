@@ -2,9 +2,9 @@
   "name": "com.scaffold.launcher",
   "displayName": "Scaffold Launcher",
   "description": "Scaffold Framework Package controller, managing and installing dependencies",
-  "unity": "2018.4",
-  "path": "",
-  "version": "0.0.3",
+  "unity": "2020.3",
+  "path": "https://github.com/MgCohen/Scaffold.git?path=/Assets/Scaffold/Launcher",
+  "version": "1.0.0",
   "author": {
     "name": "Matheus",
     "email": "matheus@hotmail.com",
