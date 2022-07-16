@@ -101,15 +101,15 @@ To use the Module-Builder or swapping the library for your own code base should 
 
 You can install Scaffold by either downloading the package or adding the package URL to the package manager or manifest! <br/><b>Note: Don't use this git default's URL as the package - it wont work, the package is nested in a internal folder </b>
 
-* <b>Unity Package:</b>
+* <b>Download Unity Package:</b>
 
     ...pending...
 
 <b>OR</b>
 
-* <b>Package Git:</b>
+* <b>Add path to Package Manager:</b>
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   https://github.com/MgCohen/Scaffold.git?path=/Assets/Scaffold/Launcher
    ```
 
   And that's it! no further setup is required.
@@ -124,24 +124,24 @@ note: to use the Builder on the main scaffold project, check <a href="https://gi
 * <b> Toolbar:</b>
 
     [Scaffold -> Builder -> Install Builder]
-
-    ...picture pending....
-
+    
+    ![installing Builder](https://imgur.com/HPyc3IJ.png)
+ 
 <b>OR</b>
 
 * <b>Add path to Package Manager: </b>
 
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   https://github.com/MgCohen/Scaffold.git?path=/Assets/Scaffold/Builder
    ```
    
    
 ### Swapping the library for your own
 
 Swapping the library modules is as easy as swapping the url for retrieval! Scaffold uses a simple HTTP request to get the list in a json format.
-To swap the url you just have to fork this repository, and edit the url on the Library Object
+To swap the url you just have to fork this repository, and edit the url on the Library Object. 
 
-...image....
+  ![Swapping Library](https://imgur.com/Tx74Eux.png)
 
 To swap the url directly in the package, you will need to either make the scriptable object editable or do it through code! the <b>Libray Url</b> property is public.
 
@@ -154,7 +154,7 @@ To swap the url directly in the package, you will need to either make the script
 
     ...image 1....
 
-    ...image 2....
+    ![Library](https://imgur.com/HCPamRY.png)
 
     Click on the gear icon at the side of each module to install/update/uninstall - it will handle everything for you.
     
@@ -179,9 +179,12 @@ Although not in any particular order, you can see that some of the modules in th
 
 - [X] Events
 - [ ] Screens
+- [ ] Noise Utility
 - [ ] Search & Algorithms
 - [ ] PathFinder
 - [ ] Grid system
+- [ ] Isometric Toolkit
+- [ ] Hexagon Toolkit
 - [ ] Draggable system
 - [ ] Card System
 - [ ] Saving System
@@ -193,16 +196,11 @@ Although not in any particular order, you can see that some of the modules in th
 - [ ] Http jumpstart kit
 - [ ] Aws & firebase jumpstart kits
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+This project started without any planning - and that can be seen on a few places where a little refactoring may be needed! no problem, all help is appreciated!
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
@@ -213,8 +211,11 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+## Adding new modules to the library
 
+If you want to actually share a new Module to the library - i'll be probably refactoring the way i send/fetch modules soon to accomodate a more open-source style.
+
+As of right now - you can still try to build your module with the Module-Builder, but you will need a credential file that would send the package data directly to the library DB.
 
 
 <!-- LICENSE -->
@@ -222,30 +223,12 @@ Don't forget to give the project a star! Thanks again!
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
 <!-- CONTACT -->
 ## Contact
 
 Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
 
 Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
